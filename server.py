@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Commander Table - local server for Mac and Linux (works on Windows too).
+"""Spellbook Table - local server for Mac and Linux (works on Windows too).
 
-The same endpoints as Commander Table.exe and server.ps1, using only Python's standard library
+The same endpoints as Spellbook Table.exe and server.ps1, using only Python's standard library
 (Python 3.8 or newer, which macOS and most Linux systems already have):
   * the game itself, from public/
   * /api/fetch      deck-site proxy (those sites block browser requests)
@@ -46,7 +46,7 @@ ROOT = os.path.join(HERE, 'public')
 CACHE = os.path.join(HERE, 'cache')
 DATA = os.path.join(HERE, 'data')
 # (item 204) An honest client name for every site: the game never poses as a web browser
-UA = 'CommanderTable/1.0 (local deck viewer; no browser)'
+UA = 'SpellbookTable/1.0 (local deck viewer; no browser)'
 # (item 201) What the game's pages may load and call: their own files, Scryfall (cards, images), Commander Spellbook
 # and MTGJSON. A script that got into a page through a name or a card text can't run or send anything elsewhere.
 CSP = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://*.scryfall.io; media-src 'self' data: blob:; connect-src 'self' https://api.scryfall.com https://*.scryfall.io https://backend.commanderspellbook.com https://mtgjson.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'"
@@ -429,10 +429,10 @@ def inspect_update(path):
         names = [n.replace('\\', '/') for n in z.namelist()]
         hits = sorted((n for n in names if n.endswith('public/index.html')), key=len)
         if not hits:
-            raise ValueError("That zip doesn't look like Commander Table (no public/index.html in it).")
+            raise ValueError("That zip doesn't look like Spellbook Table (no public/index.html in it).")
         prefix = hits[0][:-len('public/index.html')]
         if prefix.count('/') > 1:
-            raise ValueError("That zip doesn't look like Commander Table.")
+            raise ValueError("That zip doesn't look like Spellbook Table.")
         files = [n for n in names if n.startswith(prefix) and not n.endswith('/') and not n[len(prefix):].startswith('data/')]
         if any('../' in n or ':' in n for n in files):
             raise ValueError('That zip contains unsafe file paths, so it was not used.')
@@ -479,7 +479,7 @@ QUITTING = threading.Event()
 
 
 class Handler(BaseHTTPRequestHandler):
-    server_version = 'CommanderTable'
+    server_version = 'SpellbookTable'
     local = True     # the main server (this computer only); the friends' server overrides this
 
     def log_message(self, fmt, *args):
@@ -540,7 +540,7 @@ class Handler(BaseHTTPRequestHandler):
         path = urllib.parse.unquote(url.path)
         q = {k: v[0] for k, v in urllib.parse.parse_qs(url.query).items()}
         if self.local and self.foreign(path.startswith('/api/')):
-            return self.text(403, 'Only the Commander Table page on this computer can use this.')
+            return self.text(403, 'Only the Spellbook Table page on this computer can use this.')
         try:
             # (item 202) the same limit on all three servers; too much is refused, never cut short
             if not self.local and int(self.headers.get('Content-Length') or 0) > FRIEND_BODY_MAX:
@@ -590,7 +590,7 @@ class Handler(BaseHTTPRequestHandler):
                 # The custom header forces a CORS preflight, so other websites can't shut the server down
                 if self.command != 'POST' or self.headers.get('X-Commander-Table') != 'exit':
                     return self.text(400, 'Use the Exit button in the app.')
-                self.text(200, 'Commander Table has shut down.')
+                self.text(200, 'Spellbook Table has shut down.')
                 QUITTING.set()
                 threading.Thread(target=self.server.shutdown, daemon=True).start()
                 return
@@ -762,16 +762,16 @@ def open_browser(url):
 
 
 def self_check():
-    """What this computer has for Commander Table, in plain words. Returns True when it can run."""
+    """What this computer has for Spellbook Table, in plain words. Returns True when it can run."""
     ok = True
     def line(good, text, fix=''):
         print(f"  [{'ok' if good else '!!'}] {text}" + (f"\n       {fix}" if fix and not good else ''))
-    print(f'\nCommander Table self-check ({platform.system()} {platform.release()}, Python {platform.python_version()})\n')
+    print(f'\nSpellbook Table self-check ({platform.system()} {platform.release()}, Python {platform.python_version()})\n')
     good = sys.version_info >= (3, 8)
     line(good, 'Python 3.8 or newer', 'Install a newer Python (python.org, or your package manager), then run start.sh again.')
     ok &= good
     good = os.path.isfile(os.path.join(ROOT, 'index.html'))
-    line(good, 'Game files found (public/index.html)', 'Keep server.py inside the Commander Table folder, next to "public".')
+    line(good, 'Game files found (public/index.html)', 'Keep server.py inside the Spellbook Table folder, next to "public".')
     ok &= good
     try:
         os.makedirs(DATA, exist_ok=True)
@@ -787,7 +787,7 @@ def self_check():
             s = socket.socket(); s.bind(('127.0.0.1', port)); s.close(); free = port; break
         except OSError:
             continue
-    line(free is not None, f'A free port for the game ({free})' if free else 'A free port for the game (8777-8790)', 'Close other copies of Commander Table, or start with --port <number>.')
+    line(free is not None, f'A free port for the game ({free})' if free else 'A free port for the game (8777-8790)', 'Close other copies of Spellbook Table, or start with --port <number>.')
     ok &= free is not None
     lan = None
     for port in range(8800, 8821):
@@ -818,7 +818,7 @@ def self_check():
 
 
 def main():
-    ap = argparse.ArgumentParser(description='Commander Table local server')
+    ap = argparse.ArgumentParser(description='Spellbook Table local server')
     ap.add_argument('--port', type=int, default=0, help='port for the game (default: first free one from 8777)')
     ap.add_argument('--no-browser', action='store_true', help="don't open a browser window")
     ap.add_argument('--check', action='store_true', help='check this computer for what the game needs, then exit')
@@ -826,7 +826,7 @@ def main():
     if args.check:
         sys.exit(0 if self_check() else 1)
     if not os.path.isdir(ROOT):
-        sys.exit('The "public" folder was not found next to server.py. Keep this file in the Commander Table folder.')
+        sys.exit('The "public" folder was not found next to server.py. Keep this file in the Spellbook Table folder.')
     for d in (CACHE, DATA):
         try:
             os.makedirs(d, exist_ok=True)
@@ -840,9 +840,9 @@ def main():
         except OSError:
             continue
     if not srv:
-        sys.exit('No free port between 8777 and 8790. Is Commander Table already running?')
+        sys.exit('No free port between 8777 and 8790. Is Spellbook Table already running?')
     url = f'http://localhost:{srv.server_address[1]}/'
-    print(f'\n  Commander Table is running at {url}\n  Press Ctrl+C to stop.\n')
+    print(f'\n  Spellbook Table is running at {url}\n  Press Ctrl+C to stop.\n')
     if not args.no_browser:
         open_browser(url)
     try:

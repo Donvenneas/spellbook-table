@@ -1,4 +1,4 @@
-# Commander Table roadmap
+# Spellbook Table roadmap
 
 Work list for the overnight build. Each work session takes the next unchecked items in order, builds and tests
 them, then ticks them off here with a one-line note. Only free options: no paid services, accounts or certificates.
@@ -14,7 +14,7 @@ LOCK: none
 - Game folder: the folder this file is in. All code is under `public/` (the game), `launcher/` (the .exe, built by `launcher\build.ps1`) and `server.ps1` (the start.bat server). Keep both servers in step when an endpoint changes.
 - Never use Microsoft Edge. Never add paid services, sign-ups, analytics or trackers. Never get around a website's bot protection (Moxfield blocks downloads; use EDHTop16 or the bookmarklet instead).
 - Keep the folder free of personal information: no usernames, emails, computer names, home paths or IP addresses in any file. `data/` holds private browser profiles and is never shared.
-- Test every change: run `Commander Table.exe --no-window`, open http://localhost:8777 in the browser pane, run games at full speed (create a `Game` with a clock of `{ beat: async () => {} }`) and check for "Simulator error" log lines. Stop every `Commander Table` and `cloudflared` process you started before finishing.
+- Test every change: run `Spellbook Table.exe --no-window`, open http://localhost:8777 in the browser pane, run games at full speed (create a `Game` with a clock of `{ beat: async () => {} }`) and check for "Simulator error" log lines. Stop every `Spellbook Table` and `cloudflared` process you started before finishing.
 - After each finished item: tick it here with a short note, update README.md where users need to know, rebuild the .exe if `launcher/` changed, and finally run `make-shareable-zip.ps1`.
 
 ## Items
@@ -95,7 +95,7 @@ LOCK: none
 - [x] 31. Update button that pulls a new version of the game files without touching data/ (free source only, for example a GitHub release URL the user sets; never automatic).
   - Done: "Updates…" on the setup screen: paste an https .zip address (a GitHub release download, for example), "Download and check" shows its VERSION and file count, "Install" asks first, copies everything except data\, backs up each replaced file to data\update\backup-<time>, and renames the running .exe to .old (deleted on the next start). In the .exe, server.ps1 and server.py. New VERSION file (1.1.0).
 - [x] 32. Mac and Linux host version: a small cross-platform server with the same endpoints (Python standard library only), plus start scripts.
-  - Done: server.py (Python 3.8+, standard library only) with every endpoint, including online seats on 8800–8820 and the Cloudflare tunnel (downloads the right cloudflared for Mac/Linux on first use); opens Chrome, Firefox, Brave, Vivaldi, Chromium or Safari, never Edge. start.sh and "Start Commander Table.command" (macOS). Tested here on Windows with Python 3.13: all endpoints, a full game, and the update installer.
+  - Done: server.py (Python 3.8+, standard library only) with every endpoint, including online seats on 8800–8820 and the Cloudflare tunnel (downloads the right cloudflared for Mac/Linux on first use); opens Chrome, Firefox, Brave, Vivaldi, Chromium or Safari, never Edge. start.sh and "Start Spellbook Table.command" (macOS). Tested here on Windows with Python 3.13: all endpoints, a full game, and the update installer.
 
 ## Round 2 (asked for 2026-10-29: "yes 1-23", free options only)
 
@@ -1244,7 +1244,7 @@ on top of the ones above:
 - [x] 137. Friends at 1v1 and Limited tables: test the friend page with two seats and fix what breaks (untested in 56–60).
   - Done (tested, nothing needed fixing in the page): a Standard table with a friend seat played through server.py
     with a friend tab: two boards, the friend's questions, the game to the end, and a best-of-three into game 2.
-    Limited uses the same two-seat path (not played separately). Found while testing: the Commander Table.exe in the
+    Limited uses the same two-seat path (not played separately). Found while testing: the Spellbook Table.exe in the
     folder was older than the per-seat join keys (friend links read code=undefined); rebuilt. An old server.ps1 left
     running by an earlier session (Nov 4) still holds port 8777 and answers with the old API; it was left alone.
 - [x] 138. Tabletop with 3–4 friends tested and fixed (untested in item 76); save and load a tabletop.
@@ -1473,7 +1473,7 @@ on top of the ones above:
 - [ ] 177. CI on more systems: build the .exe and test it and server.ps1 on a Windows runner; run server.py's --check
   and the self-test on macOS and Ubuntu runners (closes item 52's "untested on a real Mac or Linux").
   - Done, not yet run: selftest.yml now runs server.py's --check and the self-test on Ubuntu and macOS (a matrix), and
-    a Windows job builds Commander Table.exe and runs the self-test against it and against server.ps1. Written and
+    a Windows job builds Spellbook Table.exe and runs the self-test against it and against server.ps1. Written and
     checked by eye only: the branch isn't pushed, so GitHub hasn't run the new jobs. (server.py --check passes here.)
 - [x] 178. Local bug reports: "Report a problem" saves the replay, log, version and console errors into
   data\bugs\<time>.zip with personal details stripped, for the user to share by hand. Nothing is uploaded.
@@ -1534,6 +1534,10 @@ chat or model can take any item). Reproductions: `node tests/audit-probes.mjs` (
   - Done: 1.32.0. Design tokens at the top of `public/css/style.css` (colors, the five mana colors, card-type colors, type, spacing, radius, shadow, motion); the old one-off start menu, builder, deck-chart and button styles were removed rather than overridden. Fonts are bundled in `public/fonts` (Cinzel, Inter, JetBrains Mono, SIL Open Font License, licenses beside them): nothing is loaded from a font service and the security policy is unchanged. Start menu: a dashboard with Play/Resume, your record (counted from the game history), the four newest library decks, and the modes in four groups, with icons drawn for the game. Top bar: the same controls in groups (windows, game, view, settings). Deck builder: card gallery with name and cost under each card, sharper pictures on dense screens, a words-only card face while a picture loads or when it fails, copies-in-deck badges, a docked card inspector (opens over the page from the magnifier on narrow screens), sort order, filters that search as they change, a commander banner with its color identity, live mana curve, color pips and card types (`public/js/deckcharts.js`, shared with the deck viewer), format checks (size, commander, copies, color identity, sideboard), foldable type sections, and Search / Deck tabs on phones. Deck viewer: stat tiles and the same charts. Reduced motion is respected from the system setting as well as Display. No game rule, endpoint, saved data or replay format changed; every element id the code and the tour use is kept. New English strings on the dashboard and in the builder are not yet in the other six languages.
 
 ## Round 8 (from `DESIGN-ROADMAP.md`: design, interface and accessibility)
+
+### Name and icon
+- [x] 495. Rename the project to Spellbook Table, with a new program icon in the spirit of a robed figure holding an open spellbook (asked 2026-11-21).
+  - Done: 1.68.0. `Spellbook Table.exe` (built from `launcher/SpellbookTable.cs`), the window, tray, pages, help, docs and the shareable zip use the new name. The icon is drawn for the game in `launcher/icon.ps1` (an armoured figure with a glowing open book on golden clouds; the taskbar and tray sizes show the book alone) and is also the page's favicon. Internal ids are unchanged so old replays, puzzles, challenge codes, update addresses and saved data keep working (`app: 'commander-table'`, the `X-Commander-Table` header, the release file `commander-table.zip`). Not connected to Commander Spellbook; the README says so.
 
 ### Skins
 - [x] 395-494. One hundred skin improvements (asked 2026-11-21: "implement all 100"; listed and ticked in DESIGN-ROADMAP.md section S).

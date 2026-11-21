@@ -1,16 +1,16 @@
 ---
 name: test-commander-table
-description: Test a change to Commander Table end to end - start the local server, run the self-test page (endpoint checks, 50 fast games, rules check, Kingdoms games) in the browser pane, run extra targeted games, and clean up processes. Use after any change to public/, the servers or the launcher, and before ticking a ROADMAP item.
+description: Test a change to Spellbook Table end to end - start the local server, run the self-test page (endpoint checks, 50 fast games, rules check, Kingdoms games) in the browser pane, run extra targeted games, and clean up processes. Use after any change to public/, the servers or the launcher, and before ticking a ROADMAP item.
 ---
 
-# Testing Commander Table
+# Testing Spellbook Table
 
 ## 1. Start the server
 
 From the game folder, in the background:
 
 ```powershell
-Start-Process -FilePath ".\Commander Table.exe" -ArgumentList "--no-window"
+Start-Process -FilePath ".\Spellbook Table.exe" -ArgumentList "--no-window"
 ```
 
 It serves http://localhost:8777. If the port is busy, an earlier copy is still running: reuse it, or stop it first (step 5).
@@ -78,7 +78,7 @@ tunnel, or a server you did not start).
 Stop everything you started:
 
 ```powershell
-Get-Process "Commander Table", cloudflared -ErrorAction SilentlyContinue | Stop-Process -Force
+Get-Process "Spellbook Table", cloudflared -ErrorAction SilentlyContinue | Stop-Process -Force
 ```
 
 Also stop any `py server.py` / PowerShell server you started.

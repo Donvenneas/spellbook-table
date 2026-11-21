@@ -1,5 +1,5 @@
 # Every push to any branch: the type check and the Node tests (item 216). Pull requests, pushes to main and manual
-# runs also get the self-test page against server.py on Linux and macOS, and against Commander Table.exe and
+# runs also get the self-test page against server.py on Linux and macOS, and against Spellbook Table.exe and
 # server.ps1 on Windows (item 177). The self-test page (endpoint checks, 50 fast games, the 20-game rules check,
 # 10 Kingdoms games) runs in headless Chromium.
 name: Self-test
@@ -128,7 +128,7 @@ jobs:
         run: python tests/selftest_ci.py --url http://localhost:8777 --page uitest.html --timeout 300
 
   windows:
-    # (item 177) build Commander Table.exe and run the self-test against it, then against server.ps1 (start.bat's server)
+    # (item 177) build Spellbook Table.exe and run the self-test against it, then against server.ps1 (start.bat's server)
     if: github.event_name != 'push' || github.ref == 'refs/heads/main'
     runs-on: windows-latest
     timeout-minutes: 30
@@ -144,17 +144,17 @@ jobs:
           pip install playwright==1.49.1
           python -m playwright install chromium
 
-      - name: Build Commander Table.exe
+      - name: Build Spellbook Table.exe
         shell: pwsh
         run: powershell -ExecutionPolicy Bypass -File launcher\build.ps1
 
-      - name: Self-test against Commander Table.exe
+      - name: Self-test against Spellbook Table.exe
         shell: pwsh
         run: |
-          $p = Start-Process -FilePath '.\Commander Table.exe' -ArgumentList '--no-window' -PassThru
+          $p = Start-Process -FilePath '.\Spellbook Table.exe' -ArgumentList '--no-window' -PassThru
           $up = $false
           for ($i = 0; $i -lt 30 -and -not $up; $i++) { try { Invoke-WebRequest -UseBasicParsing http://localhost:8777/ | Out-Null; $up = $true } catch { Start-Sleep 1 } }
-          if (-not $up) { throw 'Commander Table.exe did not answer on port 8777' }
+          if (-not $up) { throw 'Spellbook Table.exe did not answer on port 8777' }
           try { python tests/selftest_ci.py --url http://localhost:8777; if ($LASTEXITCODE) { throw 'self-test failed (.exe)' }
                 python tests/selftest_ci.py --url http://localhost:8777 --page uitest.html --timeout 300; if ($LASTEXITCODE) { throw 'interface test failed (.exe)' } }
           finally { Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue }

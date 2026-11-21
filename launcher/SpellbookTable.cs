@@ -1,4 +1,4 @@
-// Commander Table desktop app.
+// Spellbook Table desktop app.
 // Runs the same local server as server.ps1 (static files, deck-site proxy, Comprehensive Rules cache,
 // exit endpoint) inside this program, opens the game in its own browser window (never Microsoft Edge), and shuts
 // everything down when that window closes. A tray icon offers Open and Exit as a fallback.
@@ -15,15 +15,15 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 
-[assembly: System.Reflection.AssemblyTitle("Commander Table")]
-[assembly: System.Reflection.AssemblyProduct("Commander Table")]
+[assembly: System.Reflection.AssemblyTitle("Spellbook Table")]
+[assembly: System.Reflection.AssemblyProduct("Spellbook Table")]
 [assembly: System.Reflection.AssemblyDescription("Watch AI pilots play Magic: The Gathering Commander")]
 [assembly: System.Reflection.AssemblyVersion("1.0.0.0")]
 
-static class CommanderTable
+static class SpellbookTable
 {
     // (item 204) An honest client name for every site: the game never poses as a web browser
-    const string UA = "CommanderTable/1.0 (local deck viewer; no browser)";
+    const string UA = "SpellbookTable/1.0 (local deck viewer; no browser)";
     // (item 201) What the game's pages may load and call: their own files, Scryfall, Commander Spellbook and MTGJSON
     const string CSP = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://*.scryfall.io; media-src 'self' data: blob:; connect-src 'self' https://api.scryfall.com https://*.scryfall.io https://backend.commanderspellbook.com https://mtgjson.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'";
     // (item 202) The most a friend's page may send in one request (a 200,000-character decklist fits)
@@ -92,7 +92,7 @@ static class CommanderTable
 
         if (!Directory.Exists(Root))
         {
-            MessageBox.Show("The \"public\" folder wasn't found next to Commander Table.exe.\n\nKeep the program in the same folder as the game files. If you opened it from inside a .zip file, extract the whole zip first (right-click it, then Extract All…) and run Commander Table.exe from the extracted folder.", "Commander Table", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show("The \"public\" folder wasn't found next to Spellbook Table.exe.\n\nKeep the program in the same folder as the game files. If you opened it from inside a .zip file, extract the whole zip first (right-click it, then Extract All…) and run Spellbook Table.exe from the extracted folder.", "Spellbook Table", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
         // On a read-only drive the rules cache can't be refreshed, but the copy that came with the folder still works
@@ -106,7 +106,7 @@ static class CommanderTable
 
             if (!StartServer())
             {
-                MessageBox.Show("Commander Table couldn't start its local server (ports 8777–8790 are all busy).", "Commander Table", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Spellbook Table couldn't start its local server (ports 8777–8790 are all busy).", "Spellbook Table", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             try { File.WriteAllText(Path.Combine(DataDir, "running-url.txt"), Url); } catch { }
@@ -167,7 +167,7 @@ static class CommanderTable
         if (browser == null)
         {
             try { Clipboard.SetText(url); } catch { }
-            MessageBox.Show("Commander Table runs in a web browser, and the only one found is Microsoft Edge, which it doesn't use.\n\nOpen " + url + " in any other browser (the address is on your clipboard), or install a free browser such as Firefox or Chrome and start Commander Table again.\n\nTo quit, use Exit in the game or the tray icon by the clock.", "Commander Table", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("Spellbook Table runs in a web browser, and the only one found is Microsoft Edge, which it doesn't use.\n\nOpen " + url + " in any other browser (the address is on your clipboard), or install a free browser such as Firefox or Chrome and start Spellbook Table again.\n\nTo quit, use Exit in the game or the tray icon by the clock.", "Spellbook Table", MessageBoxButtons.OK, MessageBoxIcon.Information);
             return false;
         }
         var name = Path.GetFileName(browser).ToLowerInvariant();
@@ -249,13 +249,13 @@ static class CommanderTable
     static void SetupTray()
     {
         var menu = new ContextMenuStrip();
-        menu.Items.Add("Open Commander Table", null, (s, e) => OpenWindow(Url));
+        menu.Items.Add("Open Spellbook Table", null, (s, e) => OpenWindow(Url));
         menu.Items.Add(new ToolStripSeparator());
         menu.Items.Add("Exit", null, (s, e) => Quit());
         Tray = new NotifyIcon
         {
             Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath) ?? SystemIcons.Application,
-            Text = "Commander Table",
+            Text = "Spellbook Table",
             ContextMenuStrip = menu,
             Visible = true,
         };
@@ -315,7 +315,7 @@ static class CommanderTable
             // Other websites' pages can send simple requests to localhost; only the game's own page may use /api/
             // (the browser marks cross-site requests with Origin and Sec-Fetch-Site; HttpListener already
             // refuses Host headers other than localhost, which stops DNS rebinding)
-            if (path.StartsWith("/api/") && Foreign(req)) { SendText(ctx, 403, "Only the Commander Table page on this computer can use this."); return; }
+            if (path.StartsWith("/api/") && Foreign(req)) { SendText(ctx, 403, "Only the Spellbook Table page on this computer can use this."); return; }
             if (path.StartsWith("/api/room/"))
             {
                 var r = Room(req.HttpMethod, path, req.QueryString["seat"], req.QueryString["code"], ReadBody(req.InputStream, req.ContentLength64), true);
@@ -345,7 +345,7 @@ static class CommanderTable
                 if (req.HttpMethod != "POST" || req.Headers["X-Commander-Table"] != "exit") SendText(ctx, 400, "Use the Exit button in the app.");
                 else
                 {
-                    SendText(ctx, 200, "Commander Table has shut down.");
+                    SendText(ctx, 200, "Spellbook Table has shut down.");
                     // Let the page show its goodbye message, then close the window and quit
                     new Thread(() => { Thread.Sleep(1200); Quit(); }) { IsBackground = true }.Start();
                 }
@@ -442,7 +442,7 @@ static class CommanderTable
     // ---------- updates, only when asked: download a zip of a newer version from an address the user
     // chose (a GitHub release, for example), then copy its files over this folder. data\ is never touched,
     // every replaced file is first backed up to data\update\backup-<time>, and the running program is
-    // renamed to "Commander Table.exe.old" so the new one can take its place after a restart.
+    // renamed to "Spellbook Table.exe.old" so the new one can take its place after a restart.
     static readonly object UpdateLock = new object();
     static string LocalVersion() { var f = Path.Combine(AppDir, "VERSION"); return File.Exists(f) ? File.ReadAllText(f).Trim() : "unknown"; }
     static void Update(HttpListenerContext ctx)
@@ -549,7 +549,7 @@ static class CommanderTable
                     var n = e.FullName.Replace('\\', '/');
                     if (n.EndsWith("public/index.html") && (prefix == null || n.Length < prefix.Length + 17)) prefix = n.Substring(0, n.Length - "public/index.html".Length);
                 }
-                if (prefix == null || prefix.Split('/').Length > 2) return "That zip doesn't look like Commander Table (no public/index.html in it).";
+                if (prefix == null || prefix.Split('/').Length > 2) return "That zip doesn't look like Spellbook Table (no public/index.html in it).";
                 foreach (var e in zip.Entries)
                 {
                     var n = e.FullName.Replace('\\', '/');
@@ -931,7 +931,7 @@ static class CommanderTable
     // ---------- internet play: a free Cloudflare quick tunnel (no account, no payment)
     // It gives the friends-only server above a public https address like https://word-word.trycloudflare.com.
     // cloudflared.exe is Cloudflare's official tool; it's downloaded once from Cloudflare's GitHub releases,
-    // its digital signature is checked, and it only runs while Commander Table does.
+    // its digital signature is checked, and it only runs while Spellbook Table does.
     static string TunnelStatus = "off", TunnelUrl = "", TunnelError = "";
     static Process Tunnel;
     const string CloudflaredUrl = "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-windows-amd64.exe";
@@ -990,7 +990,7 @@ static class CommanderTable
         }) { IsBackground = true }.Start();
     }
 
-    // A Windows job object that ends the tunnel tool whenever Commander Table ends, even if it crashes
+    // A Windows job object that ends the tunnel tool whenever Spellbook Table ends, even if it crashes
     // or is force-closed (JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE)
     [System.Runtime.InteropServices.DllImport("kernel32.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode)]
     static extern IntPtr CreateJobObject(IntPtr attrs, string name);

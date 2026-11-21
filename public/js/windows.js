@@ -125,7 +125,7 @@ export async function showImages(msg = '') {
     $('imgBody').textContent = `${numText(r.files)} images, ${(r.bytes / 1048576).toFixed(0)} MB of ${r.capMB >= 1000 ? `${(r.capMB / 1000).toFixed(1)} GB` : `${r.capMB} MB`}.${msg ? ` ${msg}` : ''}`;
     $('imgCap').value = String(r.capMB);
     if (!$('imgCap').value) $('imgCap').insertAdjacentHTML('beforeend', `<option value="${r.capMB}" selected>${r.capMB} MB</option>`);
-  } catch { $('imgBody').textContent = 'Restart Commander Table to see the image folder here.'; }
+  } catch { $('imgBody').textContent = 'Restart Spellbook Table to see the image folder here.'; }
 }
 $('imgCap').addEventListener('change', async e => {
   await fetch('/api/imgcache', { method: 'POST', headers: { 'X-Commander-Table': 'images' }, body: /** @type {HTMLSelectElement} */ (e.target).value }).catch(() => {});

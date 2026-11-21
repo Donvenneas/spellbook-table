@@ -58,8 +58,8 @@ const good = () => ({ app: 'commander-table', version: REPLAY_FORMAT, seed: 42, 
 await test('Replay files: damaged, foreign and missing-field files are refused with a reason, a good one passes', async () => {
   eq(replayShapeProblem(good(), 4), '', 'a good file');
   const cases = [
-    [null, /isn't a Commander Table replay/], ['text', /isn't a Commander Table replay/], [[], /isn't a Commander Table replay/],
-    [{ ...good(), app: 'other' }, /isn't a Commander Table replay/], [{ ...good(), seats: good().seats.slice(0, 3) }, /isn't a Commander Table replay/],
+    [null, /isn't a Spellbook Table replay/], ['text', /isn't a Spellbook Table replay/], [[], /isn't a Spellbook Table replay/],
+    [{ ...good(), app: 'other' }, /isn't a Spellbook Table replay/], [{ ...good(), seats: good().seats.slice(0, 3) }, /isn't a Spellbook Table replay/],
     [{ ...good(), seats: [null, ...good().seats.slice(1)] }, /a seat has no deck/], [{ ...good(), seed: '42' }, /no game seed/],
     [{ ...good(), decisions: 'x' }, /answers are not a list/], [{ ...good(), cards: [] }, /card data is not readable/],
   ];

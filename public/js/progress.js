@@ -1,5 +1,5 @@
 // Your progress, all offline and kept in the browser profile (inside the game folder's data\ when
-// started from Commander Table.exe): the ranked ladder against the AI, daily and weekly challenges
+// started from Spellbook Table.exe): the ranked ladder against the AI, daily and weekly challenges
 // with a streak, and badges. Nothing is bought or spent: badges are only for show.
 import { store } from './util.js';
 

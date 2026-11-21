@@ -8,7 +8,7 @@ Open `index.html` through `node design/skins/tools/serve.mjs` (http://localhost:
 | `assets/fonts/` | Cinzel Decorative, Cormorant Garamond, Marcellus, Marcellus SC, Metamorphous, IM Fell English SC, Spectral | https://fonts.google.com/ | SIL Open Font License 1.1 (ship the licence text with the fonts) |
 | `assets/fonts/special-elite.woff2` | Special Elite | https://fonts.google.com/specimen/Special+Elite | Apache 2.0 |
 | `assets/icons/` | 18 icons | https://game-icons.net/ (Lorc, Delapouite and other contributors), via the `@iconify-json/game-icons` package | CC BY 3.0: credit in Help |
-| `assets/frames/` | Frames, plaques, rings, sockets, gear, dial, vials, buttons, divider, filigree | Drawn for Commander Table by `tools/make-assets.mjs` | Ours |
+| `assets/frames/` | Frames, plaques, rings, sockets, gear, dial, vials, buttons, divider, filigree | Drawn for Spellbook Table by `tools/make-assets.mjs` | Ours |
 
 Rebuild the drawn art (and copy icons out of a downloaded `icons.json`):
 

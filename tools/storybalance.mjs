@@ -27,7 +27,7 @@ async function fetchNames(names) {
   const need = [...new Set(names.map(n => n.toLowerCase()))].filter(n => !cache[n]);
   for (let i = 0; i < need.length; i += 75) {
     const r = await fetch('https://api.scryfall.com/cards/collection', {
-      method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json', 'User-Agent': 'CommanderTable-tune/1.0' },
+      method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json', 'User-Agent': 'SpellbookTable-tune/1.0' },
       body: JSON.stringify({ identifiers: need.slice(i, i + 75).map(n => ({ name: n })) }),
     });
     if (!r.ok) throw new Error(`Scryfall ${r.status}`);

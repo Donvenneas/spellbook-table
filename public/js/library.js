@@ -11,7 +11,7 @@ const VERSIONS = 'ct.libVersions';
 
 export async function listDecks() {
   const r = await fetch('/api/library');
-  if (!r.ok) throw new Error(r.status === 404 ? 'Restart Commander Table to use the deck library' : `The library answered ${r.status}`);
+  if (!r.ok) throw new Error(r.status === 404 ? 'Restart Spellbook Table to use the deck library' : `The library answered ${r.status}`);
   return (await r.json()).sort((a, b) => a.name.localeCompare(b.name));
 }
 

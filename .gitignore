@@ -5,6 +5,7 @@
 public/roles/
 
 # Build outputs (rebuild with launcher\build.ps1 and make-shareable-zip.ps1)
+Spellbook Table.exe
 Commander Table.exe
 *.old
 *.zip

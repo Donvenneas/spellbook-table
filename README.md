@@ -1,18 +1,20 @@
-# Commander Table
+# Spellbook Table
 
 Watch four AI pilots play a game of Magic: The Gathering Commander in real time, or take a seat and play against them.
 
+Spellbook Table was called Commander Table until 1.68.0. It is not connected to Commander Spellbook, the combo database it reads combos from. If you update an older copy, start `Spellbook Table.exe` from then on; the old `Commander Table.exe` can be deleted. Your decks, settings and saves stay in `data/`.
+
 ## Run it
 
-Double-click **`Commander Table.exe`**. It opens the game in its own window, with no browser tabs or command window. You can pin it to the taskbar or Start menu.
+Double-click **`Spellbook Table.exe`**. It opens the game in its own window, with no browser tabs or command window. You can pin it to the taskbar or Start menu.
 
 - The first time you open it, Windows may show "Windows protected your PC", because the program isn't digitally signed. Click **More info**, then **Run anyway**. You only need to do this once.
-- **Which browser it uses:** Commander Table never uses Microsoft Edge.
+- **Which browser it uses:** Spellbook Table never uses Microsoft Edge.
   - It opens in your default browser, or, if that's Edge, in another installed browser.
   - Chrome, Brave, Vivaldi and Chromium open a tab-free app window. Firefox opens its own window.
   - Either way it uses a private profile in the `data` folder, so it never touches your everyday browsing, history or logins.
   - To choose a browser yourself, start the program with `--browser="C:\path\to\firefox.exe"`. You can add that to a shortcut's Target.
-  - If Edge is the only browser on the PC, Commander Table puts the game's address on your clipboard to open in any other browser.
+  - If Edge is the only browser on the PC, Spellbook Table puts the game's address on your clipboard to open in any other browser.
 - To quit, close the window or click **Exit** in the top bar. A tray icon by the clock also has **Open** and **Exit**.
 - Opening the program again while it's running just opens another window on the same game.
 - Keep the .exe in this folder, next to `public` and `cache`.
@@ -36,8 +38,8 @@ It uses the C# compiler that comes with Windows, so nothing needs installing.
 The whole game lives in this one folder, so you can move or copy it anywhere: another folder, a USB stick, a cloud drive, or another computer. Nothing is installed, and nothing outside the folder is needed.
 
 - **What the other PC needs:** Windows 10 or 11 (which includes .NET Framework 4, the only other thing the program needs), a web browser other than Microsoft Edge (such as Chrome, Firefox or Brave), and an internet connection for card images and deck imports.
-- **To move it:** copy the whole `MTG AI Arena` folder, or use the ready-made zip, `Commander Table (portable).zip`, next to it in Downloads. Extract the zip first (right-click it, then **Extract All…**), then open `Commander Table.exe` inside the extracted folder. Running the .exe from inside the zip doesn't work.
-- **Keep the folder together.** `Commander Table.exe` needs `public` and `cache` beside it. To start it from the desktop, make a shortcut instead of moving the .exe.
+- **To move it:** copy the whole `MTG AI Arena` folder, or use the ready-made zip, `Spellbook Table (portable).zip`, next to it in Downloads. Extract the zip first (right-click it, then **Extract All…**), then open `Spellbook Table.exe` inside the extracted folder. Running the .exe from inside the zip doesn't work.
+- **Keep the folder together.** `Spellbook Table.exe` needs `public` and `cache` beside it. To start it from the desktop, make a shortcut instead of moving the .exe.
 - **Your settings travel with it.** The app keeps its window settings (seats, decks, theme) and the internet-play tool in a `data` folder inside this one. Copy the folder with `data` to bring them along. Leave `data` out, as the zip does, to start fresh or to share the game with a friend.
 - **On a new PC,** Windows shows "Windows protected your PC" once: click **More info**, then **Run anyway**. If the folder came from a download, you can also right-click the zip, choose **Properties** and tick **Unblock** before extracting.
 - **Read-only places** (a write-protected USB stick or a network share without write access) still work. Settings are then kept in that PC's AppData instead, and the bundled copy of the rules is used.
@@ -48,7 +50,7 @@ The whole game lives in this one folder, so you can move or copy it anywhere: an
 `server.py` is the same local server written in Python, using only its standard library (Python 3.8 or newer, which macOS and most Linux systems already have). It has everything the .exe has: deck imports, rules, the card image cache, the deck library, updates, online seats and internet play.
 
 - **Linux:** in a terminal, in this folder, run `sh start.sh`.
-- **macOS:** double-click **Start Commander Table.command**. If macOS won't open it, run `chmod +x "Start Commander Table.command"` once in Terminal, or use `sh start.sh`.
+- **macOS:** double-click **Start Spellbook Table.command**. If macOS won't open it, run `chmod +x "Start Spellbook Table.command"` once in Terminal, or use `sh start.sh`.
 - Either way the game opens in Chrome, Firefox, Brave, Vivaldi, Chromium or Safari (never Microsoft Edge). Close the terminal window, or click **Exit**, to stop it.
 - `python3 server.py --no-browser --port 8777` runs just the server.
 - `sh start.sh --check` (or `python3 server.py --check`) checks the computer first: Python version, the game files, write access to the `data` folder, free ports, a browser, and the internet connection, each with what to do if it's missing. (Tested on Windows; the Mac and Linux browser detection hasn't been tried on those systems yet.)
@@ -72,7 +74,7 @@ After a deck has been loaded once, it loads without an internet connection:
 **Updates…** on the setup screen installs a newer version from an address you choose, such as a GitHub release's download link for a zip of this folder. Nothing is checked or installed by itself.
 1. Paste the https address and click **Download and check**. It shows the version in the zip (from its `VERSION` file) and how many files it has. It also shows the zip's SHA-256: when a checksum is published next to it (`<address>.sha256`, as every GitHub release of this game has from 1.18.0), the download must match it or nothing is installed.
 2. **Install** copies the files over this folder. The `data` folder is never touched, and every file it replaces is backed up to `data\update\backup-<date>` first.
-3. Restart Commander Table to finish.
+3. Restart Spellbook Table to finish.
 
 Only use an address you trust: an update replaces the game's code.
 
@@ -106,7 +108,7 @@ The game folder contains no personal information: no names, accounts, email addr
 **What stays on your PC:**
 - The `data` folder, created when you first run the program, holds the game window's private browser profile (your seat setup, theme, game history, what each deck's AI has learned, and saved card data), your deck library (`data\decks`), cached card images (`data\images`), update backups, the internet-play tool, and the address of the running game.
 - Nothing in `data` is needed to play. Leave it out when you share the game.
-- **`make-shareable-zip.ps1`** builds `Commander Table (portable).zip` without `data`, and refuses to build if any file mentions your Windows user name, computer name or home folder:
+- **`make-shareable-zip.ps1`** builds `Spellbook Table (portable).zip` without `data`, and refuses to build if any file mentions your Windows user name, computer name or home folder:
 
       powershell -ExecutionPolicy Bypass -File make-shareable-zip.ps1
 
@@ -126,7 +128,7 @@ The game folder contains no personal information: no names, accounts, email addr
 
 Like any website you visit, these services see your internet address, but no account or personal details. The game doesn't load web fonts or anything else from Google: its three typefaces (Cinzel, Inter and JetBrains Mono, all under the SIL Open Font License) are files in `public/fonts`, with their licenses beside them.
 
-**Skin credits:** the skins' typefaces (Cinzel Decorative, Metamorphous, Marcellus SC and IM Fell English SC, SIL Open Font License) are in `public/skins/fonts` with their licenses. Their textures come from [ambientCG](https://ambientcg.com/) (CC0). Their zone and phase icons are from [game-icons.net](https://game-icons.net/) by Lorc, Delapouite and other contributors, under [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/). The frames, rings, plates, gears and dividers are drawn for Commander Table.
+**Skin credits:** the skins' typefaces (Cinzel Decorative, Metamorphous, Marcellus SC and IM Fell English SC, SIL Open Font License) are in `public/skins/fonts` with their licenses. Their textures come from [ambientCG](https://ambientcg.com/) (CC0). Their zone and phase icons are from [game-icons.net](https://game-icons.net/) by Lorc, Delapouite and other contributors, under [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/). The frames, rings, plates, gears and dividers are drawn for Spellbook Table.
 
 **Online play:**
 - Friends see only the game: seat names you typed, decks and the board.
@@ -233,7 +235,7 @@ In a one-on-one format, set **Match** to **Best of three**. The first player to 
   - All 26 roles are in: the King; Knights (Queen, Rightful Heir, Knight in Shining Armor, Field Marshal, Kingslayer); Assassins (Marksman, Priestess, Bear Trainer, Schemer, Thief); Bandits (Giant, Necromancer, Stalker, Wizard, Zealot); Renegades (Mimic, Sellsword, Cultist, Straw Man, Champion). The **Kingdoms rules** summary sits at the top of the table.
   - At the manual table nothing about the roles is automated beyond dealing them: players resolve abilities and check Victory and Defeat themselves, as with the printed cards.
   - **Role card art:** the role cards' pictures are official Magic card art (Wizards of the Coast and the artists named on each card), taken from your own copy of the role card PDF. They live in `public\roles` on this PC only: `make-shareable-zip.ps1` leaves them out, so a shared copy shows the roles as text.
-- **Challenge links:** **Challenge link…** packs this table's setup (format, match length, each seat's name, style, bracket and deck) into a link and a code. Nothing is stored online: everything is in the link. It opens on any PC running Commander Table (`http://localhost:8777/#challenge=…`), or paste the code into the same window and click **Open**.
+- **Challenge links:** **Challenge link…** packs this table's setup (format, match length, each seat's name, style, bracket and deck) into a link and a code. Nothing is stored online: everything is in the link. It opens on any PC running Spellbook Table (`http://localhost:8777/#challenge=…`), or paste the code into the same window and click **Open**.
 - **Deck builder:** **Deck builder** on the setup screen (or **Builder** on a loaded seat) opens a full-screen builder with three panels: the search and its card gallery, a card inspector, and the deck.
   - **Gallery:** each result shows the card with its name and mana cost under it, and a gold ×N badge when copies are in the deck. Click a card (or press Enter on it) to add a copy, or drag it into the deck. The filters search as soon as you change them, and **Sort** orders the results by best match, name, mana value, newest or power.
   - **Inspector:** point at a card in the results or in the deck (or move to it with Tab) to read it at full size, with its type, power and toughness, rules text and whether the simulator plays all of it; **Add to deck** and **Take one out** work from there. On a narrow window the inspector opens over the page from the magnifier on a card.
@@ -512,7 +514,7 @@ The Decklist Database's own lists are on Moxfield, which blocks downloads from p
 
 Friends can each take a seat from their own computer, tablet or phone, with nothing to install, either on your home network or **over the internet from anywhere**. The AI pilots play the other seats.
 
-1. Open Commander Table with **Commander Table.exe**, `start.bat`, or `server.py` on a Mac or Linux.
+1. Open Spellbook Table with **Spellbook Table.exe**, `start.bat`, or `server.py` on a Mac or Linux.
 2. In a seat's style menu, choose **A friend plays this seat (online)**. You can do this for as many seats as you like, and still play a seat yourself.
 3. To let friends bring their own decks, click **Open lobby…** first: friends who join see a lobby where they paste a decklist or pick one of the decks in your library, and you see what each one chose. Then load the decks. The **Invite** panel shows, for each friend's seat, a link, a **QR code** to scan with a phone, and a **join code** like `K7Q2XF9ABM-2`. Friends open the link, scan the code, or open the address shown and type the join code; then they enter a name and play. Every seat (and the spectators' link) has its own secret code, so nobody can look at another player's hand by editing their link, and the game stops answering after 30 wrong codes in a minute.
 4. Their decisions show in an action bar on their page, just like yours (pinned to the bottom with big buttons on a phone). Their own board sits at the bottom left, with the others clockwise. **Time for each decision** in the Invite panel sets how long they get (30 seconds to 10 minutes); after that the AI decides for them. **Invite** on the timeline reopens the panel; it shows who has joined.
@@ -531,14 +533,14 @@ Friends can each take a seat from their own computer, tablet or phone, with noth
 - **Check the connection** (in **Invite**) tests each friend address from this PC and the internet link through Cloudflare, says who has joined, and says what to fix when something fails (Windows Firewall, a Public network, guest Wi-Fi, a tunnel that went down). It can't see your router or a friend's device, so try your link on your own phone too.
 
 Good to know:
-- The first time you host, Windows may ask whether to allow Commander Table through the firewall. Allow it on **private networks**, or friends' links won't load.
+- The first time you host, Windows may ask whether to allow Spellbook Table through the firewall. Allow it on **private networks**, or friends' links won't load.
 - Each link carries a room code. The network server only serves the game page and that room. It can't use the deck downloader or shut the app down, and it stops when you quit.
 - **Over the internet**: click **Play over the internet** in the Invite panel.
   - It starts a free Cloudflare "quick tunnel", with no account and no payment, and adds an **Internet** link for each seat (`https://some-words.trycloudflare.com/...`). It works through home routers and mobile networks, with no port forwarding.
-  - The first time, Commander Table downloads Cloudflare's official `cloudflared.exe` (about 53 MB) from Cloudflare's GitHub releases. It checks the file is signed by Cloudflare, Inc., keeps it in the `data` folder (so it moves with the game), and after that starts the tunnel in a few seconds. (`start.bat` does the same; `server.py` downloads the Mac or Linux version.)
-  - The address changes each time Commander Table starts.
+  - The first time, Spellbook Table downloads Cloudflare's official `cloudflared.exe` (about 53 MB) from Cloudflare's GitHub releases. It checks the file is signed by Cloudflare, Inc., keeps it in the `data` folder (so it moves with the game), and after that starts the tunnel in a few seconds. (`start.bat` does the same; `server.py` downloads the Mac or Linux version.)
+  - The address changes each time Spellbook Table starts.
   - The tunnel only reaches the friend page and its room. Your own page, the deck downloader and Exit are all refused from the internet.
-  - The tunnel stops whenever Commander Table does, even if it crashes.
+  - The tunnel stops whenever Spellbook Table does, even if it crashes.
 
 ## cEDH
 
@@ -596,7 +598,7 @@ Replays saved from version 1.24.0 on keep everything the game was played with: e
 - A set's booster contents are saved after the first load, so drafts work offline. They're refreshed after 30 days.
 - Sets MTGJSON has no booster contents for use a fixed pack: a rare or mythic, a legendary card, three uncommons and nine commons.
 - **AI drafters** in 23 sets (Bloomburrow, Duskmourn, Foundations, Murders at Karlov Manor, Wilds of Eldraine, Dominaria United, March of the Machine, Outlaws of Thunder Junction, Modern Horizons 3, The Lost Caverns of Ixalan, Phyrexia: All Will Be One, The Brothers' War, Streets of New Capenna, Kamigawa: Neon Dynasty, Crimson Vow, Midnight Hunt, Adventures in the Forgotten Realms, Strixhaven, Kaldheim, Aetherdrift, Tarkir: Dragonstorm, Final Fantasy and Edge of Eternities) also weigh each card's real win rate (when drawn, from 150,000 Arena games). They only trust it for cards the simulator fully understands, so they don't take a card the AI can't actually play. In tests, decks drafted this way beat the old drafters' decks 59–37. In other sets they pick by removal, creature size for the cost and the curve, and avoid cards the simulator can't fully read (those drafters beat the older picks 72–56 in M21 drafts).
-  - The ratings come from **17Lands Public Data** (https://www.17lands.com/public_datasets), licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). Commander Table computes its own per-card summary from the first 150,000 games of each set's game data and ships it in `public/data/ratings`. They're built once by the developer tool `tools/ratings_17lands.py`; nothing is fetched from 17Lands while you play.
+  - The ratings come from **17Lands Public Data** (https://www.17lands.com/public_datasets), licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). Spellbook Table computes its own per-card summary from the first 150,000 games of each set's game data and ships it in `public/data/ratings`. They're built once by the developer tool `tools/ratings_17lands.py`; nothing is fetched from 17Lands while you play.
 - **Sealed:** six packs each for you and three AI players.
 - **Draft:** four players, three packs passed left, right, left; click the card you want, and the AI drafters take the rest, staying in their colors.
 - **Play** the decks one of two ways:
@@ -606,7 +608,7 @@ Replays saved from version 1.24.0 on keep everything the game was played with: e
 ### Cubes
 
 Choose **A cube** in Draft / Sealed to draft or open a cube instead of a set.
-- **Add a cube:** paste a CubeCobra link or cube ID (Commander Table reads CubeCobra's public card list), or paste a list with one card per line. Give it a name and click **Save cube**. You can keep as many cubes as you like; **Delete** removes one. Cubes are kept in the game folder's browser profile.
+- **Add a cube:** paste a CubeCobra link or cube ID (Spellbook Table reads CubeCobra's public card list), or paste a list with one card per line. Give it a name and click **Save cube**. You can keep as many cubes as you like; **Delete** removes one. Cubes are kept in the game folder's browser profile.
 - Packs are 15 cards dealt from the shuffled cube, so each card turns up at most once per draft. A draft needs 180 cards and sealed 360; a smaller cube makes the last packs short.
 - Card names Scryfall doesn't know are left out, and the status line says how many.
 - A cube without legendary creatures can only be played one on one.

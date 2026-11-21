@@ -1,5 +1,5 @@
 /* =========================================================================================
-   Commander Table: the Grimoire design system.
+   Spellbook Table: the Grimoire design system.
    Tokens first (color, type, space, radius, shadow, motion), then the screens. Every screen
    draws from these; a new component should need no new color.
    Fonts are bundled (public/fonts, SIL Open Font License): Cinzel for titles, Inter for

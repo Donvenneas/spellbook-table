@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Commander Table</title>
+  <title>Spellbook Table</title>
   <link rel="icon" href="favicon.ico">
   <link rel="preload" href="fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/cinzel.woff2" as="font" type="font/woff2" crossorigin>
@@ -34,7 +34,7 @@
     <header class="topbar">
     <div class="brand">
       <svg viewBox="0 0 24 24" class="logo" aria-hidden="true"><circle cx="12" cy="12" r="10.6" fill="none" stroke="currentColor" stroke-width=".8"/><path d="M12 5l6.66 4.84-2.55 7.82H7.89L5.34 9.84z" fill="none" stroke="currentColor" stroke-width="1" stroke-linejoin="round"/><path d="M12 5v7M18.66 9.84 12 12M16.11 17.66 12 12M7.89 17.66 12 12M5.34 9.84 12 12" stroke="currentColor" stroke-width=".6" opacity=".6"/><circle class="pw" cx="12" cy="5" r="1.7"/><circle class="pu" cx="18.66" cy="9.84" r="1.7"/><circle class="pb" cx="16.11" cy="17.66" r="1.7"/><circle class="pr" cx="7.89" cy="17.66" r="1.7"/><circle class="pg" cx="5.34" cy="9.84" r="1.7"/></svg>
-      <span>Commander Table</span>
+      <span>Spellbook Table</span>
       <span class="tag">AI playtester</span>
       <span id="netChip" class="net-chip" role="status" hidden title="Scryfall can't be reached: saved cards, decks and pictures still work">Offline</span>
     </div>
@@ -165,7 +165,7 @@
     <div class="sm-inner">
       <header class="sm-title">
         <svg viewBox="0 0 24 24" class="sm-logo" aria-hidden="true"><circle cx="12" cy="12" r="10.6" fill="none" stroke="currentColor" stroke-width=".8"/><path d="M12 5l6.66 4.84-2.55 7.82H7.89L5.34 9.84z" fill="none" stroke="currentColor" stroke-width="1" stroke-linejoin="round"/><path d="M12 5v7M18.66 9.84 12 12M16.11 17.66 12 12M7.89 17.66 12 12M5.34 9.84 12 12" stroke="currentColor" stroke-width=".6" opacity=".6"/><circle class="pw" cx="12" cy="5" r="1.7"/><circle class="pu" cx="18.66" cy="9.84" r="1.7"/><circle class="pb" cx="16.11" cy="17.66" r="1.7"/><circle class="pr" cx="7.89" cy="17.66" r="1.7"/><circle class="pg" cx="5.34" cy="9.84" r="1.7"/></svg>
-        <h1>Commander Table</h1>
+        <h1>Spellbook Table</h1>
         <p class="muted" id="smTagline">Play Magic against AI pilots, with friends, or on your own.</p>
         <div class="orn" aria-hidden="true"><i></i></div>
       </header>
@@ -264,7 +264,7 @@
             <button class="btn ghost" id="btnPrecons" title="The official preconstructed Commander decks, from MTGJSON">Commander precons…</button>
             <button class="btn ghost" id="btnMeta" title="Real tournament decks from EDHTop16 and archetypes from the cEDH Decklist Database">Browse the cEDH meta…</button>
             <button class="btn ghost" id="btnChallenge" title="Share this table setup as a link or code, or open one">Challenge link…</button>
-            <button class="btn ghost" id="btnLoadReplay" title="Open a replay file saved from Commander Table">Load replay…</button>
+            <button class="btn ghost" id="btnLoadReplay" title="Open a replay file saved from Spellbook Table">Load replay…</button>
             </div>
           </span>
           <span class="menu">
@@ -443,7 +443,7 @@
       <div class="modal-head">
         <div>
           <h2>Invite players</h2>
-          <p class="muted">Send each friend the link for their seat. They open it in any browser (computer, tablet or phone) on the same Wi-Fi or network as this PC; nothing to install. The game starts right away, and each seat's decisions wait for its player. If someone doesn't answer within two minutes, the AI decides for them. If the link doesn't load, allow Commander Table through Windows Firewall on private networks.</p>
+          <p class="muted">Send each friend the link for their seat. They open it in any browser (computer, tablet or phone) on the same Wi-Fi or network as this PC; nothing to install. The game starts right away, and each seat's decisions wait for its player. If someone doesn't answer within two minutes, the AI decides for them. If the link doesn't load, allow Spellbook Table through Windows Firewall on private networks.</p>
         </div>
         <button class="btn ghost" id="btnInviteClose">Done</button>
       </div>
@@ -598,7 +598,7 @@
     <div class="modal-card results-card display-card">
       <h2>Updates</h2>
       <p>This version: <b id="updVersion">…</b></p>
-      <p class="muted">Paste the address of a .zip with a newer Commander Table (for example a GitHub release download link). Nothing is checked or installed automatically; only use an address you trust, because its files replace the game's code. Your data folder (decks, history, settings) is never touched, and every replaced file is backed up to data\update first.</p>
+      <p class="muted">Paste the address of a .zip with a newer Spellbook Table (for example a GitHub release download link). Nothing is checked or installed automatically; only use an address you trust, because its files replace the game's code. Your data folder (decks, history, settings) is never touched, and every replaced file is backed up to data\update first.</p>
       <input id="updUrl" aria-label="Update address" class="input" placeholder="https://github.com/…/releases/latest/download/Commander-Table.zip" autocomplete="off" spellcheck="false">
       <p id="updStatus" class="muted"></p>
       <h3>Card sets</h3>
@@ -658,7 +658,7 @@
   <div id="challengeModal" class="modal" hidden>
     <div class="modal-card results-card display-card">
       <h2>Challenge links</h2>
-      <p class="muted">A challenge is this table's setup (format, match length, each seat's name, style, bracket and deck) packed into a link or a code. Nothing is stored online: everything is in the text. Anyone running Commander Table can open the link on their PC, or paste the code here.</p>
+      <p class="muted">A challenge is this table's setup (format, match length, each seat's name, style, bracket and deck) packed into a link or a code. Nothing is stored online: everything is in the text. Anyone running Spellbook Table can open the link on their PC, or paste the code here.</p>
       <div class="disp-row disp-block"><button class="btn primary" id="btnChallengeMake">Make a challenge from this table</button></div>
       <label class="disp-row disp-block">Link <input id="challengeLink" class="input" readonly style="width:100%"></label>
       <label class="disp-row disp-block">Code <textarea id="challengeCode" class="input" rows="3" style="width:100%" spellcheck="false" placeholder="Paste a challenge code or link here, then click Open"></textarea></label>
@@ -774,8 +774,8 @@
 
   <div id="exitModal" class="modal" hidden>
     <div class="modal-card results-card">
-      <h2>Exit Commander Table?</h2>
-      <p class="muted">This stops the current game and shuts down Commander Table. To play again later, open Commander Table (or run start.bat).</p>
+      <h2>Exit Spellbook Table?</h2>
+      <p class="muted">This stops the current game and shuts down Spellbook Table. To play again later, open Spellbook Table (or run start.bat).</p>
       <div class="modal-foot">
         <button class="btn ghost" id="btnExitCancel">Keep playing</button>
         <button class="btn primary big danger" id="btnExitConfirm">Exit</button>
@@ -784,8 +784,8 @@
   </div>
 
   <div id="goodbye" class="goodbye" hidden>
-    <h1>Commander Table has shut down</h1>
-    <p class="muted" id="goodbyeMsg">To play again, open Commander Table (or run start.bat).</p>
+    <h1>Spellbook Table has shut down</h1>
+    <p class="muted" id="goodbyeMsg">To play again, open Spellbook Table (or run start.bat).</p>
   </div>
 
   <footer class="credit" aria-label="Credits">Card images and data © Wizards of the Coast, provided by Scryfall. Comprehensive Rules © Wizards of the Coast. This fan-made tool isn't affiliated with or endorsed by Wizards of the Coast.</footer>

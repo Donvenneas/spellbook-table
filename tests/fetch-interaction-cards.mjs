@@ -8,7 +8,7 @@ const keep = ['id', 'oracle_id', 'name', 'layout', 'mana_cost', 'cmc', 'type_lin
 const pick = (o, ks) => Object.fromEntries(ks.filter(k => o[k] !== undefined).map(k => [k, o[k]]));
 for (let i = 0; i < names.length; i += 75) {
   const r = await fetch('https://api.scryfall.com/cards/collection', {
-    method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json', 'User-Agent': 'CommanderTable-tests/1.0' },
+    method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json', 'User-Agent': 'SpellbookTable-tests/1.0' },
     body: JSON.stringify({ identifiers: names.slice(i, i + 75).map(name => ({ name })) }),
   });
   if (!r.ok) throw new Error(`Scryfall answered ${r.status}`);

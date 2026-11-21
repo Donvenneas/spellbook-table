@@ -16,7 +16,7 @@ const QUERY = {
 
 async function gql(id, variables) {
   const r = await fetch('/api/edhtop16', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ query: null, variables, extensions: { 'pastoria-id': id } }) });
-  if (!r.ok) throw new Error(r.status === 404 ? 'Restart Commander Table to load EDHTop16 data' : `EDHTop16 answered ${r.status}`);
+  if (!r.ok) throw new Error(r.status === 404 ? 'Restart Spellbook Table to load EDHTop16 data' : `EDHTop16 answered ${r.status}`);
   const j = await r.json();
   if (j.errors?.length) throw new Error(`EDHTop16: ${j.errors[0].message || j.errors[0]}`);
   return j.data;

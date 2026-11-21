@@ -13,7 +13,7 @@ export class Room {
   // A seat's join code: its own secret key, then the seat number (spectators: 0), like "K7Q2XF9ABM-2".
   // Each seat has its own key, so changing the seat number in a link doesn't open another player's hand.
   joinCode(seat) { return `${this.keys[seat] || ''}-${seat + 1}`; }
-  // Opens the room for the given seat numbers; returns false if this isn't running in Commander Table.exe
+  // Opens the room for the given seat numbers; returns false if this isn't running in Spellbook Table.exe
   // keys: { seat: key } to reopen a room with the same join codes (a resumed game, item 140)
   async open(seats, keys = null) {
     this.seats = seats;

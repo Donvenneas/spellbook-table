@@ -15,7 +15,8 @@ let cur = null, section = '';
 for (const line of block.slice(1)) {
   const h = line.match(/^### (.+)/);
   if (h) { section = h[1].trim(); continue; }
-  const m = line.match(/^- \[(x| )\] (\d+)\. (.*)$/);
+  // (a range such as "395-494." counts as its first number)
+  const m = line.match(/^- \[(x| )\] (\d+)(?:-\d+)?\. (.*)$/);
   if (m) {
     // (a short item keeps its "Done:" note on the same line)
     const [title, done = ''] = m[3].split(/\s+Done(?: \([^)]*\))?:\s+/);

@@ -1,4 +1,4 @@
-# Commander Table: audit and fix roadmap (Round 6)
+# Spellbook Table: audit and fix roadmap (Round 6)
 
 Audit of version 1.31.0 (branch `replay-exactness`, commit `d9c00d9`), done 2026-11-13.
 This file is self-contained: a new chat or another model can pick up any item from it without the audit conversation.
@@ -23,7 +23,7 @@ Rules that matter for almost every engine item:
 | Check | Result |
 |---|---|
 | 13 Node suites (cards, golden, interactions, fuzz, replay, loops, combos, mana, replacements, stack, abilities, hidden, typecheck) | all pass |
-| Browser self-test against `Commander Table.exe` | 19 of 19 checks pass, 0 simulator errors, 6/6 deterministic |
+| Browser self-test against `Spellbook Table.exe` | 19 of 19 checks pass, 0 simulator errors, 6/6 deterministic |
 | About 50 rules probes written for this audit | 16 fail (kept in `tests/audit-probes.mjs`); the ones that passed were dropped |
 | Reader scan of the 3,500-card snapshot | about 280 cards counted as fully read have text that is silently not used |
 | `server.py` read in full; `server.ps1` and the launcher compared on their safeguards | findings 199 to 204 |
@@ -57,7 +57,7 @@ one repairs.
 
 - [x] **198. Repository clean-up.** (S)
   - Done: the three tracked files are removed, `__pycache__/` is ignored, the stale zip is deleted; worktrees and branches are left for the owner.
-  - Problem: files in git that shouldn't be: two empty files named `${x.a.iid}` and `${x.target}` in the root (a shell redirect accident in commit `89f198c`), and `__pycache__/server.cpython-313.pyc`. Not in git but stale: `Commander Table (portable).zip` in the game folder dated 11-07 (the script now writes the zip next to the folder), two old worktrees under `.claude/worktrees/`, branches `round5`, `claude/eager-roentgen-28567b`, `claude/trusting-hertz-0ba9c0`.
+  - Problem: files in git that shouldn't be: two empty files named `${x.a.iid}` and `${x.target}` in the root (a shell redirect accident in commit `89f198c`), and `__pycache__/server.cpython-313.pyc`. Not in git but stale: `Spellbook Table (portable).zip` in the game folder dated 11-07 (the script now writes the zip next to the folder), two old worktrees under `.claude/worktrees/`, branches `round5`, `claude/eager-roentgen-28567b`, `claude/trusting-hertz-0ba9c0`.
   - Fix: `git rm` the three tracked files, add `__pycache__/` to `.gitignore`, delete the stale zip. Ask the owner before removing worktrees and branches.
   - Done when: `git ls-files` shows none of them and `make-shareable-zip.ps1` still builds.
 
@@ -86,7 +86,7 @@ one repairs.
 
 - [x] **202. The three servers disagree on limits.** (S)
   - Done: one body limit (262,144 bytes) and a 413 answer in all three servers, resolved-path compare, redirects kept on the allowed hosts, control characters escaped in `Js()` (`tests/servers.mjs` asks a running server).
-  - Problem: the friends' server reads at most 65,536 bytes of a request body in `Commander Table.exe` (`LanClient`) and `server.ps1`, but 2 MB in `server.py`, while the deck endpoint accepts 200,000 characters. On Windows a friend's deck or sideboard answer over 64 KB is cut off silently. Smaller things: `server.py`'s friend server refuses `/index.html` by exact text, so `/INDEX.HTML` or `/./index.html` gets through (harmless today because every host-only call is refused, but not what the comment says); `/api/fetch` follows redirects off the allowed-host list; the launcher's `Js()` doesn't escape control characters other than newline.
+  - Problem: the friends' server reads at most 65,536 bytes of a request body in `Spellbook Table.exe` (`LanClient`) and `server.ps1`, but 2 MB in `server.py`, while the deck endpoint accepts 200,000 characters. On Windows a friend's deck or sideboard answer over 64 KB is cut off silently. Smaller things: `server.py`'s friend server refuses `/index.html` by exact text, so `/INDEX.HTML` or `/./index.html` gets through (harmless today because every host-only call is refused, but not what the comment says); `/api/fetch` follows redirects off the allowed-host list; the launcher's `Js()` doesn't escape control characters other than newline.
   - Fix: one limit (200,000 bytes plus headroom, for example 262,144) in all three; answer 413 instead of truncating; compare the resolved path, not the text; refuse redirects that leave `ALLOWED_HOSTS`; escape `\u0000` to `\u001f` in `Js()`. Rebuild the .exe.
   - Done when: a 150 KB deck posted to each friends' server arrives whole, and a probe script shows the same answers from all three for the cases above.
 
@@ -96,9 +96,9 @@ one repairs.
   - Done when: an update whose bytes differ from the published checksum is refused on all three servers, and the tunnel refuses a `cloudflared` whose digest doesn't match.
 
 - [x] **204. Decision for the owner: the Moxfield path.** (S)
-  - Done (honest client name only): every proxied request says `CommanderTable/<version>`. The Moxfield attempt is kept; removing it is still the owner's choice.
+  - Done (honest client name only): every proxied request says `SpellbookTable/<version>`. The Moxfield attempt is kept; removing it is still the owner's choice.
   - Problem: the hard rule says never get around a site's bot protection and names Moxfield ("use EDHTop16 or the bookmarklet instead"). `decks.js` still tries `api2.moxfield.com` through `/api/fetch`, the proxy sends a desktop-browser `User-Agent`, and Moxfield's hosts are on all three allow lists.
-  - Fix: decide. Either remove the Moxfield hosts and the two `proxied(...)` attempts and go straight to the bookmarklet message, or keep the attempt but send an honest `User-Agent` (`CommanderTable/<version>`) to every site. The honest `User-Agent` is worth doing either way.
+  - Fix: decide. Either remove the Moxfield hosts and the two `proxied(...)` attempts and go straight to the bookmarklet message, or keep the attempt but send an honest `User-Agent` (`SpellbookTable/<version>`) to every site. The honest `User-Agent` is worth doing either way.
   - Done when: the choice is written in README's deck-loading section and the three servers match.
 
 ## Phase C: rules engine and card reading
@@ -204,7 +204,7 @@ one repairs.
 ## Appendix: how the evidence was produced
 
 - Suites: every command under "Testing" in `CLAUDE.md`, run once on 2026-11-13 with Node 26.
-- Self-test: `Commander Table.exe --no-window`, then `http://localhost:8777/selftest.html?run` in the built-in browser pane.
+- Self-test: `Spellbook Table.exe --no-window`, then `http://localhost:8777/selftest.html?run` in the built-in browser pane.
 - Probes: boards built with `tests/scenario.mjs`; a probe passes only when the board ends the way the Comprehensive Rules say. The ones that passed were dropped (commander tax and damage, infect, legend rule, Blood Moon, Null Rod, Cursed Totem, Rule of Law, Drannith Magistrate, Thalia, Panharmonicon, Grafdigger's Cage, cleanup, summoning sickness, storm, tokens leaving play, protection and Auras, Elesh Norn, vehicles, fetch lands and others).
 - Reader scan: for each snapshot card with no unread line, a phrase in the card text is compared with what the reader produced. It is word matching: each hit needs a look before it is called a bug. The "you control" family in particular is mostly harmless for AI seats.
 - Servers: `server.py` read top to bottom; for `server.ps1` and `launcher/CommanderTable.cs` only the matching safeguards were compared (origin checks, custom headers, key checks, rate limit, body limits, path checks). A full read of the launcher (1,067 lines) is still worth doing under item 202.

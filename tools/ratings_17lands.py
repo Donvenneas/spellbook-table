@@ -24,7 +24,7 @@ csv.field_size_limit(10_000_000)
 
 
 def build(code, max_games):
-    req = urllib.request.Request(URL.format(set=code), headers={'User-Agent': 'CommanderTable-ratings/1.0'})
+    req = urllib.request.Request(URL.format(set=code), headers={'User-Agent': 'SpellbookTable-ratings/1.0'})
     t0 = time.time()
     with urllib.request.urlopen(req, timeout=120) as resp, gzip.open(resp, 'rt', encoding='utf-8', newline='') as f:
         rows = csv.reader(f)
@@ -49,7 +49,7 @@ def build(code, max_games):
     data = {
         'set': code, 'games': games, 'average': round(total_wins / max(1, games), 4), 'cards': cards,
         'source': '17Lands Public Data, ' + URL.format(set=code),
-        'license': 'CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). Changes: per-card win rate when in the opening hand or drawn, computed by Commander Table from the first %d games of the file.' % games,
+        'license': 'CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). Changes: per-card win rate when in the opening hand or drawn, computed by Spellbook Table from the first %d games of the file.' % games,
     }
     os.makedirs(OUT, exist_ok=True)
     with open(os.path.join(OUT, code + '.json'), 'w', encoding='utf-8') as out:

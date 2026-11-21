@@ -48,7 +48,7 @@ export function snapshotDecks(decks) {
 // (Phase 2O) Is this a replay file at all, with the fields a restore reads in the right shape? A damaged or foreign file
 // is refused here with a plain reason, before anything about the current table changes. seats: how many the format has.
 export function replayShapeProblem(data, seats) {
-  const foreign = "That isn't a Commander Table replay file";
+  const foreign = "That isn't a Spellbook Table replay file";
   if (!data || typeof data !== 'object' || Array.isArray(data) || data.app !== 'commander-table') return foreign;
   if (!Array.isArray(data.seats) || data.seats.length !== seats) return foreign;
   if (data.seats.some(s => !s || typeof s !== 'object' || typeof s.deck !== 'string')) return 'The replay file is damaged: a seat has no deck';
@@ -62,7 +62,7 @@ export function replayShapeProblem(data, seats) {
 // problems: reasons it can't be loaded at all (damaged card data, rules newer than this app); notes: what may differ.
 export function checkReplay(data) {
   const problems = [], notes = [];
-  if ((data.rules ?? 4) > RULES) problems.push(`it was played under rules version ${data.rules}, newer than this app's (${RULES}). Update Commander Table to load it`);
+  if ((data.rules ?? 4) > RULES) problems.push(`it was played under rules version ${data.rules}, newer than this app's (${RULES}). Update Spellbook Table to load it`);
   if (!data.cards || !data.hashes) {
     notes.push(`This replay was saved before replays kept their own card data (replay format ${data.version ?? 1}, before ${REPLAY_FORMAT}). It is rebuilt with today's Scryfall card data and today's Commander Spellbook combos, so if either has changed since, it can play differently from the original game.`);
     return { exact: false, problems, notes };

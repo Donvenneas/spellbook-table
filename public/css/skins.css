@@ -3,7 +3,7 @@
    and the Grimoire look in style.css stays as it is. A skin is a dark look: main.js keeps data-theme="dark"
    while one is on. Each skin sets the Grimoire tokens plus its own --sk-* values; the shared rules below
    draw the frames, buttons and portrait rings from those values.
-   Textures: ambientCG (CC0). Frames, rings, plates, gear: drawn for Commander Table (design/skins/tools/make-assets.mjs).
+   Textures: ambientCG (CC0). Frames, rings, plates, gear: drawn for Spellbook Table (design/skins/tools/make-assets.mjs).
    Fonts: SIL Open Font License, licence texts in public/skins/fonts.
    ========================================================================================= */
 @font-face { font-family: "Cinzel Decorative"; src: url("../skins/fonts/cinzel-decorative-700.woff2") format("woff2"); font-weight: 700; font-display: swap; }

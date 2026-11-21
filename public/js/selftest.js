@@ -52,7 +52,7 @@ async function run() {
 
   await check('The game files load', async () => {
     const { r, text } = await get('/index.html');
-    expect(r.ok && text.includes('Commander Table'), `HTTP ${r.status}`);
+    expect(r.ok && text.includes('Spellbook Table'), `HTTP ${r.status}`);
     return 'index.html';
   });
   await check('Comprehensive Rules (/api/rules)', async () => {

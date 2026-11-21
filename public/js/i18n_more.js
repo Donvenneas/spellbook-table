@@ -70,7 +70,7 @@ export const NEW5 = {
   'Same as the table': ['Igual que la mesa', 'Comme la table', 'Wie der Tisch', 'Igual à mesa', 'Come il tavolo', 'テーブルと同じ'],
   'Random each game': ['Al azar en cada partida', 'Au hasard à chaque partie', 'Zufällig in jeder Partie', 'Aleatório a cada partida', 'Casuale a ogni partita', '対戦ごとにランダム'],
   'Seasonal touches': ['Detalles de temporada', 'Touches de saison', 'Jahreszeitliche Akzente', 'Toques sazonais', 'Tocchi stagionali', '季節の演出'],
-  'Welcome to Commander Table': ['Bienvenido a Commander Table', 'Bienvenue sur Commander Table', 'Willkommen bei Commander Table', 'Bem-vindo ao Commander Table', 'Benvenuto in Commander Table', 'Commander Table へようこそ'],
+  'Welcome to Spellbook Table': ['Bienvenido a Spellbook Table', 'Bienvenue sur Spellbook Table', 'Willkommen bei Spellbook Table', 'Bem-vindo ao Spellbook Table', 'Benvenuto in Spellbook Table', 'Spellbook Table へようこそ'],
   'Look': ['Aspecto', 'Apparence', 'Aussehen', 'Visual', 'Aspetto', '見た目'],
   "I'm new to Magic: teach me": ['Soy nuevo en Magic: enséñame', 'Je débute à Magic : apprenez-moi', 'Ich bin neu bei Magic: zeig es mir', 'Sou novo no Magic: me ensine', 'Sono nuovo di Magic: insegnami', 'マジックは初めて：教えて'],
   'Plain': ['Sencillo', 'Simple', 'Schlicht', 'Simples', 'Semplice', 'シンプル'],

@@ -72,7 +72,7 @@ function viewerHtml(data) {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${esc(data.title)} · Commander Table replay</title>
+<title>${esc(data.title)} · Spellbook Table replay</title>
 <style>
 :root { --bg: #0f1115; --panel: #181b22; --line: #2a2f3a; --text: #e8eaf0; --muted: #8b93a3; --good: #3ecf8e; --bad: #ff5d6c; color-scheme: dark; }
 @media (prefers-color-scheme: light) { :root { --bg: #eef0f4; --panel: #fff; --line: #d6dae2; --text: #1b1f27; --muted: #5d6573; color-scheme: light; } }
@@ -117,7 +117,7 @@ footer { color: var(--muted); font-size: 11.5px; padding: 6px 16px 16px; }
   <input type="range" id="pos" min="0" value="0"><span class="info" id="info"></span>
 </header>
 <main><section class="table" id="table"></section><aside id="log"></aside></main>
-<footer>A Commander Table replay. Card images load from Scryfall when you're online. ${data.winner != null ? `Winner: ${esc(data.players[data.winner].name)} (${esc(data.reason)}).` : ''}</footer>
+<footer>A Spellbook Table replay. Card images load from Scryfall when you're online. ${data.winner != null ? `Winner: ${esc(data.players[data.winner].name)} (${esc(data.reason)}).` : ''}</footer>
 <script id="data" type="application/json">${json}</script>
 <script>
 const D = JSON.parse(document.getElementById('data').textContent);

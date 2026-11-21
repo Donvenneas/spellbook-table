@@ -1,4 +1,4 @@
 @echo off
-title Commander Table
+title Spellbook Table
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0server.ps1" %*
 pause

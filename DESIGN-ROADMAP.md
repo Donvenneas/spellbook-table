@@ -1,4 +1,4 @@
-# Commander Table design roadmap (items 220 to 380)
+# Spellbook Table design roadmap (items 220 to 380)
 
 Work list for the look, the interface, interface features and accessibility, written on 2026-11-14 after the
 "Grimoire" redesign (item 219, version 1.32.0). It is self-contained: a session, or another model, can take any item
@@ -145,7 +145,7 @@ without the conversation that produced it. Rules fixes are in `AUDIT-ROADMAP.md`
 - [ ] **241. Error states with a retry.** (S) A shared `errorBox(message, retry)` for failed fetches (Scryfall,
   EDHTop16, Spellbook, Archidekt), saying whether the game works offline without it.
   - Progress (1.35.0): `errorBox(title, detail)` with a Try again button; used by the cEDH meta and the precon list, each saying what still works. Still to do: Scryfall searches outside the builder, Commander Spellbook, Archidekt imports.
-  - More (1.41.0): the deck library, saying where the decks are kept and that the game must be started from Commander Table.
+  - More (1.41.0): the deck library, saying where the decks are kept and that the game must be started from Spellbook Table.
 - [x] **242. Switches for on/off settings.** (S) Reveal hands, Explain, Follow, Sound, Ranked, Coach: styled
   checkbox switches with a visible state beyond the tick, `role="switch"`.
   - Done: 1.35.0 for the top bar: Reveal hands, Explain, Follow and Sound are drawn as switches (`role="switch"`, knob side and track color both change). Ranked, AI look-ahead and Coach on the setup screen are still plain checkboxes.
@@ -305,7 +305,7 @@ without the conversation that produced it. Rules fixes are in `AUDIT-ROADMAP.md`
   - Done: 1.40.0 for moving it: a grip (⠿, `#abGrip`) on the action bar drags it anywhere; arrow keys on the grip move it in steps and Home puts it back, as does a double-click. The place is kept in `prefs.barPos`, restored each time the bar appears and kept on screen when the window changes size. Its default place is unchanged (bottom center), and phones keep it pinned to the bottom edge. Docking it under your board by default is not done.
 - [x] **295. Clear "your move".** (S) When the game waits for a person: the action bar pulses once, the page
   title changes, the board edge lights, and the waiting reason is stated in one sentence.
-  - Done: 1.38.0. `yourMove()` in `human.js`: while a prompt waits, the body has `your-move` (the person's board gets a green edge), the tab title reads "● Your move · Commander Table", and the action bar arrives with a short rise and glow. The question in the bar was already a sentence. Works on the friend's page too.
+  - Done: 1.38.0. `yourMove()` in `human.js`: while a prompt waits, the body has `your-move` (the person's board gets a green edge), the tab title reads "● Your move · Spellbook Table", and the action bar arrives with a short rise and glow. The question in the bar was already a sentence. Works on the friend's page too.
 - [ ] **296. Targeting with lines.** (M) While you choose targets, draw the arrow from the spell to the card under
   the pointer, and dim what cannot be chosen (the shared target test from item 209 already decides legality).
 - [ ] **297. Combat assignment by drag.** (L) Drag attackers to a player, drag blockers onto attackers, with the

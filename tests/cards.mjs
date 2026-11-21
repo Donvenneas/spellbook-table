@@ -24,7 +24,7 @@ if (args.has('--fetch')) {
   const out = [];
   let url = 'https://api.scryfall.com/cards/search?order=edhrec&q=' + encodeURIComponent('legal:commander game:paper');
   for (let page = 1; url && page <= 20; page++) {
-    const r = await fetch(url, { headers: { Accept: 'application/json', 'User-Agent': 'CommanderTable-tests/1.0' } });
+    const r = await fetch(url, { headers: { Accept: 'application/json', 'User-Agent': 'SpellbookTable-tests/1.0' } });
     if (!r.ok) throw new Error(`Scryfall answered ${r.status}`);
     const j = await r.json();
     out.push(...j.data.map(keep));

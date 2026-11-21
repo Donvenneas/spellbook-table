@@ -16,7 +16,7 @@ globalThis.fetch = async (url, init = {}) => {
     const wait = Math.max(0, nextAt - Date.now());
     nextAt = Date.now() + wait + 500;
     if (wait) await new Promise(r => setTimeout(r, wait));
-    const r = await nodeFetch(url, { ...init, headers: { ...(init.headers || {}), 'User-Agent': 'CommanderTable-tools/1.0' } });
+    const r = await nodeFetch(url, { ...init, headers: { ...(init.headers || {}), 'User-Agent': 'SpellbookTable-tools/1.0' } });
     if (r.status === 429) throw new Error('Scryfall asked us to slow down: stopping (try again in a few minutes)');
     answers.set(key, { status: r.status, body: await r.text() });
   }

@@ -58,7 +58,7 @@ if (streamer) {
 if (watching) {
   document.querySelector('.topbar .tag').textContent = 'spectator';
   $('joinModal').querySelector('h2').textContent = 'Watch the game';
-  $('joinText').textContent = 'You\'re watching someone\'s Commander Table. You\'ll see every board, but nobody\'s hand. You can still chat.';
+  $('joinText').textContent = 'You\'re watching someone\'s Spellbook Table. You\'ll see every board, but nobody\'s hand. You can still chat.';
   $('btnJoin').textContent = 'Watch';
 }
 if (!code || Number.isNaN(seat)) {

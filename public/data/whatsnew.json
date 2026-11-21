@@ -1,7 +1,19 @@
 {
- "version": "1.67.0",
+ "version": "1.68.0",
  "round": "Round 8",
  "items": [
+  {
+   "n": 495,
+   "section": "Name and icon",
+   "title": "Rename the project to Spellbook Table, with a new program icon in the spirit of a robed figure holding an open spellbook (asked 2026-11-21).",
+   "done": "1.68.0."
+  },
+  {
+   "n": 395,
+   "section": "Skins",
+   "title": "One hundred skin improvements (asked 2026-11-21: \"implement all 100\"; listed and ticked in DESIGN-ROADMAP.md section S).",
+   "done": "1.67.0."
+  },
   {
    "n": 394,
    "section": "Skins",

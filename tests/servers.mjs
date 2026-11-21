@@ -1,7 +1,7 @@
 // The same answers from every server (items 201 and 202): run against a server that is already started.
 //   py server.py --no-browser --port 8795          then   node tests/servers.mjs http://localhost:8795
 //   powershell -File server.ps1 -Port 8796 -NoBrowser     node tests/servers.mjs http://localhost:8796
-//   "Commander Table.exe" --no-window                     node tests/servers.mjs http://localhost:8777
+//   "Spellbook Table.exe" --no-window                     node tests/servers.mjs http://localhost:8777
 // It opens a room with one online seat (and closes it again), so don't run it against a game in progress.
 const base = (process.argv[2] || 'http://localhost:8777').replace(/\/$/, '');
 const results = [];

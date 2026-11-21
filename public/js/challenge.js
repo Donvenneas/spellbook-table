@@ -1,6 +1,6 @@
 // Challenge links: a table setup (format, match length, each seat's name, style, bracket and deck
 // source) or a puzzle, packed into a link or a code. Nothing is stored anywhere: everything is in the
-// text, compressed (deflate) and written in URL-safe base64. Anyone running Commander Table opens it
+// text, compressed (deflate) and written in URL-safe base64. Anyone running Spellbook Table opens it
 // on their own PC (http://localhost:8777/#challenge=…), or pastes the code on the setup screen.
 const b64 = bytes => btoa(String.fromCharCode(...bytes)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 const unb64 = s => Uint8Array.from(atob(s.replace(/-/g, '+').replace(/_/g, '/') + '==='.slice((s.length + 3) % 4)), c => c.charCodeAt(0));

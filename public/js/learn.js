@@ -1,7 +1,7 @@
 // Per-deck memory: after every finished game, each deck remembers which of its cards it cast and whether
 // it won. Over many games (batch runs especially) cards that show up in wins more than the deck's
 // average get a small bonus when its AI pilot chooses what to cast, and cards seen mostly in losses a penalty.
-// Stored in the browser profile, which lives in the game folder's data/ when started from Commander Table.exe.
+// Stored in the browser profile, which lives in the game folder's data/ when started from Spellbook Table.exe.
 import { store } from './util.js';
 import { recordThreat, learnedThreat } from './threat.js';
 

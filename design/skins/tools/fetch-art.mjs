@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 
 const dir = join(dirname(fileURLToPath(import.meta.url)), "..", "_cardart");
 mkdirSync(dir, { recursive: true });
-const headers = { "User-Agent": "CommanderTable-SkinPreview/1.0", Accept: "application/json" };
+const headers = { "User-Agent": "SpellbookTable-SkinPreview/1.0", Accept: "application/json" };
 const wait = ms => new Promise(r => setTimeout(r, ms));
 
 // id -> [Scryfall query, want art crop too]

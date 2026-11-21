@@ -1,4 +1,4 @@
-# Builds "Commander Table (portable).zip" next to this folder, safe to share:
+# Builds "Spellbook Table (portable).zip" next to this folder, safe to share:
 #  • leaves out the data folder (your private browser profile, saved settings, the internet-play tool)
 #  • leaves out logs and temporary files
 #  • refuses to build if any file mentions this PC's user name, computer name or home folder
@@ -10,7 +10,7 @@ Add-Type -AssemblyName System.IO.Compression, System.IO.Compression.FileSystem
 if (Get-Command node -ErrorAction SilentlyContinue) { Push-Location $PSScriptRoot; try { & node tools\whatsnew.mjs; & node tools\help.mjs } finally { Pop-Location } }
 
 $root = $PSScriptRoot
-$zip  = Join-Path (Split-Path $root -Parent) 'Commander Table (portable).zip'
+$zip  = Join-Path (Split-Path $root -Parent) 'Spellbook Table (portable).zip'
 $top  = Split-Path $root -Leaf
 
 $files = Get-ChildItem -LiteralPath $root -Recurse -File -Force | Where-Object {

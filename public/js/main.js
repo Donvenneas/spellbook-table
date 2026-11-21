@@ -559,7 +559,7 @@ function newGame(opts = {}) {
   // Friends' seats: open the room (once), then start
   openRoom().then(ok => {
     if (game !== g) return;
-    if (!ok) { $('tlLabel').textContent = `Online seats need Commander Table.exe (${room.error})`; return; }
+    if (!ok) { $('tlLabel').textContent = `Online seats need Spellbook Table.exe (${room.error})`; return; }
     push();
     g.run();
   });
@@ -595,9 +595,9 @@ function showInvite() {
   $('inviteBody').innerHTML = `
     <div class="internet-box">
       ${room.tunnelUrl
-        ? `<b>Internet play is on.</b> <span class="muted">Friends anywhere can use the internet links below. The address changes each time Commander Table starts.</span>`
+        ? `<b>Internet play is on.</b> <span class="muted">Friends anywhere can use the internet links below. The address changes each time Spellbook Table starts.</span>`
         : `<button class="btn primary" id="btnInternet">Play over the internet</button>
-           <span class="muted" id="internetStatus">Home-network links work on the same Wi-Fi. For friends anywhere, this starts a free Cloudflare tunnel (no account needed). The first time, Commander Table downloads Cloudflare's official tunnel tool (about 60 MB).</span>`}
+           <span class="muted" id="internetStatus">Home-network links work on the same Wi-Fi. For friends anywhere, this starts a free Cloudflare tunnel (no account needed). The first time, Spellbook Table downloads Cloudflare's official tunnel tool (about 60 MB).</span>`}
     </div>
     <div class="conn-check"><button class="btn small" id="btnConnCheck">Check the connection</button> <span id="connCheck" class="muted">Tests each friend address from this PC, and the internet link through Cloudflare.</span></div>
     <label class="decision-time">Time for each decision
@@ -661,11 +661,11 @@ async function connectionCheck() {
   };
   const rows = [];
   const add = (ok, what, fix = '') => rows.push(`<div class="cc-row ${ok ? 'ok' : 'bad'}">${ok ? '✔' : '✘'} ${what}${!ok && fix ? `<div class="muted small">${fix}</div>` : ''}</div>`);
-  add(await reach('/api/room/status'), 'Commander Table is running on this PC', 'Start Commander Table again.');
+  add(await reach('/api/room/status'), 'Spellbook Table is running on this PC', 'Start Spellbook Table again.');
   if (!room.code) add(false, 'No room is open', 'Seat a friend (A friend plays this seat) or press Spectators first.');
   else {
     if (!room.ips.length) add(false, 'No home-network address', 'This PC isn\'t on a network: connect to Wi-Fi or a cable.');
-    for (const ip of room.ips) add(await reach(`http://${ip}:${room.port}/play.html`), `Friends' port answers at ${ip}:${room.port}`, 'Something on this PC blocks it: allow Commander Table (or Python / PowerShell) through Windows Firewall for private networks.');
+    for (const ip of room.ips) add(await reach(`http://${ip}:${room.port}/play.html`), `Friends' port answers at ${ip}:${room.port}`, 'Something on this PC blocks it: allow Spellbook Table (or Python / PowerShell) through Windows Firewall for private networks.');
     if (room.ips.length) rows.push('<div class="muted small">If friends on the same Wi-Fi still can\'t open the link: check the network is set to Private in Windows, that their device isn\'t on a guest network (guest Wi-Fi keeps devices apart), and try the link on your own phone.</div>');
     if (room.tunnelUrl) add(await reach(`${room.tunnelUrl}/play.html`, 12000), 'The internet link works through Cloudflare', 'The tunnel is down: close this window and press Play over the internet again (the address changes). A school or work network may block it.');
     else rows.push('<div class="muted small">Internet play is off. For friends elsewhere, press Play over the internet: no router setup needed.</div>');
@@ -707,7 +707,7 @@ $('tlInvite').addEventListener('click', async () => {
   if (!game) return;
   // A game without friends' seats: open a room just for spectators
   if (await openRoom([-1, -2])) pushView();
-  else $('tlLabel').textContent = `Spectator links need Commander Table.exe (${room.error})`;
+  else $('tlLabel').textContent = `Spectator links need Spellbook Table.exe (${room.error})`;
 });
 // ---------- chat and emotes between everyone at an online table (friends, spectators and you)
 const chatLog = [];
@@ -1003,7 +1003,7 @@ async function loadReplayData(data, { resume = false } = {}) {
       if (rep.notSaved.length) notes.push(`${rep.notSaved.length} card${rep.notSaved.length === 1 ? ' was' : 's were'} not in the replay's saved data and came from today's card data: ${rep.notSaved.slice(0, 5).join(', ')}${rep.notSaved.length > 5 ? '…' : ''}.`);
       if (rep.differs.length) notes.push(`Scryfall's data has changed since this game for ${rep.differs.slice(0, 5).join(', ')}${rep.differs.length > 5 ? ` and ${rep.differs.length - 5} more` : ''}; the replay uses the cards as they were.`);
       const changed = readingChanges(data, seats.map(s => s.deck));
-      if (changed.length) notes.push(`This version of Commander Table reads ${changed.length} card${changed.length === 1 ? '' : 's'} differently from the version that saved the replay (${changed.slice(0, 5).join(', ')}${changed.length > 5 ? '…' : ''}), so the game can play differently from there.`);
+      if (changed.length) notes.push(`This version of Spellbook Table reads ${changed.length} card${changed.length === 1 ? '' : 's'} differently from the version that saved the replay (${changed.slice(0, 5).join(', ')}${changed.length > 5 ? '…' : ''}), so the game can play differently from there.`);
     }
     $('setupStatus').textContent = '';
     $('setup').hidden = true;
@@ -1336,7 +1336,7 @@ $('btnUpdates').addEventListener('click', async () => {
   $('updStatus').textContent = '';
   try {
     const r = await fetch('/api/update');
-    if (!r.ok) throw new Error(r.status === 404 ? 'Restart Commander Table to use updates.' : `HTTP ${r.status}`);
+    if (!r.ok) throw new Error(r.status === 404 ? 'Restart Spellbook Table to use updates.' : `HTTP ${r.status}`);
     const j = await r.json();
     $('updVersion').textContent = j.version;
     if (j.url && !$('updUrl').value) $('updUrl').value = j.url;
@@ -1369,7 +1369,7 @@ $('btnUpdApply').addEventListener('click', async () => {
     const j = await r.json();
     $('updVersion').textContent = j.version;
     $('updStatus').textContent = j.changed
-      ? `Installed: ${j.changed} file${j.changed === 1 ? '' : 's'} updated (the old ones are in ${j.backup}). Close Commander Table and start it again to finish.`
+      ? `Installed: ${j.changed} file${j.changed === 1 ? '' : 's'} updated (the old ones are in ${j.backup}). Close Spellbook Table and start it again to finish.`
       : 'Every file was already up to date.';
   } catch (err) { $('updStatus').textContent = `The update didn't install: ${err.message}`; }
 });
@@ -1911,7 +1911,7 @@ const moxScript = `(async()=>{try{const id=location.pathname.split('/').filter(B
 const d=await(await fetch('https://api2.moxfield.com/v3/decks/all/'+id)).json();const b=d.boards||{};
 const rows=s=>Object.values((b[s]||{}).cards||{}).map(c=>c.quantity+' '+c.card.name);
 const t=['Commander',...rows('commanders'),'','Deck',...rows('mainboard')].join('\\n');
-try{await navigator.clipboard.writeText(t);alert('Copied '+(d.name||'the deck')+'. Paste it into a Commander Table seat.')}
+try{await navigator.clipboard.writeText(t);alert('Copied '+(d.name||'the deck')+'. Paste it into a Spellbook Table seat.')}
 catch(e){const a=document.createElement('textarea');a.value=t;a.style.cssText='position:fixed;inset:10%;z-index:99999;width:80%;height:80%';document.body.append(a);a.select();alert('Press Ctrl+C to copy the selected decklist.')}}
 catch(e){alert('Could not read this deck: '+e.message)}})()`;
 $('moxBookmarklet').href = `javascript:${encodeURIComponent(moxScript.replace(/\n/g, ''))}`;
@@ -2498,7 +2498,7 @@ function renderPuzzles() {
 }
 // extra: newGame options (a lesson's coach and after step, a chapter's); say: where to show progress
 async function startPuzzle(pz, extra = {}, say = t => { $('puzzleStatus').textContent = t; }) {
-  if (!validPuzzle(pz)) throw new Error("That isn't a Commander Table puzzle");
+  if (!validPuzzle(pz)) throw new Error("That isn't a Spellbook Table puzzle");
   const format = FORMATS[pz.format] ? pz.format : 'commander';
   const decks = [];
   for (const [i, spec] of pz.players.entries()) {
@@ -2571,7 +2571,7 @@ $('btnPeSave').addEventListener('click', () => { const pz = peRead(); store('ct.
 $('btnPeLink').addEventListener('click', async () => {
   const pz = peRead();
   const link = challengeLink(await encodeChallenge({ puzzle: pz }));
-  try { await navigator.clipboard.writeText(link); $('peStatus').textContent = 'Challenge link copied: it opens this puzzle on any PC running Commander Table.'; } catch { $('peStatus').textContent = link; }
+  try { await navigator.clipboard.writeText(link); $('peStatus').textContent = 'Challenge link copied: it opens this puzzle on any PC running Spellbook Table.'; } catch { $('peStatus').textContent = link; }
 });
 $('puzzleFile').addEventListener('change', async e => {
   const file = e.target.files[0];
@@ -2835,7 +2835,7 @@ async function renderLibrary() {
   if (!body.children.length) body.innerHTML = loadingRows(5);
   try { libraryDecks = await listDecks(); } catch (err) {
     $('libraryStatus').textContent = err.message;
-    body.innerHTML = errorBox("Couldn't read the deck library", `${err.message}. Decks are files in the game folder's data\\decks; the game has to be started from Commander Table for it to read them.`);
+    body.innerHTML = errorBox("Couldn't read the deck library", `${err.message}. Decks are files in the game folder's data\\decks; the game has to be started from Spellbook Table for it to read them.`);
     body.querySelector('[data-retry]')?.addEventListener('click', () => renderLibrary());
     return;
   }
@@ -3508,7 +3508,7 @@ $('btnExitConfirm').addEventListener('click', async () => {
   $('exitModal').hidden = true;
   let ok = false;
   try { ok = (await fetch('/api/exit', { method: 'POST', headers: { 'X-Commander-Table': 'exit' } })).ok; } catch { /* server already gone */ }
-  if (!ok) $('goodbyeMsg').textContent = "Commander Table didn't answer, so it may already be stopped. If its window is still open, close it.";
+  if (!ok) $('goodbyeMsg').textContent = "Spellbook Table didn't answer, so it may already be stopped. If its window is still open, close it.";
   $('goodbye').hidden = false;
 });
 
@@ -3636,7 +3636,7 @@ Rules.load().then(() => {
     if (!$('rulesSearch').value) { $('rulesSearch').value = '903'; }
     searchRules();
   } else {
-    $('rulesMeta').textContent = `Couldn't load the Comprehensive Rules: ${Rules.error}. Open the game with Commander Table.exe (or start.bat) so it can download them.`;
+    $('rulesMeta').textContent = `Couldn't load the Comprehensive Rules: ${Rules.error}. Open the game with Spellbook Table.exe (or start.bat) so it can download them.`;
   }
 });
 
@@ -3651,7 +3651,7 @@ installImageFallback((host, img) => {
 });
 installDetails(iid => game?.objects.get(iid), () => view);
 renderSeats();
-if (location.protocol === 'file:') $('setupStatus').textContent = 'Open this game with Commander Table.exe or start.bat. Deck import needs its local server.';
+if (location.protocol === 'file:') $('setupStatus').textContent = 'Open this game with Spellbook Table.exe or start.bat. Deck import needs its local server.';
 // First visit: a short tour of the setup screen (remembered; the Tour button shows it again)
 // ---------- Learn to play (tutorial.js): lessons with a coach beside the table
 document.addEventListener('click', e => { if (e.target.id === 'btnCoachHide') $('coach').hidden = true; });
@@ -3840,7 +3840,7 @@ $('btnChallengeMake').addEventListener('click', async () => {
   const code = await encodeChallenge(table);
   $('challengeCode').value = code;
   $('challengeLink').value = challengeLink(code);
-  $('challengeStatus').textContent = `${numText(code.length)} characters. The link opens on any PC running Commander Table.`;
+  $('challengeStatus').textContent = `${numText(code.length)} characters. The link opens on any PC running Spellbook Table.`;
 });
 $('btnChallengeCopy').addEventListener('click', async () => {
   try { await navigator.clipboard.writeText($('challengeLink').value || ''); $('challengeStatus').textContent = 'Link copied.'; } catch { $('challengeStatus').textContent = 'Couldn\'t reach the clipboard; select the link and copy it.'; }
@@ -4263,7 +4263,7 @@ if (firstRun && !UITEST && !navigator.webdriver && !$('startMenu').hidden) {
   const m = document.createElement('div');
   m.id = 'firstRunModal'; m.className = 'modal'; m.hidden = true;
   m.innerHTML = `<div class="modal-card results-card display-card first-run" role="dialog" aria-labelledby="frTitle">
-    <h2 id="frTitle">Welcome to Commander Table</h2>
+    <h2 id="frTitle">Welcome to Spellbook Table</h2>
     <p class="muted">A few choices before you start. You can change every one later in Settings → Display.</p>
     <label class="disp-row">Language <select id="frLang" class="input">${opt(Object.entries(LANGS), prefs.lang || (navigator.language || 'en').slice(0, 2))}</select></label>
     <label class="disp-row">Look <select id="frSkin" class="input">${opt(Object.entries(SKIN_NAMES).filter(([k]) => k !== 'plain'), '')}</select></label>

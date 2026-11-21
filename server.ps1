@@ -1,4 +1,4 @@
-# Commander Table - local server
+# Spellbook Table - local server
 # Serves the app, proxies deck-site requests (they block browser CORS) and caches the
 # Magic: The Gathering Comprehensive Rules downloaded from Wizards of the Coast.
 param([int]$Port = 8777, [switch]$NoBrowser)
@@ -20,7 +20,7 @@ $AllowedHosts = @(
   'cubecobra.com', 'www.cubecobra.com'
 )
 # (item 204) An honest client name for every site: the game never poses as a web browser
-$UA = 'CommanderTable/1.0 (local deck viewer; no browser)'
+$UA = 'SpellbookTable/1.0 (local deck viewer; no browser)'
 # (item 201) What the game's pages may load and call: their own files, Scryfall, Commander Spellbook and MTGJSON
 $CSP = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://*.scryfall.io; media-src 'self' data: blob:; connect-src 'self' https://api.scryfall.com https://*.scryfall.io https://backend.commanderspellbook.com https://mtgjson.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'"
 # (item 202) The most a friend's page may send in one request (a 200,000-character decklist fits)
@@ -117,7 +117,7 @@ function Send-Text($Ctx, [int]$Status, [string]$Text) {
   Send-Response $Ctx $Status 'text/plain; charset=utf-8' ([Text.Encoding]::UTF8.GetBytes($Text))
 }
 
-# ---------- online seats (same protocol as Commander Table.exe and server.py)
+# ---------- online seats (same protocol as Spellbook Table.exe and server.py)
 # The game runs in the host's browser. Friends' pages poll their view of the table and post answers.
 # Friends connect to a plain TCP listener on 8800-8820 (an HttpListener on the network would need admin
 # rights); host-only calls are accepted only from this PC.
@@ -312,7 +312,7 @@ $listener = New-Object Net.HttpListener
 $listener.Prefixes.Add("http://localhost:$Port/")
 $listener.Start()
 Write-Host ""
-Write-Host "  Commander Table is running at http://localhost:$Port/" -ForegroundColor Green
+Write-Host "  Spellbook Table is running at http://localhost:$Port/" -ForegroundColor Green
 Write-Host "  Press Ctrl+C to stop." -ForegroundColor DarkGray
 Write-Host ""
 # Open the game in the default browser, unless that's Microsoft Edge; then use another installed browser
@@ -354,7 +354,7 @@ try {
     $foreign = ($origin -and $origin -ne "http://localhost:$Port" -and $origin -ne "http://127.0.0.1:$Port") -or $site -eq 'cross-site' -or $site -eq 'same-site'
     try {
       if ($path.StartsWith('/api/') -and $foreign) {
-        Send-Text $ctx 403 'Only the Commander Table page on this computer can use this.'
+        Send-Text $ctx 403 'Only the Spellbook Table page on this computer can use this.'
       }
       elseif ($path.StartsWith('/api/room/')) {
         $seat = 0; [void][int]::TryParse($req.QueryString['seat'], [ref]$seat)
@@ -378,7 +378,7 @@ try {
         if ($req.HttpMethod -ne 'POST' -or $req.Headers['X-Commander-Table'] -ne 'exit') {
           Send-Text $ctx 400 'Use the Exit button in the app.'
         } else {
-          Send-Text $ctx 200 'Commander Table has shut down.'
+          Send-Text $ctx 200 'Spellbook Table has shut down.'
           Write-Host "Exit requested from the app. Shutting down." -ForegroundColor Yellow
           $listener.Stop()
         }
@@ -491,9 +491,9 @@ try {
           try {
             $names = $z.Entries | ForEach-Object { $_.FullName.Replace('\', '/') }
             $hit = $names | Where-Object { $_.EndsWith('public/index.html') } | Sort-Object Length | Select-Object -First 1
-            if (-not $hit) { return @{ Error = "That zip doesn't look like Commander Table (no public/index.html in it)." } }
+            if (-not $hit) { return @{ Error = "That zip doesn't look like Spellbook Table (no public/index.html in it)." } }
             $prefix = $hit.Substring(0, $hit.Length - 'public/index.html'.Length)
-            if ($prefix.Split('/').Count -gt 2) { return @{ Error = "That zip doesn't look like Commander Table." } }
+            if ($prefix.Split('/').Count -gt 2) { return @{ Error = "That zip doesn't look like Spellbook Table." } }
             $files = $z.Entries | Where-Object { $n = $_.FullName.Replace('\', '/'); $n.StartsWith($prefix) -and -not $n.EndsWith('/') -and -not $n.Substring($prefix.Length).StartsWith('data/') }
             if ($files | Where-Object { $_.FullName -match '\.\./|:' }) { return @{ Error = 'That zip contains unsafe file paths, so it was not used.' } }
             $v = 'unknown'
