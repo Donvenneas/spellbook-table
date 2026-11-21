@@ -85,6 +85,8 @@ jobs:
         run: node tests/ids.mjs
       - name: Stylesheet lint
         run: node tests/csslint.mjs
+      - name: Skin contrast
+        run: node tests/skins-contrast.mjs
 
   selftest:
     # (item 177) server.py and the self-test on Linux and macOS (the game's Mac and Linux path)

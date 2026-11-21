@@ -614,6 +614,38 @@ async function suite() {
     return out.join(', ');
   });
 
+  // (design items 478 and 490) every skin: the boards get its frame, nothing scrolls sideways at the six sizes, the game
+  // buttons stay on screen, and choosing Grimoire again takes every trace away. The saved choice is put back.
+  await check('Skins: each skin frames the table at six sizes, and Grimoire comes back', async () => {
+    const sel = /** @type {HTMLSelectElement} */ (D.getElementById('dispSkin'));
+    const before = sel.value, de = D.documentElement, out = [];
+    const pick = v => { sel.value = v; sel.dispatchEvent(new W.Event('change', { bubbles: true })); };
+    try {
+      for (const s of ['nightspire', 'highkeep', 'brass', 'vellum', 'plain']) {
+        pick(s);
+        expect(de.dataset.skin === s, `${s}: the page shows "${de.dataset.skin || 'Grimoire'}"`);
+        const frame = W.getComputedStyle(view().boards[0].el).borderImageSource;
+        if (['nightspire', 'highkeep', 'brass'].includes(s)) expect(/\.svg/.test(frame), `${s}: the boards have no frame (${frame})`);
+        for (const [w, h] of [[1920, 1080], [1600, 900], [1366, 768], [1280, 720], [768, 1024], [375, 812]]) {
+          await sizeFrame(w, h);
+          view().render();
+          await settle();
+          expect(de.scrollWidth <= W.innerWidth + 1, `${s} at ${w}×${h}: the page scrolls sideways (${de.scrollWidth} px)`);
+          const r = D.getElementById('btnPlay').getBoundingClientRect();
+          expect(r.width > 0 && r.left >= 0 && r.right <= W.innerWidth + 1, `${s} at ${w}×${h}: Start/Pause is cut off`);
+        }
+        out.push(s);
+      }
+      pick('');
+      expect(!de.dataset.skin, 'Grimoire: a skin is still set');
+      expect(W.getComputedStyle(view().boards[0].el).borderImageSource === 'none', 'Grimoire: the boards still have a skin frame');
+    } finally {
+      pick(before);
+      await sizeFrame(1366, 768);
+    }
+    return `${out.join(', ')} at 6 sizes; Grimoire restored`;
+  });
+
   await check('24. Online seats stay in step with the host', async () => {
     throw new Skip('Not run here: it needs a room with a friend\'s page; tests/net.mjs and tests/multiplayer.mjs check the views and answers');
   });

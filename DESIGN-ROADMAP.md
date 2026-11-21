@@ -100,8 +100,9 @@ without the conversation that produced it. Rules fixes are in `AUDIT-ROADMAP.md`
   dark and a parchment version from tokens, and add two more drawn in CSS: slate and night sky.
 - [ ] **229. Seat colors as a set of tokens.** (S) `SEAT_COLORS` in `cores.js` and the color-blind set are literals
   in JS. Mirror them as `--seat-1..9` so CSS and charts can use them, and check each against both themes for 3:1 contrast.
-- [ ] **230. A third theme: "Vellum night" (dim, low blue light).** (M, needs 220) Only worth doing once colors are
+- [x] **230. A third theme: "Vellum night" (dim, low blue light).** (M, needs 220) Only worth doing once colors are
   tokens. Add to the ☀ button as a three-way choice, saved in `prefs.theme`.
+  - Done: 1.67.0. Vellum night is a skin (Display → Skin; item 486): warm and dim, little blue light.
 - [x] **231. Follow the system theme on first run.** (S) `prefers-color-scheme` picks dark or light until the
   player chooses; add "Match system" to Display.
   - Done: 1.35.0. The host page already followed the system on first run; now it keeps following it while no theme is chosen, the friend's page and the self-test page do the same, and Display has **Theme**: Match the system, Dark, Light (parchment). The ☀ button still picks one outright.
@@ -484,8 +485,9 @@ without the conversation that produced it. Rules fixes are in `AUDIT-ROADMAP.md`
 - [ ] **360. Contextual help.** (S) A "?" in each window's head opening Help at that window's section.
 - [ ] **361. Glossary on demand.** (S) Keyword tooltips exist in card text; add a glossary window listing every
   keyword the rules file defines, searchable.
-- [ ] **362. First-run choices.** (S) On the very first start: language, theme, text size and "new to Magic?"
+- [x] **362. First-run choices.** (S) On the very first start: language, theme, text size and "new to Magic?"
   on one screen, before the dashboard.
+  - Done: 1.67.0. The very first start asks for language, look, theme and text size on one screen, with "I'm new to Magic: teach me" (item 434).
 
 ## N. Responsive and performance
 
@@ -531,7 +533,7 @@ without the conversation that produced it. Rules fixes are in `AUDIT-ROADMAP.md`
 ## P. Tests and tooling for the interface
 
 - [ ] **376. Screenshots in CI.** (M) The CI self-test already runs Playwright against `server.py`. Add
-  screenshots of the dashboard, setup, a table at a fixed seed, the builder and the deck viewer in both themes at
+  screenshots of the dashboard, setup, a table at a fixed seed, the builder and the deck viewer in both themes and in every skin (Display → Skin: Nightspire, Highkeep and Brass Meridian in dark and light, Vellum night, Plain) at
   three widths, compared with stored images at a tolerance. Needs 227 for a stable component page.
 - [ ] **377. Accessibility checks in CI.** (M) A script in `tests/` that loads each window and fails on: a button
   without a name, an image without alt, a dialog without a label, a contrast pair under the limit (251). Write
@@ -547,6 +549,211 @@ without the conversation that produced it. Rules fixes are in `AUDIT-ROADMAP.md`
   no console errors.
 
 ---
+
+## S. Skins (items 395 to 494, asked 2026-11-21: "implement all 100")
+
+Follow-ups to item 394 (Display → Skin). Stylesheet work goes in `public/css/skins.css`; art in `public/skins/`, drawn by `design/skins/tools/make-assets.mjs`.
+
+- [x] **395. Recolour the creature, other and land lanes per skin.**
+  - Done: 1.67.0. Lane tints per skin (--sk-lane-c, -o, -l).
+- [x] **396. Restyle the hand row per skin.**
+  - Done: 1.67.0. A dark well with the skin's metal edge.
+- [x] **397. Restyle the command zone per skin.**
+  - Done: 1.67.0. Metal gradient; gold label with a crown icon.
+- [x] **398. Skin the card preview beside the pointer.**
+  - Done: 1.67.0. Skin panel and metal border.
+- [x] **399. Skin the action bar.**
+  - Done: 1.67.0. Skin panel; the green edge stays, mixed with the metal.
+- [x] **400. Skin the stack panel.**
+  - Done: 1.67.0. Skin panel.
+- [x] **401. Skin the docked preview and the card details window.**
+  - Done: 1.67.0. Skin panel, headings in the skin's label face.
+- [x] **402. Skin-styled plates for the zone counters.**
+  - Done: 1.67.0. Metal edges, title-face counts, game-icons.
+- [x] **403. Restyle the mana pips in the board header.**
+  - Done: 1.67.0. Pips glow faintly in the skin's light.
+- [x] **404. Restyle the hand-count pips.**
+  - Done: 1.67.0. Face-down cards carry the skin's card back and a metal edge.
+- [x] **405. Skin tooltips and keyword pop-ups.**
+  - Done: 1.67.0. Skin panel and label face.
+- [x] **406. Skin notices.**
+  - Done: 1.67.0. Skin panel, metal edge.
+- [x] **407. Skin the turn banner.**
+  - Done: 1.67.0. Title face, metal edge.
+- [x] **408. Skin the combo banner and the eliminated overlay.**
+  - Done: 1.67.0. Title face; the winner in gold.
+- [x] **409. Targeting arrows in each skin's colour.**
+  - Done: 1.67.0. Arrows keep the player's color, with the skin's glow.
+- [x] **410. Skin the life-change pop-up.**
+  - Done: 1.67.0. Metal row lines.
+- [x] **411. Restyle the YOU tag.**
+  - Done: 1.67.0. The skin's 'on' plate.
+- [x] **412. Skin the timeline slider.**
+  - Done: 1.67.0. Metal track and thumb (with 418).
+- [x] **413. Restyle Pause, Step and Resume.**
+  - Done: 1.67.0. Start/Pause is the skin's plate; Step in the label face.
+- [x] **414. Skin the Game log / Rules tabs.**
+  - Done: 1.67.0. Label face, metal underline.
+- [x] **415. Dropdowns per skin.**
+  - Done: 1.67.0. Well background, metal border, glow on focus.
+- [x] **416. Text boxes and search fields per skin.**
+  - Done: 1.67.0. Same as dropdowns.
+- [x] **417. Checkboxes and toggles per skin.**
+  - Done: 1.67.0. Metal accent, the skin's 'on' track.
+- [x] **418. Range sliders per skin.**
+  - Done: 1.67.0. Metal track, metal knob.
+- [x] **419. Segmented buttons per skin.**
+  - Done: 1.67.0. The chosen segment is the skin's 'on' plate.
+- [x] **420. Close buttons on windows.**
+  - Done: 1.67.0. Metal ring, gold cross.
+- [x] **421. Scrollbars in the skin's metal.**
+  - Done: 1.67.0. Metal scrollbars.
+- [x] **422. Framed seat cards on the setup screen.**
+  - Done: 1.67.0. Metal edge and highlight.
+- [x] **423. Skin the results window.**
+  - Done: 1.67.0. Skin frame (every window) and rows in wells.
+- [x] **424. Skin the deck builder.**
+  - Done: 1.67.0. Skin frame and form controls.
+- [x] **425. Skin the deck library and deck viewer.**
+  - Done: 1.67.0. Skin frame and form controls.
+- [x] **426. Skin Progress and its badges.**
+  - Done: 1.67.0. Badges in wells; earned ones glow.
+- [x] **427. Skin Draft / Sealed.**
+  - Done: 1.67.0. Skin frame and form controls.
+- [x] **428. Skin Kingdoms role cards and the role reveal.**
+  - Done: 1.67.0. Role chips in the label face with a metal ring.
+- [x] **429. Skin the manual tabletop.**
+  - Done: 1.67.0. The skin's page behind the manual tabletop.
+- [x] **430. Skin Help and What's new.**
+  - Done: 1.67.0. Skin frame, headings in the label face.
+- [x] **431. Skin the coach bubble and the tour.**
+  - Done: 1.67.0. Skin panel and metal ring.
+- [x] **432. Skin the Exit window and the goodbye screen.**
+  - Done: 1.67.0. The skin's page, title face.
+- [x] **433. A swatch for each skin in Display.**
+  - Done: 1.67.0. A swatch on each Skin button.
+- [x] **434. A skin picker in the first-run choices.**
+  - Done: 1.67.0. First-run choices (with design item 362): language, look, theme, text size, 'teach me'.
+- [x] **435. The top bar's theme button cycles through the skins.**
+  - Done: 1.67.0. ☀ steps Grimoire dark, Grimoire light, then each skin.
+- [x] **436. Preview a skin by hovering its choice.**
+  - Done: 1.67.0. Hovering a Skin button shows it until the pointer leaves the row.
+- [x] **437. The skin is remembered on this device only.**
+  - Done: 1.67.0. Settings live in this browser profile only; the hint says so.
+- [x] **438. Random skin each game.**
+  - Done: 1.67.0. 'Random each game' draws a skin when a game starts.
+- [x] **439. A different skin for the start menu and the table.**
+  - Done: 1.67.0. Display → Start menu skin.
+- [x] **440. The skin in shared game links (the friend may keep their own).**
+  - Done: 1.67.0. Invite links carry the host's skin (?skin=); the friend may pick their own.
+- [x] **441. A keyboard shortcut to change skin.**
+  - Done: 1.67.0. Shift+K, listed under Keyboard shortcuts.
+- [x] **442. The Skin row in the six interface languages.**
+  - Done: 1.67.0. The new labels in Spanish, French, German, Portuguese, Italian and Japanese.
+- [x] **443. Brass Meridian's gear redrawn as a ring.**
+  - Done: 1.67.0. Bm-gear-ring.svg: open middle, 18 teeth, rivets.
+- [x] **444. A start-menu sigil per skin.**
+  - Done: 1.67.0. Highkeep's crest (hk-crest.svg), Nightspire's rune, Brass Meridian's gear.
+- [x] **445. A per-skin divider under the start menu title.**
+  - Done: 1.67.0. Ns, hk and bm dividers under the title.
+- [x] **446. Highkeep plaques on window titles.**
+  - Done: 1.67.0. Plaques on window headings.
+- [x] **447. Nightspire's corner studs light up on the active board.**
+  - Done: 1.67.0. Ns-frame-lit.svg on the active board.
+- [x] **448. Rivets on Brass Meridian's buttons and plates.**
+  - Done: 1.67.0. Rivets on Brass buttons, screws on its plates.
+- [x] **449. A slow aether shimmer on Brass Meridian's active frame.**
+  - Done: 1.67.0. A slow aether pulse (off with Fewer animations or Less background motion).
+- [x] **450. A hover glow per skin.**
+  - Done: 1.67.0. The skin's glow on hover.
+- [x] **451. The target highlight colour per skin, still recognisable.**
+  - Done: 1.67.0. Green stays, ringed in the skin's glow.
+- [x] **452. A card back per skin.**
+  - Done: 1.67.0. Rune seal, Crest of Highkeep, Gearwork: the skin's back until you pick one.
+- [x] **453. An avatar frame per skin.**
+  - Done: 1.67.0. The skin's ring around portraits on the results screen too.
+- [x] **454. Board backgrounds per skin.**
+  - Done: 1.67.0. Felt, wood, stone and plain in the skin's materials.
+- [x] **455. Darker textures where small text sits.**
+  - Done: 1.67.0. The log, preview text and action bar text sit on a darker wash.
+- [x] **456. A thin edge on battlefield cards per skin.**
+  - Done: 1.67.0. A thin metal edge on cards, never over state glows.
+- [x] **457. A skin ornament on the commander's card.**
+  - Done: 1.67.0. Metal outline and a crown (game-icons).
+- [x] **458. Skin-styled seat-colour stripes.**
+  - Done: 1.67.0. The seat stripe fades at its ends and glows.
+- [x] **459. Skin fonts for the turn label and log turn headers everywhere.**
+  - Done: 1.67.0. Turn label, log turn headers, phase names.
+- [x] **460. The downloaded game-icons as zone and phase icons, credited in Help.**
+  - Done: 1.67.0. Library, graveyard, exile, command zone and the current phase; credited in the README (Help).
+- [x] **461. A click sound per skin.**
+  - Done: 1.67.0. A click in the skin's voice (Sound on).
+- [x] **462. A turn-start sound per skin.**
+  - Done: 1.67.0. Every effect, 'your turn' included, in the skin's waveform and pitch.
+- [x] **463. Background music per skin.**
+  - Done: 1.67.0. A piece per skin: organ, horns, a music box over clockwork, a soft Vellum pad.
+- [x] **464. A short transition when switching skins.**
+  - Done: 1.67.0. A short fade between looks, skipped with reduced motion.
+- [x] **465. Every skin animation follows Fewer animations and Less background motion.**
+  - Done: 1.67.0. Gears, glows and the title ring obey both settings.
+- [x] **466. Animations pause when the window is hidden.**
+  - Done: 1.67.0. Animations pause while the window is hidden.
+- [x] **467. Contrast of all text on each skin measured.**
+  - Done: 1.67.0. Tests/skins-contrast.mjs: 67 pairs, all 4.5:1 or better (in CI).
+- [x] **468. Muted text contrast raised on Highkeep.**
+  - Done: 1.67.0. Measured at 8.8:1 on navy; no change needed.
+- [x] **469. Dark text on Brass plates checked at small sizes.**
+  - Done: 1.67.0. A lighter life plate (bm-lifeplate.svg) and a darker low-life red: 7.5:1 and 5.1:1.
+- [x] **470. Thinner frames with Larger text and cards.**
+  - Done: 1.67.0. Frames 9 and 13 px with Larger text and cards.
+- [x] **471. A simpler frame with Easier reading.**
+  - Done: 1.67.0. Plain metal borders with Easier reading.
+- [x] **472. Focus outlines visible on every skin.**
+  - Done: 1.67.0. Focus outlines in the skin's focus color, offset on plates.
+- [x] **473. Skins checked with the colour-blind seat colours.**
+  - Done: 1.67.0. Seat numbers (colour-blind seats) sit over the rings.
+- [x] **474. A screen reader hears the skin change.**
+  - Done: 1.67.0. The change is announced in the notice area (role=status).
+- [x] **475. Clean fallbacks if a skin font fails to load.**
+  - Done: 1.67.0. Every skin face falls back to Cinzel, then Georgia.
+- [x] **476. Thinner frames on narrow screens and phones.**
+  - Done: 1.67.0. 8 and 10 px frames under 700 px wide.
+- [x] **477. Thinner frames on 7 to 9 player tables.**
+  - Done: 1.67.0. 7 px frames at 7 to 9 players, 10 px at 5 or 6.
+- [x] **478. Skins at all six screen sizes in uitest.**
+  - Done: 1.67.0. The interface test's Skins check covers the six sizes.
+- [x] **479. Skins checked in the friend page layout.**
+  - Done: 1.67.0. Play.html loads skins.css; the friend's boards are the same markup.
+- [x] **480. Printing stays plain with a skin on.**
+  - Done: 1.67.0. Print drops frames, textures and rings.
+- [x] **481. Full-screen mode checked.**
+  - Done: 1.67.0. Full screen uses the same layout.
+- [x] **482. Skins on the friend's page (play.html).**
+  - Done: 1.67.0. Play.html loads the skins.
+- [x] **483. The friend chooses their own skin.**
+  - Done: 1.67.0. A Skin choice in the friend's top bar, saved on their device (ct.friendSkin).
+- [x] **484. The host's skin as the friend's default.**
+  - Done: 1.67.0. 'Host's skin' is the default, from the link.
+- [x] **485. Light versions of the skins.**
+  - Done: 1.67.0. Light versions of Nightspire, Highkeep and Brass Meridian (Theme → Light).
+- [x] **486. Vellum night (item 230) as a skin.**
+  - Done: 1.67.0. Vellum night: warm, dim, little blue (this is design item 230).
+- [x] **487. A plain high-performance skin.**
+  - Done: 1.67.0. Plain: flat, no textures, shadows or drifting lights.
+- [x] **488. Seasonal variations.**
+  - Done: 1.67.0. Frost in late December, embers at the end of October (Display switch).
+- [x] **489. Skins as optional earned rewards.**
+  - Done: 1.67.0. Each skin's card back unlocks for every look after five games in that skin; skins themselves stay free.
+- [x] **490. A uitest step that switches through every skin.**
+  - Done: 1.67.0. Uitest 'Skins' check.
+- [x] **491. Skins in Firefox and Chrome (tests/browsers.mjs).**
+  - Done: 1.67.0. Tests/browsers.mjs in headless Chrome 159 and Firefox 160: self-test 19/19 and uitest 20 passed (Skins check included) in both.
+- [x] **492. Skin screenshots in the visual regression plan (item 376).**
+  - Done: 1.67.0. Item 376's plan lists every skin.
+- [x] **493. The stylesheet lint covers skins.css.**
+  - Done: 1.67.0. Tests/csslint.mjs lints skins.css against its own baseline.
+- [x] **494. How to make a new skin, documented.**
+  - Done: 1.67.0. Design/skins/README.md.
 
 ## Not on this list, on purpose
 

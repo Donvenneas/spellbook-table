@@ -69,6 +69,28 @@
   --sk-mark: url("../skins/frames/bm-gear.svg");
 }
 
+/* ================================================================ item 433: a swatch on each Skin button in Display */
+:root {
+  --sw-grimoire: linear-gradient(135deg, #0b0a0e 50%, #c9a24b 50%);
+  --sw-nightspire: linear-gradient(135deg, #0b1226 50%, #cfa54e 50% 75%, #b8293f 75%);
+  --sw-highkeep: linear-gradient(135deg, #0d1532 50%, #d8a945 50% 75%, #a92a1f 75%);
+  --sw-brass: linear-gradient(135deg, #0f1c1b 50%, #c9a052 50% 75%, #5ce2ef 75%);
+  --sw-vellum: linear-gradient(135deg, #1c1813 50%, #b89060 50%);
+  --sw-plain: linear-gradient(135deg, #17161d 50%, #6d6878 50%);
+  --sw-random: conic-gradient(#cfa54e 0 25%, #a92a1f 0 50%, #5ce2ef 0 75%, #b89060 0);
+}
+#dispSkin + .seg .seg-b::before, #dispMenuSkin option::before { content: ""; display: inline-block; flex: none; width: 12px; height: 12px; margin-right: 6px; border-radius: 3px; background: var(--sw, none); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--text) 30%, transparent); }
+#dispSkin + .seg .seg-b[data-v=""] { --sw: var(--sw-grimoire); }
+#dispSkin + .seg .seg-b[data-v="nightspire"] { --sw: var(--sw-nightspire); }
+#dispSkin + .seg .seg-b[data-v="highkeep"] { --sw: var(--sw-highkeep); }
+#dispSkin + .seg .seg-b[data-v="brass"] { --sw: var(--sw-brass); }
+#dispSkin + .seg .seg-b[data-v="vellum"] { --sw: var(--sw-vellum); }
+#dispSkin + .seg .seg-b[data-v="plain"] { --sw: var(--sw-plain); }
+#dispSkin + .seg .seg-b[data-v="random"] { --sw: var(--sw-random); }
+
+/* the friend page's Skin choice sits in the top bar at its own width (item 483) */
+#friendSkin { width: auto; flex: none; padding: 4px 6px; }
+
 /* ================================================================ shared skin rules */
 :root[data-skin] body { background: var(--sk-page); }
 :root[data-skin] .start-menu { background: var(--sk-page); }
@@ -107,7 +129,7 @@
 :root[data-skin] .life small { font-family: var(--sk-label); color: var(--muted); text-shadow: none; }
 
 /* phase track */
-:root[data-skin] .phase-track { background: rgba(0, 0, 0, .42); border-color: var(--sk-metal-lo); }
+:root[data-skin] .phase-track { background: var(--sk-well); border-color: var(--sk-metal-lo); }
 :root[data-skin] .phase-track .ph { font-family: var(--sk-label); letter-spacing: .05em; }
 :root[data-skin] .phase-track .ph.on { background: var(--sk-on); color: var(--sk-on-ink); box-shadow: 0 0 12px -2px var(--sk-glow); }
 
@@ -132,7 +154,7 @@
 /* start menu */
 :root[data-skin] .sm-title h1 { font-family: var(--sk-title); }
 :root[data-skin] .sm-title::before { background: var(--sk-mark) center / contain no-repeat; -webkit-mask: none; mask: none; border-radius: 0; opacity: .7; }
-:root[data-skin] .sm-btn { background: linear-gradient(rgba(255, 255, 255, .04), rgba(0, 0, 0, .25)); border-color: color-mix(in srgb, var(--sk-metal) 26%, transparent); }
+:root[data-skin] .sm-btn { background: linear-gradient(rgba(255, 255, 255, .04), var(--sk-well)); border-color: color-mix(in srgb, var(--sk-metal) 26%, transparent); }
 :root[data-skin] .sm-btn:hover, :root[data-skin] .sm-btn:focus-visible { border-color: var(--sk-metal); box-shadow: 0 8px 24px -12px var(--sk-glow); background: linear-gradient(color-mix(in srgb, var(--sk-metal) 12%, transparent), rgba(0, 0, 0, .25)); }
 :root[data-skin] .sm-btn .ico { color: var(--sk-metal); }
 :root[data-skin] .sm-main { background: linear-gradient(120deg, color-mix(in srgb, var(--sk-metal) 22%, var(--panel)), var(--panel) 75%); border-color: var(--sk-metal); }
@@ -149,9 +171,9 @@
 :root[data-skin="highkeep"] .brand { background: linear-gradient(#fff4c4, #e2b24c 55%, #8a5d14); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 1px 0 #000); }
 
 /* Brass Meridian: life on a brass plate, gears that turn behind the active player's portrait */
-:root[data-skin="brass"] .life { border-style: solid; border-color: transparent; border-image: url("../skins/frames/bm-plate.svg") 0 30 fill / 0 12px stretch; border-width: 0 12px; border-radius: 0; color: #241706; text-shadow: 0 1px 0 rgba(255, 255, 255, .35); box-shadow: none; padding-inline: 4px; }
+:root[data-skin="brass"] .life { border-style: solid; border-color: transparent; border-image: url("../skins/frames/bm-lifeplate.svg") 0 30 fill / 0 12px stretch; border-width: 0 12px; border-radius: 0; color: #241706; text-shadow: 0 1px 0 rgba(255, 255, 255, .35); box-shadow: none; padding-inline: 4px; }
 :root[data-skin="brass"] .life small { color: #5a3d14; }
-:root[data-skin="brass"] .life.low { color: #8a1a10; }
+:root[data-skin="brass"] .life.low { color: #6e1208; }
 :root[data-skin="brass"] .board .avatar::before { -webkit-mask: radial-gradient(circle, transparent 0 65%, #000 66%); mask: radial-gradient(circle, transparent 0 65%, #000 66%); }
 :root[data-skin="brass"] .board.active .avatar::before { animation: skGear 14s linear infinite; filter: drop-shadow(0 0 6px var(--sk-glow)); }
 :root[data-skin="brass"] .sm-title::before { animation: skGear 40s linear infinite; }
@@ -159,6 +181,215 @@
 :root[data-skin="brass"] body.calm .board.active .avatar::before, :root[data-skin="brass"] body.less-motion .board.active .avatar::before,
 :root[data-skin="brass"] body.calm .sm-title::before, :root[data-skin="brass"] body.less-motion .sm-title::before { animation: none; }
 @media (prefers-reduced-motion: reduce) { :root[data-skin="brass"] .board.active .avatar::before, :root[data-skin="brass"] .sm-title::before { animation: none; } }
+
+/* ================================================================ items 395-414: the rest of the table */
+:root[data-skin="nightspire"] { --sk-lane-c: rgba(64, 110, 220, .13); --sk-lane-o: rgba(140, 90, 200, .13); --sk-lane-l: rgba(207, 165, 78, .1); }
+:root[data-skin="highkeep"] { --sk-lane-c: rgba(70, 100, 190, .2); --sk-lane-o: rgba(170, 45, 32, .15); --sk-lane-l: rgba(130, 86, 34, .24); }
+:root[data-skin="brass"] { --sk-lane-c: rgba(60, 160, 140, .15); --sk-lane-o: rgba(92, 226, 239, .08); --sk-lane-l: rgba(196, 112, 60, .17); }
+:root[data-skin] .row.creatures:not(:empty) { background: radial-gradient(ellipse at 50% 0, var(--sk-lane-c), transparent 75%), rgba(0, 0, 0, .18); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--sk-metal) 14%, transparent); }
+:root[data-skin] .row.others:not(:empty) { background: radial-gradient(ellipse at 50% 0, var(--sk-lane-o), transparent 75%), rgba(0, 0, 0, .18); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--sk-metal) 14%, transparent); }
+:root[data-skin] .row.lands:not(:empty) { background: linear-gradient(180deg, var(--sk-lane-l), rgba(0, 0, 0, .22)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--sk-metal) 14%, transparent); }
+:root[data-skin] .row:not(:empty)::before { font-family: var(--sk-label); font-weight: 400; color: color-mix(in srgb, var(--sk-metal) 70%, var(--muted)); }
+:root[data-skin] .handbar { border-top-color: var(--sk-metal-lo); }
+:root[data-skin] .handrow { background: linear-gradient(180deg, rgba(0, 0, 0, .32), rgba(0, 0, 0, .5)); border-top-color: var(--sk-metal-lo); }
+:root[data-skin] .handrow .back { box-shadow: 0 0 0 1px color-mix(in srgb, var(--sk-metal) 55%, transparent); }
+:root[data-skin] .cmdzone { background: linear-gradient(180deg, color-mix(in srgb, var(--sk-metal) 15%, transparent), color-mix(in srgb, var(--sk-metal) 3%, transparent) 70%); border-right-color: color-mix(in srgb, var(--sk-metal) 32%, transparent); }
+:root[data-skin] .cmdzone .zlabel { color: var(--gold-hi); }
+:root[data-skin] .piles { background: var(--sk-well); border-left-color: var(--sk-metal-lo); }
+:root[data-skin] .pile { border-color: color-mix(in srgb, var(--sk-metal) 55%, transparent); background: var(--deep); box-shadow: 0 2px 6px rgba(0, 0, 0, .5); }
+:root[data-skin] .pile b { font-family: var(--sk-title); color: var(--gold-hi); }
+:root[data-skin] .pile small { font-family: var(--sk-label); }
+:root[data-skin] .mana .pip { color: var(--gold-hi); }
+:root[data-skin] .mana .pip img { filter: drop-shadow(0 0 2px color-mix(in srgb, var(--sk-glow) 60%, transparent)); }
+/* panels that float over the table */
+:root[data-skin] .preview, :root[data-skin] .cd-panel, :root[data-skin] .kw-tooltip, :root[data-skin] .stack-panel, :root[data-skin] .notice, :root[data-skin] .combo-banner {
+  background: var(--sk-panel); border-color: color-mix(in srgb, var(--sk-metal) 60%, transparent); color: var(--text);
+}
+:root[data-skin] .preview h3, :root[data-skin] .cd-panel h3, :root[data-skin] .kw-tooltip b { font-family: var(--sk-label); color: var(--gold-hi); }
+:root[data-skin] .preview .sec, :root[data-skin] .life-pop td { border-color: color-mix(in srgb, var(--sk-metal) 25%, transparent); }
+:root[data-skin] .notice { border-left-color: var(--sk-metal); }
+:root[data-skin] .action-bar { background: var(--sk-panel); border-color: color-mix(in srgb, var(--good) 55%, var(--sk-metal)); }
+:root[data-skin] .turn-banner { font-family: var(--sk-title); border-color: color-mix(in srgb, var(--sk-metal) 70%, var(--pc)); }
+:root[data-skin] .combo-banner b, :root[data-skin] .elim { font-family: var(--sk-title); }
+:root[data-skin] .elim.winner { color: var(--gold-hi); }
+:root[data-skin] .combat-svg path { filter: drop-shadow(0 0 5px currentColor) drop-shadow(0 0 3px var(--sk-glow)) drop-shadow(0 0 2px #000); }
+:root[data-skin] .board.you .pname::after { background: var(--sk-on); color: var(--sk-on-ink); font-family: var(--sk-label); font-weight: 400; }
+:root[data-skin] #btnStep, :root[data-skin] #btnPlay { font-family: var(--sk-label); letter-spacing: .05em; }
+:root[data-skin] .tabs { border-bottom-color: var(--sk-metal-lo); }
+:root[data-skin] .tabs button { font-family: var(--sk-label); letter-spacing: .08em; }
+:root[data-skin] .tabs button.active { color: var(--gold-hi); border-bottom-color: var(--sk-metal); background: linear-gradient(0deg, color-mix(in srgb, var(--sk-metal) 12%, transparent), transparent); }
+
+/* ================================================================ items 415-432: forms and windows */
+:root[data-skin] .input, :root[data-skin] select, :root[data-skin] .sbracket, :root[data-skin] .seat select, :root[data-skin] textarea {
+  background: var(--sk-well); border-color: color-mix(in srgb, var(--sk-metal) 34%, var(--line)); color: var(--text);
+}
+:root[data-skin] .input:focus, :root[data-skin] select:focus, :root[data-skin] textarea:focus { border-color: var(--sk-metal); box-shadow: 0 0 0 3px color-mix(in srgb, var(--sk-glow) 25%, transparent); }
+:root[data-skin] input[type=checkbox], :root[data-skin] input[type=radio] { accent-color: var(--sk-metal); }
+:root[data-skin] .switch input[type=checkbox] { background: var(--sk-well); border-color: var(--sk-metal-lo); }
+:root[data-skin] .switch input[type=checkbox]:checked { background: var(--sk-on); border-color: var(--sk-metal); }
+:root[data-skin] .switch input[type=checkbox]:checked::before { background: var(--gold-hi); box-shadow: 0 0 6px var(--sk-glow); }
+:root[data-skin] input[type=range]::-webkit-slider-runnable-track { background: linear-gradient(90deg, var(--sk-metal), var(--sk-metal-lo)); }
+:root[data-skin] input[type=range]::-moz-range-track { background: var(--sk-metal-lo); }
+:root[data-skin] input[type=range]::-moz-range-progress { background: var(--sk-metal); }
+:root[data-skin] input[type=range]::-webkit-slider-thumb { background: radial-gradient(circle at 35% 30%, var(--gold-hi), var(--sk-metal) 60%, var(--sk-metal-lo)); border-color: #000; box-shadow: 0 0 6px color-mix(in srgb, var(--sk-glow) 60%, transparent); }
+:root[data-skin] input[type=range]::-moz-range-thumb { background: radial-gradient(circle at 35% 30%, var(--gold-hi), var(--sk-metal) 60%, var(--sk-metal-lo)); border-color: #000; }
+:root[data-skin] .seg { background: var(--sk-well); border-color: var(--sk-metal-lo); }
+:root[data-skin] .seg > label:has(input:checked), :root[data-skin] .seg-b[aria-checked="true"] { background: var(--sk-on); color: var(--sk-on-ink); box-shadow: inset 0 0 0 1px var(--sk-metal); }
+:root[data-skin] .modal-x { background: var(--sk-well); border: 1px solid var(--sk-metal); color: var(--gold-hi); }
+:root[data-skin] .modal-x:hover { box-shadow: 0 0 12px -2px var(--sk-glow); }
+:root[data-skin], :root[data-skin] * { scrollbar-color: var(--sk-metal-lo) transparent; }
+:root[data-skin] .seat { border-color: color-mix(in srgb, var(--sk-metal) 34%, var(--line)); box-shadow: inset 0 1px 0 color-mix(in srgb, var(--sk-metal) 20%, transparent); }
+:root[data-skin] .standing { background: var(--sk-well); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--sk-metal) 22%, transparent); }
+:root[data-skin] .standing .place { font-family: var(--sk-title); color: var(--gold-hi); }
+:root[data-skin] .modal-card h3 { font-family: var(--sk-label); color: color-mix(in srgb, var(--gold-hi) 85%, var(--text)); font-weight: 400; letter-spacing: .05em; }
+:root[data-skin] .badge { border-color: color-mix(in srgb, var(--sk-metal) 30%, var(--line)); background: var(--sk-well); }
+:root[data-skin] .badge.got { border-color: var(--sk-metal); box-shadow: 0 0 14px -6px var(--sk-glow); }
+:root[data-skin] .role-chip { font-family: var(--sk-label); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--sk-metal) 45%, transparent); }
+:root[data-skin] .tabletop { background: var(--sk-page); }
+:root[data-skin] .mt-bar b { font-family: var(--sk-title); color: var(--gold-hi); }
+:root[data-skin] .coach, :root[data-skin] .tour-box, :root[data-skin] .coach-tip { background: var(--sk-panel); border-color: var(--sk-metal); color: var(--text); }
+:root[data-skin] .coach-head, :root[data-skin] .tour-box b { font-family: var(--sk-label); color: var(--gold-hi); }
+:root[data-skin] .tour-ring { border-color: var(--sk-metal); }
+:root[data-skin] .goodbye { background: var(--sk-page); }
+:root[data-skin] .goodbye h1, :root[data-skin] .pass-modal h2 { font-family: var(--sk-title); color: var(--gold-hi); }
+
+/* ================================================================ items 443-460: polish */
+:root[data-skin="nightspire"] { --sk-divider: url("../skins/frames/ns-divider.svg"); }
+:root[data-skin="highkeep"] { --sk-divider: url("../skins/frames/hk-divider.svg"); --sk-mark: url("../skins/frames/hk-crest.svg"); }
+:root[data-skin="brass"] { --sk-divider: url("../skins/frames/bm-divider.svg"); --sk-ring: url("../skins/frames/bm-gear-ring.svg"); --sk-ring-out: -10px; }
+:root[data-skin="brass"] .board .avatar::before { -webkit-mask: none; mask: none; }
+:root[data-skin="highkeep"] .sm-title::before { animation: none; opacity: .9; }
+:root[data-skin] .sm-title::after { content: ""; display: block; width: 240px; max-width: 80%; height: 16px; margin: 10px auto 0; background: var(--sk-divider, none) center / contain no-repeat; }
+:root[data-skin="highkeep"] .modal-card h2 { width: fit-content; padding: 6px 4px; border-style: solid; border-color: transparent; border-image: url("../skins/frames/hk-plaque.svg") 0 60 fill / 0 30px stretch; border-width: 0 30px; color: #ffe9a8; text-shadow: 0 1px 0 #000; }
+:root[data-skin="nightspire"] .board.active { border-image-source: url("../skins/frames/ns-frame-lit.svg"); }
+:root[data-skin="brass"] .btn:not(.primary):not(.ghost) { padding-inline: 16px;
+  background: radial-gradient(circle at 7px 50%, #f3dc9c 0 1.4px, #6e4c18 2px, transparent 2.6px), radial-gradient(circle at calc(100% - 7px) 50%, #f3dc9c 0 1.4px, #6e4c18 2px, transparent 2.6px), linear-gradient(color-mix(in srgb, var(--panel-2) 92%, #fff 8%), var(--panel)); }
+@keyframes skAether { 0%, 100% { box-shadow: 0 0 0 1px var(--pc), 0 0 26px -6px var(--pc), 0 0 16px -8px #5ce2ef; } 50% { box-shadow: 0 0 0 1px var(--pc), 0 0 26px -6px var(--pc), 0 0 34px -4px #5ce2ef; } }
+:root[data-skin="brass"] .board.active { animation: skAether 4s ease-in-out infinite; }
+:root[data-skin] .btn:hover:not(:disabled), :root[data-skin] .sm-btn:hover { box-shadow: 0 0 14px -4px var(--sk-glow); }
+:root[data-skin] .card.pickable { box-shadow: 0 0 0 2px var(--good), 0 0 0 4px color-mix(in srgb, var(--sk-glow) 45%, transparent), 0 0 16px var(--good); }
+:root[data-skin] .standing .avatar { position: relative; }
+:root[data-skin] .standing .avatar::before { content: ""; position: absolute; inset: var(--sk-ring-out); background: var(--sk-ring) center / contain no-repeat; pointer-events: none; }
+/* board backgrounds from Display, in the skin's materials */
+:root[data-skin] body[data-bg="felt"] .board { background: radial-gradient(ellipse at 50% 40%, rgba(255, 255, 255, .06), transparent 70%), linear-gradient(color-mix(in srgb, #1f5a3a 70%, var(--panel)), color-mix(in srgb, #143d27 70%, var(--panel))); }
+:root[data-skin] body[data-bg="wood"] .board { background: linear-gradient(rgba(40, 22, 8, .55), rgba(20, 10, 4, .72)), url("../skins/textures/wood094.jpg") center / 420px #2a1a0d; }
+:root[data-skin] body[data-bg="stone"] .board { background: linear-gradient(rgba(20, 22, 28, .6), rgba(10, 12, 16, .76)), url("../skins/textures/rock031.jpg") center / 360px #22242a; }
+:root[data-skin] body[data-bg="plain"] .board { background: var(--panel); }
+/* text sits on darker ground than the decoration around it */
+:root[data-skin] .sidebar .log, :root[data-skin] .preview .ptext, :root[data-skin] .action-bar .ab-text { background: var(--sk-read); border-radius: 4px; }
+:root[data-skin] .board .card:not(.attacking):not(.blocking):not(.pickable):not(.chosen):not(.aimed):not(:hover) { box-shadow: 0 0 0 1px color-mix(in srgb, var(--sk-metal) 60%, #000), 0 3px 8px rgba(0, 0, 0, .5); }
+:root[data-skin] .card.commander { outline: 2px solid var(--sk-metal); outline-offset: 2px; }
+:root[data-skin] .board .card.commander::before { content: ""; position: absolute; top: -11px; left: 50%; width: 16px; height: 16px; transform: translateX(-50%); z-index: 3; pointer-events: none;
+  background: var(--gold-hi); -webkit-mask: url("../skins/icons/crown.svg") center / contain no-repeat; mask: url("../skins/icons/crown.svg") center / contain no-repeat; filter: drop-shadow(0 1px 1px #000); }
+:root[data-skin] .board::before { height: 3px; opacity: 1; background: linear-gradient(90deg, transparent, var(--pc) 12%, var(--pc) 88%, transparent); box-shadow: 0 0 10px var(--pc); }
+/* zone and phase icons (game-icons.net, CC BY 3.0; credited in Help) */
+:root[data-skin] .pile small::before, :root[data-skin] .cmdzone .zlabel::before, :root[data-skin] .phase-track .ph.on::before {
+  content: ""; display: inline-block; width: 1.1em; height: 1.1em; margin-right: 3px; vertical-align: -.2em; background: currentColor;
+  -webkit-mask: var(--sk-icon) center / contain no-repeat; mask: var(--sk-icon) center / contain no-repeat; }
+:root[data-skin] .pile small::before { display: block; margin: 0 auto 1px; width: 12px; height: 12px; }
+:root[data-skin] .pile.lib { --sk-icon: url("../skins/icons/book-cover.svg"); }
+:root[data-skin] .pile.gy { --sk-icon: url("../skins/icons/tombstone.svg"); }
+:root[data-skin] .pile.ex { --sk-icon: url("../skins/icons/portal.svg"); }
+:root[data-skin] .cmdzone .zlabel { --sk-icon: url("../skins/icons/crown.svg"); }
+:root[data-skin] .phase-track .ph.on { --sk-icon: url("../skins/icons/hourglass.svg"); }
+
+/* ================================================================ items 465-466: switching and hidden windows */
+@keyframes skFade { from { opacity: .7; } to { opacity: 0; } }
+:root.skin-switch body::after { content: ""; position: fixed; inset: 0; z-index: var(--z-tip); pointer-events: none; background: var(--bg); animation: skFade .45s ease-out forwards; }
+:root.tab-hidden *, :root.tab-hidden *::before, :root.tab-hidden *::after { animation-play-state: paused !important; }
+:root[data-skin] body.less-motion .board.active, :root[data-skin] body.calm .board.active { animation: none; }
+@media (prefers-reduced-motion: reduce) { :root[data-skin] .board.active, :root.skin-switch body::after { animation: none; } :root.skin-switch body::after { display: none; } }
+
+/* ================================================================ items 467-475: reading and access */
+:root[data-skin] { --sk-well: rgba(0, 0, 0, .38); --sk-read: rgba(0, 0, 0, .22); }
+:root[data-skin] body.big { --sk-fw: 9px; --sk-fw-big: 13px; }
+:root[data-skin] body.readable .board, :root[data-skin] body.readable .modal-card, :root[data-skin] body.readable .sm-panel { border-image: none; border-width: 2px; border-color: color-mix(in srgb, var(--sk-metal) 70%, transparent); border-radius: var(--r-lg); }
+:root[data-skin] :focus-visible { outline-color: var(--focus); }
+:root[data-skin] .btn.primary:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+:root[data-skin] body.cb .board .avatar::after { z-index: 2; }
+
+/* ================================================================ items 476-481: screens and printing */
+@media (max-width: 700px) { :root[data-skin] { --sk-fw: 8px; --sk-fw-big: 10px; } :root[data-skin] .btn.primary:not(.danger) { --sk-go-w: 0 10px; } }
+:root[data-skin] .table[data-n="5"], :root[data-skin] .table[data-n="6"] { --sk-fw: 10px; }
+:root[data-skin] .table[data-n="7"], :root[data-skin] .table[data-n="8"], :root[data-skin] .table[data-n="9"] { --sk-fw: 7px; }
+@media print {
+  :root[data-skin] body, :root[data-skin] .start-menu { background: #fff; }
+  :root[data-skin] .board, :root[data-skin] .modal-card, :root[data-skin] .sm-panel { border-image: none; border: 1px solid #bbb; background: #fff; box-shadow: none; }
+  :root[data-skin] .sm-title::before, :root[data-skin] .sm-title::after, :root[data-skin] .board .avatar::before { display: none; }
+}
+
+/* ================================================================ item 485: light versions (Theme → Light) */
+:root[data-skin="nightspire"][data-theme="light"] {
+  --bg: #efeae0; --felt: #e6e0d2; --panel: #f8f5ee; --panel-2: #efe9dc; --line: #d6cdb8; --line-2: #b9ab88; --deep: #e4ddcc; --subbar: #f1ece1; --board-bg: rgba(250, 247, 240, .9); --overlay: rgba(250, 247, 240, .97);
+  --hover: #e8e0cc; --hover-line: #8a6a1c; --text: #1c1a2a; --muted: #5b5670; --accent: #8a6a1c; --accent-2: #6b5012; --gold-hi: #6b5012; --on-accent: #fff8e8; --focus: #2a5aa8;
+  --topbar: linear-gradient(#fbf8f1, #efe9dc);
+  --table-bg: linear-gradient(rgba(246, 242, 232, .9), rgba(234, 228, 214, .94)), url("../skins/textures/marble023.jpg") center / 420px;
+  --sk-metal: #a8822e; --sk-metal-lo: #c9b27a; --sk-glow: #6f9fe0; --sk-on-ink: #fff4f5;
+  --sk-page: linear-gradient(rgba(246, 242, 232, .9), rgba(234, 228, 214, .94)), url("../skins/textures/marble023.jpg") center / 420px #efeae0;
+  --sk-panel: linear-gradient(rgba(252, 250, 245, .94), rgba(244, 239, 229, .96)), url("../skins/textures/marble023.jpg") center / 360px #f8f5ee;
+  --sk-life-bg: rgba(255, 255, 255, .7); --sk-well: rgba(255, 255, 255, .6); --sk-read: rgba(255, 255, 255, .5); --sk-frame-glow: 0 10px 24px rgba(60, 50, 20, .18);
+}
+:root[data-skin="highkeep"][data-theme="light"] {
+  --bg: #efe3c8; --felt: #e6d8b8; --panel: #f9f1de; --panel-2: #f0e5cb; --line: #d8c59c; --line-2: #b89c62; --deep: #e7d9b8; --subbar: #f3e9d3; --board-bg: rgba(250, 243, 226, .9); --overlay: rgba(250, 243, 226, .97);
+  --hover: #ead9b4; --hover-line: #7a5412; --text: #24190c; --muted: #66563c; --accent: #8a5e12; --accent-2: #6e4808; --gold-hi: #6e4808; --on-accent: #fff6dc; --focus: #1f5fa8;
+  --topbar: linear-gradient(rgba(252, 246, 232, .92), rgba(240, 228, 200, .95)), url("../skins/textures/wood094.jpg") center / 380px;
+  --table-bg: linear-gradient(rgba(244, 232, 205, .86), rgba(232, 216, 182, .9)), url("../skins/textures/wood094.jpg") center / 520px;
+  --sk-metal: #b0802a; --sk-metal-lo: #cfb27a; --sk-glow: #3d8fe0;
+  --sk-page: linear-gradient(rgba(244, 232, 205, .86), rgba(232, 216, 182, .9)), url("../skins/textures/wood094.jpg") center / 520px #efe3c8;
+  --sk-panel: linear-gradient(rgba(252, 247, 234, .94), rgba(243, 233, 210, .96)), url("../skins/textures/leather037.jpg") center / 300px #f9f1de;
+  --sk-life-bg: linear-gradient(#fffaf0, #f1e4c6); --sk-well: rgba(255, 255, 255, .6); --sk-read: rgba(255, 255, 255, .5); --sk-frame-glow: 0 10px 24px rgba(70, 50, 10, .2);
+}
+:root[data-skin="brass"][data-theme="light"] {
+  --bg: #e9e6dc; --felt: #dfdccf; --panel: #f6f3ea; --panel-2: #ece7da; --line: #cfc7b0; --line-2: #ad9c72; --deep: #e1dccd; --subbar: #efebe1; --board-bg: rgba(247, 244, 236, .9); --overlay: rgba(247, 244, 236, .97);
+  --hover: #e4dcc6; --hover-line: #7d5a1e; --text: #1d211f; --muted: #56605a; --accent: #8a6420; --accent-2: #6d4c14; --gold-hi: #6d4c14; --on-accent: #fff8e6; --focus: #127f8c;
+  --topbar: linear-gradient(rgba(250, 248, 242, .92), rgba(236, 231, 218, .95)), url("../skins/textures/metal009.jpg") center / 320px;
+  --table-bg: linear-gradient(rgba(240, 237, 228, .88), rgba(226, 221, 206, .92)), url("../skins/textures/metal009.jpg") center / 420px;
+  --sk-metal: #a8823a; --sk-metal-lo: #cbb382; --sk-glow: #1aa5b8;
+  --sk-page: linear-gradient(rgba(240, 237, 228, .88), rgba(226, 221, 206, .92)), url("../skins/textures/metal009.jpg") center / 420px #e9e6dc;
+  --sk-panel: linear-gradient(rgba(250, 248, 242, .94), rgba(240, 236, 226, .96)), url("../skins/textures/metal009.jpg") center / 320px #f6f3ea;
+  --sk-well: rgba(255, 255, 255, .6); --sk-read: rgba(255, 255, 255, .5); --sk-frame-glow: 0 10px 24px rgba(50, 40, 20, .18);
+}
+:root[data-skin][data-theme="light"] .life, :root[data-skin][data-theme="light"] .pname, :root[data-skin][data-theme="light"] .brand { text-shadow: none; }
+:root[data-skin][data-theme="light"] .bhead { background: linear-gradient(rgba(255, 255, 255, .5), rgba(255, 255, 255, .15)); }
+:root[data-skin][data-theme="light"] .handrow { background: linear-gradient(180deg, rgba(120, 90, 40, .08), rgba(120, 90, 40, .16)); }
+:root[data-skin="highkeep"][data-theme="light"] .brand { filter: none; }
+
+/* ================================================================ item 486: Vellum night (dim, warm, little blue light) */
+:root[data-skin="vellum"] {
+  --bg: #12100c; --felt: #16130e; --panel: #1c1813; --panel-2: #231e17; --line: #352d22; --line-2: #4d4131; --deep: #0f0d0a; --subbar: #17140f; --board-bg: rgba(28, 24, 19, .9); --overlay: rgba(20, 17, 13, .97);
+  --hover: #2b241b; --hover-line: #a8865a; --text: #e2d6bf; --muted: #a49577; --accent: #b89060; --accent-2: #94724a; --gold-hi: #e0c08e; --on-accent: #1a120a; --focus: #e0b070;
+  --mana-u: #6f8fa8; --link: #d2a878;
+  --font-display: "Cinzel", Georgia, serif;
+  --topbar: linear-gradient(#1c1813, #15120e);
+  --table-bg: radial-gradient(ellipse at 50% 30%, #211c15 0%, #16130e 60%, #0e0c09 100%);
+  --sk-title: "Cinzel", Georgia, serif; --sk-label: "Cinzel", Georgia, serif;
+  --sk-metal: #a8865a; --sk-metal-lo: #4d4131; --sk-glow: #c8945a; --sk-on: linear-gradient(#7a5a32, #4e3820); --sk-on-ink: #f6e6c8;
+  --sk-page: radial-gradient(ellipse at 50% 30%, #211c15 0%, #16130e 60%, #0e0c09 100%) #12100c;
+  --sk-panel: linear-gradient(#1f1a14, #191510) #1c1813;
+  --sk-frame: none; --sk-fw: 1px; --sk-fw-big: 1px; --sk-frame-glow: 0 8px 22px rgba(0, 0, 0, .45);
+  --sk-go: none; --sk-ring: none; --sk-mark: none; --sk-life-bg: rgba(0, 0, 0, .25);
+}
+/* ================================================================ item 487: Plain (flat and fastest) */
+:root[data-skin="plain"] {
+  --sk-title: var(--font-display); --sk-label: var(--font-display);
+  --sk-metal: #6d6878; --sk-metal-lo: #2d2a35; --sk-glow: transparent; --sk-on: var(--accent); --sk-on-ink: #0b0a0e;
+  --sk-page: var(--bg); --sk-panel: var(--panel); --table-bg: var(--felt);
+  --sk-frame: none; --sk-fw: 1px; --sk-fw-big: 1px; --sk-frame-glow: none;
+  --sk-go: none; --sk-ring: none; --sk-mark: none; --sk-life-bg: var(--deep);
+}
+:root[data-skin="vellum"] .board, :root[data-skin="vellum"] .sm-panel, :root[data-skin="vellum"] .modal-card,
+:root[data-skin="plain"] .board, :root[data-skin="plain"] .sm-panel, :root[data-skin="plain"] .modal-card { border-image: none; border-color: var(--line-2); border-radius: var(--r-lg); }
+:root[data-skin="vellum"] .btn.primary:not(.danger), :root[data-skin="plain"] .btn.primary:not(.danger) { border-image: none; border: 1px solid var(--accent); border-radius: 8px; background: var(--sk-on); padding-inline: 14px; }
+:root[data-skin="plain"] .table-wrap::before, :root[data-skin="plain"] .board::after, :root[data-skin="plain"] .sm-title::before, :root[data-skin="plain"] .sm-main::after { display: none; }
+:root[data-skin="plain"] .board, :root[data-skin="plain"] .sm-panel, :root[data-skin="plain"] .modal-card, :root[data-skin="plain"] .card, :root[data-skin="plain"] .btn { box-shadow: none; transition: none; backdrop-filter: none; }
+:root[data-skin="plain"] .board.active { box-shadow: 0 0 0 2px var(--pc); }
+:root[data-skin="vellum"] .btn.primary:not(.danger):hover:not(:disabled), :root[data-skin="plain"] .btn.primary:not(.danger):hover:not(:disabled) { background: var(--sk-on); }
+
+/* ================================================================ item 488: seasonal touches (every look) */
+:root[data-season="winter"] .table-wrap, :root[data-season="winter"] .start-menu { box-shadow: inset 0 0 90px rgba(200, 230, 255, .16); }
+:root[data-season="winter"] .sm-title h1 { filter: drop-shadow(0 0 10px rgba(220, 240, 255, .45)); }
+:root[data-season="harvest"] .table-wrap, :root[data-season="harvest"] .start-menu { box-shadow: inset 0 0 90px rgba(255, 120, 40, .14); }
+:root[data-season="harvest"] .sm-title h1 { filter: drop-shadow(0 0 10px rgba(255, 140, 60, .4)); }
 
 /* High contrast keeps its own plain look */
 :root[data-skin] body.contrast .board, :root[data-skin] body.contrast .modal-card, :root[data-skin] body.contrast .sm-panel { border-image: none; border-width: 2px; border-color: var(--text); background: var(--panel); }

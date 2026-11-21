@@ -2,5 +2,11 @@
   "important": 16,
   "zindex": 0,
   "colors": 383,
-  "unused": 4
+  "unused": 4,
+  "skins.css": {
+    "important": 1,
+    "zindex": 0,
+    "colors": 72,
+    "unused": 0
+  }
 }

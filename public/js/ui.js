@@ -756,6 +756,10 @@ export const Sound = {
   volume: 1,
   ctx: null,
   last: 0,
+  // The skin's voice (items 461-462): its waveform and pitch for every effect, plus a click for buttons
+  /** @type {string} */
+  style: '',
+  voices: { nightspire: ['sine', 0.84], highkeep: ['sawtooth', 1], brass: ['square', 1.26], vellum: ['sine', 0.75] },
   // The Sound switch turns the background music on and off with the effects
   setEnabled(on) { this.enabled = on; if (on) Music.start(); else Music.stop(); },
   combat() { if (this.enabled) Music.battle(); },
@@ -763,24 +767,25 @@ export const Sound = {
     cast: [[520, 0.06], [780, 0.08]], land: [[180, 0.07]], combat: [[140, 0.12], [110, 0.12]], damage: [[90, 0.15]],
     removal: [[400, 0.05], [260, 0.1]], death: [[220, 0.08], [150, 0.14]], combo: [[523, 0.08], [659, 0.08], [784, 0.08], [1047, 0.2]],
     win: [[523, 0.12], [659, 0.12], [784, 0.12], [1047, 0.35]], loss: [[300, 0.15], [200, 0.25]], politics: [[660, 0.06], [660, 0.06]],
-    yourTurn: [[440, 0.09], [660, 0.16]],
+    yourTurn: [[440, 0.09], [660, 0.16]], click: [[1200, 0.025]],
   },
   forLog(kind) { if (this.tones[kind]) this.play(kind); },
   play(kind) {
     if (!this.enabled) return;
     const now = performance.now();
     // Never more than a few sounds a second, even at top speed
-    if (now - this.last < 120 && kind !== 'win' && kind !== 'combo') return;
+    if (now - this.last < (kind === 'click' ? 40 : 120) && kind !== 'win' && kind !== 'combo') return;
     this.last = now;
     try {
       this.ctx ||= new AudioContext();
       let t = this.ctx.currentTime;
       for (const [freq, dur] of this.tones[kind] || []) {
         const osc = this.ctx.createOscillator(), gain = this.ctx.createGain();
-        osc.type = kind === 'damage' || kind === 'combat' ? 'triangle' : 'sine';
-        osc.frequency.value = freq;
+        const sv = this.voices[this.style];
+        osc.type = sv && kind !== 'damage' && kind !== 'combat' ? /** @type {OscillatorType} */ (sv[0]) : kind === 'damage' || kind === 'combat' ? 'triangle' : 'sine';
+        osc.frequency.value = freq * (sv ? sv[1] : 1);
         gain.gain.setValueAtTime(0.0001, t);
-        gain.gain.exponentialRampToValueAtTime(Math.max(0.0002, 0.12 * this.volume), t + 0.01);
+        gain.gain.exponentialRampToValueAtTime(Math.max(0.0002, (kind === 'click' ? 0.035 : sv && sv[0] !== 'sine' ? 0.06 : 0.12) * this.volume), t + 0.01);
         gain.gain.exponentialRampToValueAtTime(0.0001, t + dur);
         osc.connect(gain).connect(this.ctx.destination);
         osc.start(t);

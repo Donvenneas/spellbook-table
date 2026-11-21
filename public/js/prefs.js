@@ -6,3 +6,5 @@ import { store } from './util.js';
 // (Phase 2O) saved settings that aren't an object (damaged, or written by something else) are ignored: defaults apply
 const savedPrefs = store('ct.prefs');
 export const prefs = savedPrefs && typeof savedPrefs === 'object' && !Array.isArray(savedPrefs) ? savedPrefs : {};
+// Nothing saved yet: the very first start on this device (the first-run choices, design items 362 and 434)
+export const firstRun = !savedPrefs;

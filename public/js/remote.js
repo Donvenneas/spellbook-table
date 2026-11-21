@@ -28,10 +28,23 @@ const cardData = new Map();
 // ---------- theme
 const prefs = store('ct.prefs') || {};
 function applyTheme(t) { document.documentElement.dataset.theme = t; $('btnTheme').textContent = t === 'dark' ? '☀' : '☾'; }
-applyTheme(prefs.theme || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'));
+// Skins (design items 482-484): the host's skin comes with the link (?skin=); the friend can choose their own,
+// saved on this device. Nightspire, Highkeep and Brass Meridian follow the theme; the others are dark.
+const SKINS = ['nightspire', 'highkeep', 'brass', 'vellum', 'plain'], LIGHT_SKINS = ['nightspire', 'highkeep', 'brass'];
+const hostSkin = SKINS.includes(params.get('skin') || '') ? params.get('skin') : '';
+function applySkin() {
+  const own = store('ct.friendSkin') || '';
+  const s = own === 'grimoire' ? '' : SKINS.includes(own) ? own : hostSkin;
+  if (s) document.documentElement.dataset.skin = s; else delete document.documentElement.dataset.skin;
+  const t = prefs.theme || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+  applyTheme(s && !LIGHT_SKINS.includes(s) ? 'dark' : t);
+}
+$('friendSkin').value = store('ct.friendSkin') || '';
+$('friendSkin').addEventListener('change', e => { store('ct.friendSkin', e.target.value); applySkin(); });
+applySkin();
 // The friend page follows a language chosen on this device, else the browser's own language
 startI18n(prefs.lang || (navigator.language || 'en').slice(0, 2));
-$('btnTheme').addEventListener('click', () => { prefs.theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'; store('ct.prefs', prefs); applyTheme(prefs.theme); });
+$('btnTheme').addEventListener('click', () => { prefs.theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'; store('ct.prefs', prefs); applySkin(); });
 
 // ---------- joining
 $('joinName').value = store('ct.name') || '';
@@ -59,7 +72,7 @@ $('btnJoin').addEventListener('click', async () => {
     // Reload with the full link so a refresh or a dropped connection rejoins the same seat
     store('ct.name', $('joinName').value.trim() || 'Friend');
     store('ct.joined', `${c}/${s}`);
-    location.replace(`play.html?code=${c}&seat=${s}`);
+    location.replace(`play.html?code=${c}&seat=${s}${hostSkin ? `&skin=${hostSkin}` : ''}`);
     return;
   }
   const name = $('joinName').value.trim() || 'Friend';

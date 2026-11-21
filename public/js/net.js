@@ -31,10 +31,12 @@ export class Room {
   // Join links: one per network address, plus the internet address once the tunnel is up
   // (seat -1 is the spectators' link, seat -2 the delayed streamer view)
   links() {
+    // (design item 484) the host's skin rides along as the friend's default look
+    const skin = globalThis.document?.documentElement?.dataset?.skin, sk = skin ? `&skin=${encodeURIComponent(skin)}` : '';
     return this.seats.map(s => ({
       seat: s,
-      urls: this.ips.map(ip => `http://${ip}:${this.port}/play.html?code=${this.keys[s]}&seat=${s}`),
-      internet: this.tunnelUrl ? `${this.tunnelUrl}/play.html?code=${this.keys[s]}&seat=${s}` : null,
+      urls: this.ips.map(ip => `http://${ip}:${this.port}/play.html?code=${this.keys[s]}&seat=${s}${sk}`),
+      internet: this.tunnelUrl ? `${this.tunnelUrl}/play.html?code=${this.keys[s]}&seat=${s}${sk}` : null,
     }));
   }
   // Friends' chat messages newer than the last one fetched

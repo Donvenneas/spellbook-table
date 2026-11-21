@@ -210,12 +210,55 @@ const RIVET = `<radialGradient id="rivet" cx=".35" cy=".3" r=".75"><stop offset=
     <circle cx="186" cy="25" r="4" fill="url(#rivet)" stroke="#241503" stroke-width=".6"/><path d="M183.5 22.5 188.5 27.5" stroke="#2b1b05" stroke-width=".9"/>`,
     RIVET + `<linearGradient id="copper" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffc396"/><stop offset=".35" stop-color="#d07a44"/><stop offset=".7" stop-color="#8a4019"/><stop offset="1" stop-color="#4f210a"/></linearGradient>`));
 
+  // the life plate: a lighter brass so dark ink reads at 4.5:1 or better (design item 469), slice 0 30 fill
+  out("frames", "bm-lifeplate.svg", svg(200, 50, `
+    <rect x="1" y="1" width="198" height="48" rx="10" fill="url(#pale)" stroke="#241503" stroke-width="1.2"/>
+    <rect x="7" y="7" width="186" height="36" rx="6" fill="none" stroke="#5a3d14" stroke-opacity=".5"/>
+    <path d="M12 3H188" stroke="#fff8dc" stroke-opacity=".6"/>
+    <circle cx="14" cy="25" r="4" fill="url(#rivet)" stroke="#241503" stroke-width=".6"/><path d="M11.5 22.5 16.5 27.5" stroke="#2b1b05" stroke-width=".9"/>
+    <circle cx="186" cy="25" r="4" fill="url(#rivet)" stroke="#241503" stroke-width=".6"/><path d="M183.5 22.5 188.5 27.5" stroke="#2b1b05" stroke-width=".9"/>`,
+    RIVET + `<linearGradient id="pale" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f8e6b0"/><stop offset=".45" stop-color="#e2c27a"/><stop offset="1" stop-color="#c9a45e"/></linearGradient>`));
+
   // engraved filigree corner for the focus card
   out("frames", "bm-filigree.svg", svg(60, 60, `<g fill="none" stroke="url(#brass)" stroke-width="1.3" stroke-linecap="round">
     <path d="M4 56V20C4 11 11 4 20 4H56"/>
     <path d="M10 44c0-14 6-24 18-28 8-3 14 0 14 6 0 5-5 7-8 4"/>
     <path d="M44 10c-14 0-24 6-28 18-3 8 0 14 6 14 5 0 7-5 4-8"/></g>
     <circle cx="10" cy="10" r="3.2" fill="url(#rivet)"/>`, BRASS + RIVET));
+}
+
+/* ---------------- items 443-447: rings, sigils, dividers, lit frame ---------------- */
+{
+  // Brass Meridian: a gear drawn as a ring (open middle) for portraits
+  const n = 18, cx = 50, cy = 50, ro = 49, ri = 42, hole = 34;
+  let d = "";
+  for (let i = 0; i < n; i++) {
+    const a0 = (i / n) * Math.PI * 2, s = Math.PI * 2 / n;
+    [[ri, a0], [ro, a0 + s * .16], [ro, a0 + s * .5], [ri, a0 + s * .66]].forEach(([rad, a], k) => { d += `${i === 0 && k === 0 ? "M" : "L"}${r(cx + Math.cos(a) * rad)} ${r(cy + Math.sin(a) * rad)}`; });
+  }
+  d += `Z M${cx} ${cy - hole}A${hole} ${hole} 0 1 0 ${cx + .01} ${cy - hole}Z`;
+  out("frames", "bm-gear-ring.svg", svg(100, 100, `<path d="${d}" fill="url(#brass)" fill-rule="evenodd" stroke="#241503" stroke-width="1.2"/><circle cx="50" cy="50" r="38" fill="none" stroke="#fff3c8" stroke-opacity=".35"/><circle cx="50" cy="50" r="35" fill="none" stroke="#241503" stroke-width="1.5"/>${[0, 1, 2, 3, 4, 5].map(k => { const a = k * Math.PI / 3; return `<circle cx="${r(50 + Math.cos(a) * 38.5)}" cy="${r(50 + Math.sin(a) * 38.5)}" r="1.6" fill="url(#rivet)"/>`; }).join("")}`, BRASS + RIVET));
+
+  // Highkeep: a crest (shield, crown, crossed blades) for the start menu
+  out("frames", "hk-crest.svg", svg(120, 120, `
+    <path d="M28 40 92 88M92 40 28 88" stroke="url(#goldb)" stroke-width="6" stroke-linecap="round"/>
+    <path d="M60 22 92 34v26c0 22-14 36-32 46C42 96 28 82 28 60V34Z" fill="#0d1532" stroke="url(#goldb)" stroke-width="5"/>
+    <path d="M60 30 84 39v21c0 17-10 28-24 36-14-8-24-19-24-36V39Z" fill="none" stroke="#e7c46d" stroke-width="1.2" opacity=".7"/>
+    <path d="M60 46 70 60 60 74 50 60Z" fill="url(#ruby)" stroke="#e7c46d" stroke-width="1.5"/>
+    <path d="M42 14 48 22 54 12 60 22 66 12 72 22 78 14 76 26H44Z" fill="url(#goldb)" stroke="#1e1103" stroke-width="1"/>`,
+    GOLD_BB + `<radialGradient id="ruby" cx=".38" cy=".32" r=".8"><stop offset="0" stop-color="#ff9b8a"/><stop offset=".45" stop-color="#c0251a"/><stop offset="1" stop-color="#3d0503"/></radialGradient>`));
+
+  // dividers under the start menu title
+  out("frames", "hk-divider.svg", svg(240, 16, `<path d="M0 8H100M140 8H240" stroke="url(#gl)" stroke-width="2"/><path d="M104 8 120 1 136 8 120 15Z" fill="url(#goldb)" stroke="#1e1103"/><circle cx="120" cy="8" r="3" fill="#c0251a"/>`,
+    GOLD_BB + `<linearGradient id="gl" x1="0" x2="1"><stop offset="0" stop-color="#d8a945" stop-opacity="0"/><stop offset=".4" stop-color="#d8a945"/><stop offset=".6" stop-color="#d8a945"/><stop offset="1" stop-color="#d8a945" stop-opacity="0"/></linearGradient>`));
+  out("frames", "bm-divider.svg", svg(240, 16, `<path d="M0 8H104M136 8H240" stroke="url(#gl)" stroke-width="2"/><circle cx="120" cy="8" r="7" fill="url(#brass)" stroke="#241503"/><circle cx="120" cy="8" r="2.4" fill="#5ce2ef"/>${[60, 90, 150, 180].map(x => `<circle cx="${x}" cy="8" r="2" fill="url(#rivet)"/>`).join("")}`,
+    BRASS + RIVET + `<linearGradient id="gl" x1="0" x2="1"><stop offset="0" stop-color="#c9a052" stop-opacity="0"/><stop offset=".4" stop-color="#c9a052"/><stop offset=".6" stop-color="#c9a052"/><stop offset="1" stop-color="#c9a052" stop-opacity="0"/></linearGradient>`));
+
+  // Nightspire: the frame with its corner studs lit, for the active board
+  const lit = readFileSync(join(root, "frames", "ns-frame.svg"), "utf8")
+    .replace('<circle cx="17" cy="17" r="1.3" fill="#8fc3ff" stroke="none"/>', '<circle cx="17" cy="17" r="5" fill="#8fc3ff" opacity=".35" stroke="none"/><circle cx="17" cy="17" r="2.2" fill="#e6f3ff" stroke="none"/>')
+    .replace('fill="#0b1226" stroke="none"/>', 'fill="#2a5aa8" stroke="none"/>');
+  out("frames", "ns-frame-lit.svg", lit);
 }
 
 /* ---------------- icons from game-icons.net (CC BY 3.0) ---------------- */

@@ -43,11 +43,11 @@ const STRENGTH = {
 import { topCommanders, ddbDecks, edhtop16Name, offlineSince, compareWithMeta, trendHistory } from './cedhdata.js';
 import { Rules } from './rules.js';
 import { esc, sleep, store, symbolize, makeRng, whenText, dayText, numText, installImageFallback } from './util.js';
-import { prefs } from './prefs.js';
+import { prefs, firstRun } from './prefs.js';
 import { SEAT_COLORS, deckText, runOnCores, gameFromSummary } from './cores.js';
 import { showImages, showStorage, openHelp } from './windows.js';
 import { FORMATS, formatOf, checkDeck } from './formats.js';
-import { AVATARS, BACKS, avatarById, backById, unlocked, unlockText, pickerHtml } from './cosmetics.js';
+import { AVATARS, BACKS, avatarById, backById, skinBack, unlocked, unlockText, pickerHtml } from './cosmetics.js';
 import { LANGS, startI18n } from './i18n.js';
 import { LESSONS, lessonsDone, markLesson, lessonPuzzle, coachHtml } from './tutorial.js';
 import { CHAPTERS, storyDone, markChapter, chapterOpen, chapterPuzzle } from './story.js';
@@ -349,6 +349,7 @@ function newGame(opts = {}) {
   lobbyOpen = false;
   // (a game started from anywhere, the start menu included, takes the screen)
   $('startMenu').hidden = true;
+  if (!opts.replay) rollGameSkin();
   clock?.abort();
   clock = new Clock();
   if (!opts.replay || !setup) {
@@ -1248,15 +1249,15 @@ function applyDisplay(initial = false) {
   }
   // Card back for every face-down card (cosmetics.js); a locked choice falls back to the first one
   const ctx = cosmeticCtx();
-  const back = backById(prefs.back);
-  document.body.style.setProperty('--card-back', unlocked(back, ctx) ? back.css : BACKS[0].css);
+  const back = backById(prefs.back), sb = !prefs.back && skinBack(document.documentElement.dataset.skin);
+  document.body.style.setProperty('--card-back', sb ? sb.css : unlocked(back, ctx) ? back.css : BACKS[0].css);
   if (!initial && !$('setup').hidden) renderSeats();
 }
 // What has been unlocked: badges, games you played, your best deck mastery level
 function cosmeticCtx() {
   const lv = Object.keys(store('ct.learn') || {}).reduce((m, k) => Math.max(m, mastery(k.split(' + ').map(name => ({ name }))).level), 1);
   // ('ct.history' spelled out: this runs at startup, before HISTORY is declared)
-  return { badges: badges(), games: (store('ct.history') || []).filter(h => h.seats.some(s => s.you)).length, maxMastery: lv };
+  return { badges: badges(), games: (store('ct.history') || []).filter(h => h.seats.some(s => s.you)).length, maxMastery: lv, skinGames: prefs.skinGames || {} };
 }
 // Your avatar, on every seat you play (otherwise its commander's art)
 function avatarUrl() {
@@ -1281,7 +1282,9 @@ $('displayModal').addEventListener('click', e => {
 $('btnDisplay').addEventListener('click', () => {
   $('dispBg').value = prefs.bg || 'art';
   $('dispTheme').value = prefs.theme || '';
-  $('dispSkin').value = currentSkin();
+  $('dispSkin').value = prefs.skin === 'random' || SKINS.includes(prefs.skin) ? prefs.skin : '';
+  $('dispMenuSkin').value = prefs.menuSkin || '';
+  $('dispSeason').checked = !prefs.noSeason;
   $('dispCard').value = String(+prefs.cardScale || 100);
   $('dispCard').setAttribute('aria-valuetext', `${+prefs.cardScale || 100}%`);
   $('dispCardSay').textContent = `${+prefs.cardScale || 100}%`;
@@ -1778,23 +1781,82 @@ function applyTheme(t) {
 const systemTheme = () => (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
 // Skins (Display → Skin, css/skins.css): Nightspire, Highkeep, Brass Meridian. They are dark looks, so the dark theme
 // stays on while one is chosen; Grimoire (no skin) follows the Theme setting as before.
-const SKINS = ['nightspire', 'highkeep', 'brass'];
-const currentSkin = () => (SKINS.includes(prefs.skin) ? prefs.skin : '');
-function applySkin() {
-  const s = currentSkin();
-  if (s) document.documentElement.dataset.skin = s; else delete document.documentElement.dataset.skin;
-  applyTheme(s ? 'dark' : (prefs.theme || systemTheme()));
+// Items 433-442: a different skin for the start menu ("same" by default), "random" picks one per game, hovering a
+// choice in Display previews it, ☀ and Shift+K step through every look, and the change is announced.
+const SKINS = ['nightspire', 'highkeep', 'brass', 'vellum', 'plain'];
+const SKIN_NAMES = { '': 'Grimoire', nightspire: 'Nightspire', highkeep: 'Highkeep', brass: 'Brass Meridian', vellum: 'Vellum night', plain: 'Plain (fastest)' };
+// Light versions (item 485): these skins have a light page too; the others are dark only
+const LIGHT_SKINS = ['nightspire', 'highkeep', 'brass'];
+let gameSkin = SKINS[Math.floor(Math.random() * 3)];
+const tableSkin = () => (prefs.skin === 'random' ? gameSkin : SKINS.includes(prefs.skin) ? prefs.skin : '');
+const menuSkin = () => (SKINS.includes(prefs.menuSkin) ? prefs.menuSkin : prefs.menuSkin === 'grimoire' ? '' : tableSkin());
+/** @type {string | null} */
+let previewSkin = null;
+const currentSkin = () => (previewSkin !== null ? previewSkin : $('startMenu').hidden ? tableSkin() : menuSkin());
+function applySkin(announce = false) {
+  const root = document.documentElement, s = currentSkin(), was = root.dataset.skin || '';
+  if (s) root.dataset.skin = s; else delete root.dataset.skin;
+  const light = (prefs.theme || systemTheme()) === 'light';
+  // a skin without a light version stays dark; one with a light version follows the Theme setting
+  applyTheme(s && !LIGHT_SKINS.includes(s) ? 'dark' : light ? 'light' : 'dark');
+  // Seasonal touches (item 488): a few days around the solstices and the end of October, unless turned off
+  const md = new Date().getMonth() * 100 + new Date().getDate();
+  root.dataset.season = prefs.noSeason ? '' : md >= 1215 || md <= 105 ? 'winter' : md >= 1025 && md <= 1101 ? 'harvest' : '';
+  Music.setStyle(s || 'grimoire');
+  Sound.style = s;
+  if (!prefs.back && was !== s) applyDisplay(true);
+  if (was !== s) {
+    // (item 465) a short cross-fade between looks, skipped with Fewer animations
+    root.classList.add('skin-switch'); setTimeout(() => root.classList.remove('skin-switch'), 450);
+    if (announce) notice(`Look: ${SKIN_NAMES[s] || 'Grimoire'}${s && LIGHT_SKINS.includes(s) && light ? ' (light)' : ''}`);
+  }
 }
+new MutationObserver(() => applySkin()).observe($('startMenu'), { attributes: true, attributeFilter: ['hidden'] });
+// (item 466) animations pause while the window is hidden or minimised
+document.addEventListener('visibilitychange', () => document.documentElement.classList.toggle('tab-hidden', document.hidden));
 applySkin();
-matchMedia('(prefers-color-scheme: light)').addEventListener('change', () => { if (!prefs.theme && !currentSkin()) applyTheme(systemTheme()); });
+matchMedia('(prefers-color-scheme: light)').addEventListener('change', () => { if (!prefs.theme) applySkin(); });
 $('dispTheme').addEventListener('change', e => { if (e.target.value) prefs.theme = e.target.value; else delete prefs.theme; store('ct.prefs', prefs); applySkin(); });
-$('dispSkin').addEventListener('change', e => { if (SKINS.includes(e.target.value)) prefs.skin = e.target.value; else delete prefs.skin; store('ct.prefs', prefs); applySkin(); });
-// ☀ / ☾: with a skin on, the light theme means going back to Grimoire (skins have no light version)
-$('btnTheme').addEventListener('click', () => {
-  prefs.theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
-  if (prefs.theme === 'light') delete prefs.skin;
-  store('ct.prefs', prefs); applySkin();
-});
+$('dispSkin').addEventListener('change', e => { const v = e.target.value; if (SKINS.includes(v) || v === 'random') prefs.skin = v; else delete prefs.skin; store('ct.prefs', prefs); previewSkin = null; applySkin(true); });
+$('dispSeason').addEventListener('change', e => { if (e.target.checked) delete prefs.noSeason; else prefs.noSeason = true; store('ct.prefs', prefs); applySkin(); });
+$('dispMenuSkin').addEventListener('change', e => { const v = e.target.value; if (v) prefs.menuSkin = v; else delete prefs.menuSkin; store('ct.prefs', prefs); applySkin(); });
+// Hovering a skin's button in Display shows it until the pointer leaves the row
+{
+  const segOf = () => /** @type {HTMLElement | null} */ ($('dispSkin').nextElementSibling);
+  $('displayModal').addEventListener('pointerover', e => {
+    const b = e.target instanceof Element ? e.target.closest('.seg-b') : null;
+    if (!b || b.parentElement !== segOf()) return;
+    const v = /** @type {HTMLElement} */ (b).dataset.v || '';
+    const next = v === 'random' ? null : v;
+    if (next !== previewSkin) { previewSkin = next; applySkin(); }
+  });
+  $('displayModal').addEventListener('pointerout', e => {
+    const seg = segOf();
+    if (previewSkin === null || !seg || (e.relatedTarget instanceof Node && seg.contains(e.relatedTarget))) return;
+    previewSkin = null; applySkin();
+  });
+}
+// ☀ / ☾ and Shift+K step through the looks: Grimoire dark, Grimoire light, then each skin
+const LOOKS = [['dark', ''], ['light', ''], ...SKINS.map(s => ['dark', s])];
+function nextLook() {
+  const s = tableSkin(), t = document.documentElement.dataset.theme;
+  const i = LOOKS.findIndex(([th, sk]) => sk === s && (s || th === t));
+  const [th, sk] = LOOKS[(i + 1) % LOOKS.length];
+  prefs.theme = th;
+  if (sk) prefs.skin = sk; else delete prefs.skin;
+  delete prefs.menuSkin;
+  store('ct.prefs', prefs); applySkin(true);
+  const after = LOOKS[(i + 2) % LOOKS.length];
+  $('btnTheme').title = `Change the look (Shift+K). Next: ${after[1] ? SKIN_NAMES[after[1]] : `Grimoire ${after[0]}`}`;
+}
+$('btnTheme').addEventListener('click', nextLook);
+// A new game with "Random each game" draws its skin (item 438); nothing in the game depends on it
+function rollGameSkin() {
+  if (prefs.skin === 'random') { gameSkin = SKINS[Math.floor(Math.random() * SKINS.length)]; applySkin(true); }
+  // games started in each skin unlock its card back for every look (item 489)
+  const s = tableSkin();
+  if (s) { prefs.skinGames = { ...(prefs.skinGames || {}), [s]: (prefs.skinGames?.[s] || 0) + 1 }; store('ct.prefs', prefs); }
+}
 $('btnFull').addEventListener('click', () => { if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen?.().catch(() => notice("This window can't go full screen.", { tone: 'warn' })); });
 document.addEventListener('fullscreenchange', () => { const on = !!document.fullscreenElement; $('btnFull').setAttribute('aria-pressed', String(on)); $('btnFull').dataset.tip = on ? 'Leave full screen' : 'Full screen'; });
 {
@@ -1840,6 +1902,8 @@ $('volFx').addEventListener('change', () => Sound.play('cast'));
 if (prefs.sound) document.addEventListener('pointerdown', () => Sound.setEnabled(prefs.sound), { once: true });
 document.body.classList.toggle('follow', !!prefs.follow);
 $('followMode').addEventListener('change', e => { prefs.follow = e.target.checked; store('ct.prefs', prefs); document.body.classList.toggle('follow', prefs.follow); view?.render(); });
+// (item 461) with a skin on, buttons click in the skin's voice
+document.addEventListener('pointerdown', e => { if (prefs.sound && Sound.style && e.target instanceof Element && e.target.closest('.btn, .sm-btn, .seg-b, .modal-x')) Sound.play('click'); });
 $('soundOn').addEventListener('change', e => { prefs.sound = e.target.checked; store('ct.prefs', prefs); Sound.setEnabled(prefs.sound); if (prefs.sound) Sound.play('land'); });
 
 // Moxfield bookmarklet: runs on moxfield.com in your own browser and copies the decklist
@@ -3503,6 +3567,7 @@ document.addEventListener('keydown', e => {
   // (a window is open: its own keys come first; only the zone viewer keeps its shortcuts)
   if (modalOpen() && $('zoneModal').hidden) return;
   if (e.key === '?') { e.preventDefault(); showShortcuts(); return; }
+  if (e.key === 'K' && e.shiftKey && !e.ctrlKey && !e.metaKey && !e.altKey) { e.preventDefault(); nextLook(); return; }
   // When it's your decision, the keys answer the action bar first
   if (humanUI.key(e)) return;
   if (e.key === 'u' || ((e.ctrlKey || e.metaKey) && e.key === 'z')) { e.preventDefault(); undo(); return; }
@@ -4026,6 +4091,7 @@ const SHORTCUTS = [
     ['U or Ctrl+Z', 'Undo your last decision'],
     ['G, X, L', 'Open your graveyard, exile or library'],
     ['?', 'This list'],
+    ['Shift+K', 'Change the look: Grimoire dark, Grimoire light, then each skin'],
     ['Drag ⠿ on the action bar', 'Move the bar off your cards (double-click ⠿ to put it back)'],
   ]],
   ['When the game asks you something', [
@@ -4189,6 +4255,38 @@ $('btnSetupMenu').addEventListener('click', showMenu);
 fetch('/api/update').then(r => r.json()).then(j => { $('smVersion').textContent = `Version ${j.version}`; }).catch(() => {});
 // A challenge link goes straight to the setup screen; otherwise the menu greets you
 if (!$('setup').hidden || openedChallenge) $('startMenu').hidden = true;
+
+// First-run choices (design items 362 and 434): on the very first start on this device, before the dashboard:
+// language, skin, theme, text size and "new to Magic?". Everything here is also in Display. Not shown to tests.
+if (firstRun && !UITEST && !navigator.webdriver && !$('startMenu').hidden) {
+  const opt = (pairs, cur) => pairs.map(([v, n]) => `<option value="${esc(v)}" ${v === cur ? 'selected' : ''}>${esc(n)}</option>`).join('');
+  const m = document.createElement('div');
+  m.id = 'firstRunModal'; m.className = 'modal'; m.hidden = true;
+  m.innerHTML = `<div class="modal-card results-card display-card first-run" role="dialog" aria-labelledby="frTitle">
+    <h2 id="frTitle">Welcome to Commander Table</h2>
+    <p class="muted">A few choices before you start. You can change every one later in Settings → Display.</p>
+    <label class="disp-row">Language <select id="frLang" class="input">${opt(Object.entries(LANGS), prefs.lang || (navigator.language || 'en').slice(0, 2))}</select></label>
+    <label class="disp-row">Look <select id="frSkin" class="input">${opt(Object.entries(SKIN_NAMES).filter(([k]) => k !== 'plain'), '')}</select></label>
+    <label class="disp-row">Theme <select id="frTheme" class="input">${opt([['', 'Match the system'], ['dark', 'Dark'], ['light', 'Light']], '')}</select></label>
+    <label class="disp-row">Text size <select id="frText" class="input">${opt([['', 'Normal'], ['1.12', 'Large'], ['1.25', 'Larger']], '')}</select></label>
+    <div class="modal-foot"><button class="btn" id="frLearn">I'm new to Magic: teach me</button> <button class="btn primary" id="frGo">Start</button></div>
+  </div>`;
+  document.body.append(m);
+  const done = learn => {
+    const lang = /** @type {HTMLSelectElement} */ ($('frLang')).value;
+    const reload = lang !== (prefs.lang || 'en');
+    prefs.lang = lang; prefs.welcomed = true; store('ct.prefs', prefs);
+    m.hidden = true;
+    if (reload) { location.reload(); return; }
+    if (learn) $('btnLearn').click();
+  };
+  $('frSkin').addEventListener('change', e => { if (e.target.value) prefs.skin = e.target.value; else delete prefs.skin; applySkin(true); });
+  $('frTheme').addEventListener('change', e => { if (e.target.value) prefs.theme = e.target.value; else delete prefs.theme; applySkin(); });
+  $('frText').addEventListener('change', e => { if (e.target.value) prefs.textScale = e.target.value; else delete prefs.textScale; applyDisplay(); });
+  $('frGo').addEventListener('click', () => done(false));
+  $('frLearn').addEventListener('click', () => done(true));
+  setTimeout(() => { m.hidden = false; $('frGo').focus(); }, 300);
+}
 renderMenu();
 if (prefs.autoSets !== false) dailySetCheck().then(r => { if (r) { renderMenu(r); refreshSetLists(); } });
 dailyBulk();

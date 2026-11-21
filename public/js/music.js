@@ -5,6 +5,18 @@ const BPM = 84, BEAT = 60 / BPM, BAR = BEAT * 4;
 const N = (name, oct) => 440 * 2 ** ((['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'].indexOf(name) - 9) / 12 + (oct - 4));
 // Dm · B♭ · F · C · Dm · Gm · B♭ · A
 const CHORDS = [['D', 'F', 'A'], ['A#', 'D', 'F'], ['F', 'A', 'C'], ['C', 'E', 'G'], ['D', 'F', 'A'], ['G', 'A#', 'D'], ['A#', 'D', 'F'], ['A', 'C#', 'E']];
+// Each skin has its own piece (items 463-464): chords, the pad's and the arpeggio's sound, bells, and Brass Meridian's clockwork tick
+const STYLES = {
+  grimoire: { chords: CHORDS, pad: 'sawtooth', padFilter: 1100, arp: 'triangle', arpOct: 4, bell: 'sine', tick: false },
+  // Em · C · Am · B · Em · D · C · B: a cathedral organ
+  nightspire: { chords: [['E', 'G', 'B'], ['C', 'E', 'G'], ['A', 'C', 'E'], ['B', 'D#', 'F#'], ['E', 'G', 'B'], ['D', 'F#', 'A'], ['C', 'E', 'G'], ['B', 'D#', 'F#']], pad: 'square', padFilter: 800, arp: 'sine', arpOct: 4, bell: 'triangle', tick: false },
+  // C · G · Am · F · C · F · G · E: heroic horns
+  highkeep: { chords: [['C', 'E', 'G'], ['G', 'B', 'D'], ['A', 'C', 'E'], ['F', 'A', 'C'], ['C', 'E', 'G'], ['F', 'A', 'C'], ['G', 'B', 'D'], ['E', 'G#', 'B']], pad: 'sawtooth', padFilter: 1400, arp: 'sawtooth', arpOct: 4, bell: 'sine', tick: false },
+  // Am · D · Am · E · F · G · Am · E: a music box over clockwork
+  brass: { chords: [['A', 'C', 'E'], ['D', 'F#', 'A'], ['A', 'C', 'E'], ['E', 'G#', 'B'], ['F', 'A', 'C'], ['G', 'B', 'D'], ['A', 'C', 'E'], ['E', 'G#', 'B']], pad: 'triangle', padFilter: 1200, arp: 'sine', arpOct: 5, bell: 'sine', tick: true },
+  vellum: { chords: CHORDS, pad: 'sine', padFilter: 700, arp: 'sine', arpOct: 4, bell: '', tick: false },
+};
+let style = STYLES.grimoire;
 
 let ctx = null, master = null, verb = null, echo = null, battleBus = null;
 let timer = null, nextBar = 0, bar = 0, intensity = 0, battleUntil = 0;
@@ -60,17 +72,18 @@ function drum(t, { pitch = 70, gain = 0.5, noise = 0.25, dest = battleBus } = {}
 }
 
 function scheduleBar(t, i) {
-  const chord = CHORDS[i % CHORDS.length];
+  const chord = style.chords[i % style.chords.length];
   const root = chord[0];
   // Pad: three slightly detuned voices per chord tone, softly filtered
-  for (const n of chord) for (const dt of [-7, 0, 7]) voice(t, N(n, 3), BAR + 0.4, { type: 'sawtooth', gain: 0.012, attack: 0.9, release: 0.9, filter: 1100 + intensity * 900, detune: dt, toVerb: 0.6 });
+  for (const n of chord) for (const dt of [-7, 0, 7]) voice(t, N(n, 3), BAR + 0.4, { type: style.pad, gain: style.pad === 'square' ? 0.007 : 0.012, attack: 0.9, release: 0.9, filter: style.padFilter + intensity * 900, detune: dt, toVerb: 0.6 });
   // Bass on beats 1 and 3
   for (const b of [0, 2]) voice(t + b * BEAT, N(root, 2), BEAT * 1.8, { type: 'sine', gain: 0.11, attack: 0.02, release: 0.5, toVerb: 0.05 });
   // Arpeggio up and down the chord (eighths), with echo
-  const arp = [...chord.map(n => N(n, 4)), N(chord[0], 5), N(chord[2], 4), N(chord[1], 4)];
-  for (let k = 0; k < 8; k++) voice(t + k * BEAT / 2, arp[k % arp.length] * (k % 4 === 3 ? 2 : 1), BEAT * 0.9, { type: 'triangle', gain: 0.03 + intensity * 0.015, attack: 0.005, release: 0.4, toVerb: 0.35, toEcho: 0.7 });
+  const o = style.arpOct, arp = [...chord.map(n => N(n, o)), N(chord[0], o + 1), N(chord[2], o), N(chord[1], o)];
+  for (let k = 0; k < 8; k++) voice(t + k * BEAT / 2, arp[k % arp.length] * (k % 4 === 3 ? 2 : 1), BEAT * 0.9, { type: style.arp, filter: style.arp === 'sawtooth' ? 1600 : 0, gain: 0.03 + intensity * 0.015, attack: 0.005, release: 0.4, toVerb: 0.35, toEcho: 0.7 });
   // Bells every other bar
-  if (i % 2 === 0) voice(t + BEAT * 2.5, N(chord[1], 6), BEAT * 3, { type: 'sine', gain: 0.025, attack: 0.003, release: 2.5, toVerb: 0.8 });
+  if (style.tick) for (let b = 0; b < 4; b++) voice(t + b * BEAT, 2400 + (b % 2) * 600, 0.03, { type: 'square', gain: 0.006, attack: 0.001, release: 0.02, filter: 5000, toVerb: 0.1 });
+  if (style.bell && i % 2 === 0) voice(t + BEAT * 2.5, N(chord[1], 6), BEAT * 3, { type: style.bell, gain: 0.025, attack: 0.003, release: 2.5, toVerb: 0.8 });
   // Battle layer: war drums and a string ostinato (faded in by the battle bus)
   if (intensity > 0.02) {
     for (const [b, p, gn] of [[0, 62, 0.55], [1.5, 80, 0.3], [2, 62, 0.45], [3, 95, 0.32], [3.5, 95, 0.25]]) drum(t + b * BEAT, { pitch: p, gain: gn });
@@ -113,4 +126,6 @@ export const Music = {
   },
   // Combat: the battle layer comes in for the next several seconds
   battle(seconds = 9) { battleUntil = performance.now() + seconds * 1000; },
+  // The skin's piece; it takes over from the next bar
+  setStyle(name) { style = STYLES[name] || STYLES.grimoire; },
 };

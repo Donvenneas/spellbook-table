@@ -38,6 +38,11 @@ export const BACKS = [
   { id: 'league', name: 'Seven-star banner', unlock: { badge: 'league-7' }, css: 'radial-gradient(circle at 50% 50%, #ffe08a 0 6%, transparent 7%), repeating-conic-gradient(from 0deg at 50% 50%, #1e3a6b 0 25.7deg, #2a5296 25.7deg 51.4deg)' },
   { id: 'cup', name: 'Friendship cup', unlock: { badge: 'cup-win' }, css: 'repeating-linear-gradient(0deg, #6b1e3a 0 6px, #8f2a50 6px 12px), #6b1e3a' },
   { id: 'mythic', name: 'Mythic flame', unlock: { badge: 'rank-mythic' }, css: 'radial-gradient(ellipse at 50% 100%, #ffd36b 0 25%, #ff7a45 26% 45%, #a12b0d 46% 70%, #2a0a05 71%)' },
+  // The skins' own backs (design items 452 and 489): used while that skin is on and no back is chosen, and free to
+  // pick for any look after five games played in that skin
+  { id: 'rune', name: 'Rune seal (Nightspire)', skin: 'nightspire', unlock: { skinGames: ['nightspire', 5] }, css: 'radial-gradient(circle at 50% 50%, #f7e4a6 0 5%, transparent 6%), radial-gradient(circle at 50% 50%, transparent 0 24%, #cfa54e 25% 27%, transparent 28% 34%, #cfa54e 35% 36%, transparent 37%), repeating-conic-gradient(from 0deg at 50% 50%, #0b1226 0 15deg, #121c3a 15deg 30deg)' },
+  { id: 'crest', name: 'Crest of Highkeep', skin: 'highkeep', unlock: { skinGames: ['highkeep', 5] }, css: 'radial-gradient(circle at 50% 50%, #c0251a 0 8%, #ffd96b 9% 12%, transparent 13%), linear-gradient(90deg, transparent 46%, #c99b3e 46% 54%, transparent 54%), repeating-linear-gradient(45deg, #0d1532 0 6px, #142048 6px 12px), #0d1532' },
+  { id: 'gearwork', name: 'Gearwork (Brass Meridian)', skin: 'brass', unlock: { skinGames: ['brass', 5] }, css: 'radial-gradient(circle at 50% 50%, #5ce2ef 0 4%, #efd28a 5% 9%, #8f6828 10% 17%, transparent 18%), repeating-conic-gradient(from 0deg at 50% 50%, #8f6828 0 8deg, transparent 8deg 20deg), repeating-radial-gradient(circle at 50% 50%, #10201e 0 5px, #1b332f 5px 10px)' },
 ];
 
 // ctx: { badges: {id: date}, games: number of finished games you played, maxMastery: best deck level }
@@ -47,6 +52,7 @@ export function unlocked(item, ctx) {
   if (u.badge) return !!ctx.badges[u.badge];
   if (u.games) return (ctx.games || 0) >= u.games;
   if (u.mastery) return (ctx.maxMastery || 0) >= u.mastery;
+  if (u.skinGames) return (ctx.skinGames?.[u.skinGames[0]] || 0) >= u.skinGames[1];
   return false;
 }
 export function unlockText(item, badgeList) {
@@ -55,10 +61,13 @@ export function unlockText(item, badgeList) {
   if (u.badge) return `Earn the "${badgeList.find(b => b.id === u.badge)?.name || u.badge}" badge`;
   if (u.games) return `Play ${u.games} games yourself`;
   if (u.mastery) return `Get a deck to mastery level ${u.mastery}`;
+  if (u.skinGames) return `Start ${u.skinGames[1]} games with the skin on (shown in that skin until then)`;
   return '';
 }
 export const avatarById = id => AVATARS.find(a => a.id === id) || AVATARS[0];
 export const backById = id => BACKS.find(b => b.id === id) || BACKS[0];
+/** The back a skin shows while no back is chosen */
+export const skinBack = skin => BACKS.find(b => b.skin === skin);
 
 // The pickers in the Display window
 export function pickerHtml(kind, current, ctx, badgeList) {
