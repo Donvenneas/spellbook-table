@@ -928,6 +928,19 @@ on top of the ones above:
     check now also finds activated and channel abilities whose effect isn't read, which moved some cards out of "full".
     Of the 421: 55 fully simulated (3 before), 6 known incorrect, 358 still partial. Tests: new tests/completions.mjs
     (58, CI). Report set in audit/phase-2f; the rest is listed in audit/phase-2f/PHASE_2F_REMAINING_GAPS.md.
+- [x] 393. Multiplayer attacks and the loop runner (asked 2026-11-21: attack with everything against several opponents,
+  an easier attacker interface for big boards, and loops repeated an exact number of times with progress controls).
+  - Done (version 1.65.0; no rules change, golden games unchanged): the cause was the attack question itself:
+    "Attack <player>" answered the whole declaration, so every selected creature went to that one player. New attack
+    planner in the action bar (attackplan.js): a lane per opponent, planeswalker and battle (avatar, life, attackers and
+    power, attack tax and limits), a grid of your creatures (selected, sent and unable-with-reason), click or drag to
+    assign and reassign, Select all / unassigned, Clear, Reset, Spread evenly, AI plan, Last combat, a summary and
+    Confirm. 0-power creatures can attack now. The plan is one recorded answer ({ d: { attack } }), checked against the
+    rules on replay. Online seats get "Send selected to <player>" and "Confirm attackers" buttons after the old ones, so
+    the old answers keep their numbers. Loop runner (looprun.js): counts 1–50 or typed (up to 999), Preview on a copy
+    of the game, "answer yes/no questions the same way each time", progress with Pause/Resume/Stop between repetitions;
+    a stop by hand is written into the recorded answer so a replay stops there. Tests: new tests/attacks.mjs (12) and
+    tests/looprun.mjs (13), both in CI; two new interface checks in uitest.js.
 - [x] 385. Quality, rules validation, security and release readiness (asked 2026-11-17, Phase 2O): a baseline audit
   (tests/phase-2o-audit.md), the defects it found fixed, event-sequence rules tests, saved-data tests, fuzz failure
   capture, measurements and other browsers.

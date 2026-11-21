@@ -428,6 +428,8 @@ function newGame(opts = {}) {
   humanUI.seat = null;
   remoteUIs.forEach(u => u.cancel());
   humanUI.onRecord = noteAnswer;
+  // (a loop stopped by hand writes where it stopped into its recorded answer: save that too)
+  humanUI.onAmend = autosave;
   remoteUIs = new Map(setup.remote.map(i => {
     const u = new RemoteUI(room, i, prefs.decisionTime || 120, setup.replayOnly ? 'off' : prefs.turnClock || 'off', prefs.dropPolicy || 'ai');
     u.setRecord(setup.remoteDecisions[i] ||= [], setup.replayOnly);

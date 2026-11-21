@@ -10,6 +10,8 @@ import { needsTarget, needsTargetIn, costText } from './effects.js';
 import { esc, makeRng } from './util.js';
 import { targetFits, legalTargets, tutorFits } from './resolve.js';
 import { canAnnounce, announceLabel, announceHuman } from './kingdomsPlay.js';
+import { attackPlanner, declToRecord, recordToDecl } from './attackplan.js';
+import { runLoopBlock, loopPanel, previewLoop, LoopProgress, actionText, clampReps } from './looprun.js';
 
 // The page says it is waiting for the person: a class on the body (the stylesheet lights their board) and the tab's title
 const PAGE_TITLE = typeof document !== 'undefined' ? document.title : '';
@@ -31,6 +33,7 @@ export class HumanUI {
     // (the seat answering now in a hotseat game, and the page's hook that records each answer)
     /** @type {number | null} */ this.seat = null;
     /** @type {((who: any, i: number) => void) | null} */ this.onRecord = null;
+    /** @type {(() => void) | null} a recorded answer was updated (the page saves the game) */ this.onAmend = null;
     this.bar = document.getElementById('actionBar');
     this.text = document.getElementById('abText');
     this.buttons = document.getElementById('abButtons');
@@ -38,6 +41,9 @@ export class HumanUI {
     document.addEventListener('click', e => {
       if (!this.pending) return;
       const card = e.target.closest('[data-iid]');
+      // (a panel in the bar, such as the attack planner, takes the clicks on the cards it offers without answering)
+      if (card?.closest('.ab-panel')) return;
+      if (card && this.pending.onObj && this.pending.objs.has(+card.dataset.iid)) { e.preventDefault(); e.stopPropagation(); this.pending.onObj(this.pending.objs.get(+card.dataset.iid)); return; }
       if (card && this.pending.objs.has(+card.dataset.iid)) { e.preventDefault(); e.stopPropagation(); return this.finish({ obj: this.pending.objs.get(+card.dataset.iid) }); }
       const board = e.target.closest('.board[data-player]');
       if (board && this.pending.players.has(+board.dataset.player) && !card) return this.finish({ player: +board.dataset.player });
@@ -74,6 +80,8 @@ export class HumanUI {
       const board = /** @type {HTMLElement | null} */ (document.elementFromPoint(e.clientX, e.clientY)?.closest('.board[data-player]'));
       if (!board) return;
       const target = +board.dataset.player;
+      // (the attack planner: the creature, or the whole selection it belongs to, is sent to that player in the plan)
+      if (this.pending.onDrop) { this.pending.onDrop(d.iid, target); return; }
       this.autoNext = { button: target };
       // (if the creature was already selected, the click would unselect it: answer the attack straight away instead)
       const hasAttack = this.pending.buttons.some(b => b.value === target);
@@ -83,7 +91,16 @@ export class HumanUI {
   }
   // record: every answer given in this game, in order. When a game is rebuilt (replay, rewind, undo)
   // the recorded answers are replayed until they run out, then you're asked live again.
-  attach(game, view, record = []) { this.cancel(); this.game = game; this.view = view; this.record = record; this.pos = 0; this.autoAnswers = new Map(); }
+  attach(game, view, record = []) { this.cancel(); document.querySelectorAll('.loop-run').forEach(el => el.remove()); this.game = game; this.view = view; this.record = record; this.pos = 0; this.autoAnswers = new Map(); this.learnAuto = null; }
+  // This bar can show panels (the attack planner, the loop runner) whose answer is one recorded value: { d: data }
+  get panels() { return true; }
+  // (1.65.0) A recorded panel answer updated after the fact: a loop stopped by hand records where it stopped, so a
+  // replay stops there too. Only while that game is the one on the table.
+  amend(game, i, patch) {
+    if (game !== this.game || !this.record[i]?.d) return;
+    Object.assign(this.record[i].d, patch);
+    this.onAmend?.();
+  }
   // Auto-answers (item 118): a yes/no-style question answered "always" is answered the same way for the rest of the
   // game. The answers are still recorded one by one, so replays and undo don't change.
   autoKey(text, buttons, objs) {
@@ -106,7 +123,9 @@ export class HumanUI {
     return true;
   }
   // Show a question; resolves with {button}, {obj} or {player}
-  ask(text, { buttons = [], objs = [], players = [] } = {}) {
+  // panel(host, answer): draws extra controls into the bar; answer(data) answers with one recorded value. It may return
+  // { onObj(o), onDrop(iid, seat), key(e) } to take clicks on the offered cards, drags onto a board and keys.
+  ask(text, { buttons = [], objs = [], players = [], panel = null } = {}) {
     this.cancel();
     const objMap = new Map(objs.map(o => [o.iid, o]));
     // (a seat that has conceded is asked nothing more: its remaining choices get the default answer)
@@ -116,6 +135,7 @@ export class HumanUI {
     if (this.replaying) {
       const a = this.record[this.pos++];
       if (a.c != null) return Promise.resolve(conceding());
+      if (a.d != null) return Promise.resolve({ data: a.d, rec: this.pos - 1 });
       const v = a.o != null ? { obj: objMap.get(a.o) || this.game.objects.get(a.o) } : a.pl != null ? { player: a.pl } : { button: buttons[a.b]?.value ?? 'cancel' };
       return Promise.resolve(v);
     }
@@ -124,24 +144,28 @@ export class HumanUI {
     if (this.game?.clock.untilLive) { this.game.clock.untilLive = false; this.game.clock.setPaused?.(false); }
     const recConcede = () => { this.wantConcede = null; this.record.push({ c: meIdx }); this.pos++; this.onRecord?.('h', this.record.length - 1); return conceding(); };
     if (me && this.wantConcede === meIdx) return Promise.resolve(recConcede());
+    const key = this.autoKey(text, buttons, objs);
     return new Promise(resolve => {
       const rec = v => {
         if (v.concede) { resolve(recConcede()); return; }
-        this.record.push(v.obj ? { o: v.obj.iid } : v.player != null ? { pl: v.player } : { b: buttons.findIndex(b => b.value === v.button) });
+        this.record.push(v.data != null ? { d: v.data } : v.obj ? { o: v.obj.iid } : v.player != null ? { pl: v.player } : { b: buttons.findIndex(b => b.value === v.button) });
         this.pos++;
+        if (v.data != null) v.rec = this.record.length - 1;
+        // (a loop running with "answer the same way each time": a yes/no question answered once is answered so for the
+        // rest of the loop; every answer is still recorded)
+        if (this.learnAuto && key && v.button !== undefined) { const b = buttons.find(x => x.value === v.button); if (b && !this.autoAnswers.has(key)) { this.autoAnswers.set(key, b.label); this.learnAuto.add(key); } }
         this.onRecord?.('h', this.record.length - 1);
         resolve(v);
       };
       // (choosing: a question that asks for particular cards or players, such as a target, rather than a turn's open
       // prompt where every playable card is highlighted; only then is the rest of the table dimmed)
       const choosing = (objs.length + players.length) > 0 && !/main phase|Declare attackers|blockers|respond|priority|you may (cast|play|activate)/i.test(String(text).replace(/<[^>]+>/g, ''));
-      this.pending = { resolve: rec, buttons, objs: objMap, players: new Set(players), choosing };
+      this.pending = { resolve: rec, buttons, objs: objMap, players: new Set(players), choosing, onObj: null, onDrop: null, panelKey: null };
       this.waiting = true;
       // (the second half of a drag-to-attack: answer at once if this question offers that attack)
       const auto = this.autoNext;
       this.autoNext = null;
       if (auto && buttons.some(b => b.value === auto.button)) { setTimeout(() => this.finish(auto), 0); }
-      const key = this.autoKey(text, buttons, objs);
       const always = key && this.autoAnswers?.get(key);
       const preset = always && buttons.find(b => b.label === always);
       if (preset) setTimeout(() => this.finish({ button: preset.value }), 0);
@@ -158,9 +182,22 @@ export class HumanUI {
         this.buttons.append(f);
         setTimeout(() => f.focus(), 0);
       }
+      this.panelHost?.remove();
+      this.panelHost = null;
+      if (panel) {
+        const host = document.createElement('div');
+        host.className = 'ab-panel';
+        this.buttons.before(host);
+        this.panelHost = host;
+        const pend = this.pending;
+        const api = panel(host, data => { if (this.pending === pend) this.finish({ data }); }) || {};
+        Object.assign(pend, { onObj: api.onObj || null, onDrop: api.onDrop || null, panelKey: api.key || null });
+      }
       for (const b of buttons) {
         const el = document.createElement('button');
         el.className = `btn ${b.primary ? 'primary' : ''} ${b.keep ? 'keep' : ''}`;
+        // (kept for the recorded answers' numbering, but the panel above answers instead)
+        if (b.hidden) el.hidden = true;
         el.textContent = b.label;
         // (keyboard shortcuts read these, so they still work when the labels are translated)
         if (/AI/.test(b.label)) el.dataset.ai = '1';
@@ -211,6 +248,8 @@ export class HumanUI {
   finish(value) {
     const p = this.pending;
     if (!p) return;
+    this.panelHost?.remove();
+    this.panelHost = null;
     this.highlight(false);
     this.pending = null;
     this.waiting = false;
@@ -222,6 +261,8 @@ export class HumanUI {
   cancel() {
     const p = this.pending;
     if (!p) return;
+    this.panelHost?.remove();
+    this.panelHost = null;
     this.highlight(false);
     this.pending = null;
     this.waiting = false;
@@ -235,7 +276,10 @@ export class HumanUI {
     // (a focused card you can pick: Enter or Space picks it; Tab moves between them)
     const f = /** @type {HTMLElement | null} */ (document.activeElement);
     if ((e.key === 'Enter' || e.key === ' ') && f?.classList?.contains('pickable') && f.dataset.iid) { e.preventDefault(); f.click(); return true; }
-    const btns = [...this.buttons.children];
+    // (a panel's own keys first; a key typed into one of its fields is the field's)
+    if (/** @type {any} */ (f)?.closest?.('.ab-panel') && /^(INPUT|SELECT|TEXTAREA|BUTTON)$/.test(f?.tagName || '')) return false;
+    if (this.pending.panelKey?.(e)) { e.preventDefault(); return true; }
+    const btns = [...this.buttons.children].filter(x => !(/** @type {HTMLElement} */ (x).hidden));
     let b = null;
     if (e.key === ' ' || e.key === 'Enter') b = btns.find(x => x.classList.contains('primary')) || btns[0];
     else if (e.key === 'Escape') b = btns.find(x => x.dataset.esc);
@@ -258,6 +302,11 @@ export class SeatUI {
   get view() { return this.ui.view; }
   get game() { return this.ui.game; }
   key(e) { return this.ui.key(e); }
+  get panels() { return true; }
+  amend(game, i, patch) { return this.ui.amend(game, i, patch); }
+  get learnAuto() { return this.ui.learnAuto; }
+  set learnAuto(v) { this.ui.learnAuto = v; }
+  get autoAnswers() { return this.ui.autoAnswers; }
   async ask(text, opts) {
     const ui = this.ui;
     // (a seat that has conceded: no "pass the device" for the choices it has left)
@@ -560,33 +609,43 @@ export class HumanAgent extends Agent {
       this.acts = [];
       return;
     }
-    let done = 0, why = '';
-    for (; done < n && !g.over && !p.lost; done++) {
-      for (const x of block) {
-        // (rules 7) a creature spell cast again from the zone it was cast from last time (Squee from exile, Gravecrawler)
-        if (x.k === 'cast') {
-          const c = p[x.zone]?.find(y => y.card.name === x.name);
-          if (!c || !g.canCast(p, c)) { why = `${x.name} can't be cast from your ${x.zone} now`; break; }
-          await g.cast(p, c);
-          continue;
-        }
-        const o = g.objects.get(x.iid);
-        if (!o || o.zone !== 'battlefield' || o.controller !== p.idx) { why = `${o?.card.name || 'a card'} isn't on your battlefield any more`; break; }
-        if (x.k === 'mana') { if (o.tapped || !g.tapForMana(p, o)) { why = `${o.card.name} can't be tapped for mana`; break; } continue; }
-        // (rules 7) the same creature sacrificed to the same outlet
-        if (x.k === 'sac') {
-          const v = p.battlefield.find(y => y.card.name === x.name && y.fx.type.creature && (y !== o || !o.fx.sacOutlet?.other));
-          if (!v || !o.fx.sacOutlet || (o.fx.sacOutlet.tap && o.tapped)) { why = `${x.name} can't be sacrificed to ${o.card.name}`; break; }
-          await g.sacTo(p, o, v);
-          continue;
-        }
-        const ab = g.abilitiesOf(o)[x.i];
-        if (!ab || !g.canActivate(p, o, ab)) { why = `${o.card.name}'s ability can't be paid for or used`; break; }
-        await g.activate(p, o, ab);
-      }
-      if (why) break;
-    }
+    const { done, why } = await runLoopBlock(g, p, block, n);
     g.log(`${g.pn(p)} repeated the loop ${done} of ${n} times${why ? ` (stopped: ${esc(why)})` : ''}`, { kind: 'combo' });
+    this.acts = [];
+  }
+  // (1.65.0) The loop runner: the count you picked or typed, with progress, Pause/Resume and Stop between repetitions,
+  // and "answer yes/no questions the same way each time". data: the recorded answer { repeat, auto, stop? }; rec: its
+  // place in the record (a stop by hand is written there, so a replay stops at the same repetition).
+  async runLoop(g, p, block, data, rec) {
+    const n = clampReps(data.repeat);
+    this.loopCount = n;
+    this.loopAuto = !!data.auto;
+    const page = typeof document !== 'undefined' && !g.sim;
+    const prog = page && !this.ui.replaying ? new LoopProgress(n, block.map(x => actionText(g, x)).join(' → ')) : null;
+    const learned = data.auto && this.ui.autoAnswers ? (this.ui.learnAuto = new Set()) : null;
+    let res;
+    try {
+      res = await runLoopBlock(g, p, block, n, {
+        before: async done => {
+          if (data.stop != null) return done >= data.stop ? 'stop' : undefined;
+          if (!prog) return undefined;
+          await prog.wait();
+          if (prog.stopped && !this.ui.replaying) { this.ui.amend?.(g, rec, { stop: done }); return 'stop'; }
+          return undefined;
+        },
+        after: async done => {
+          if (!prog) return;
+          prog.progress(done);
+          g.emit('update');
+          // (a moment for the page between repetitions, so the table stays responsive and Pause/Stop can be clicked)
+          await new Promise(r => setTimeout(r, 0));
+        },
+      });
+    } finally {
+      if (learned) { for (const k of learned) this.ui.autoAnswers.delete(k); this.ui.learnAuto = null; }
+    }
+    prog?.finish(res.done, res.why);
+    g.log(`${g.pn(p)} repeated the loop ${res.done} of ${n} times${res.why ? ` (stopped: ${esc(res.why)})` : ''}`, { kind: 'combo' });
     this.acts = [];
   }
 
@@ -635,13 +694,19 @@ export class HumanAgent extends Agent {
           ...combos.map(c => ({ label: `Combo: ${c.combo.label}`, value: { combo: c.combo }, primary: true })),
           ...(canAnnounce(g, p) ? [{ label: announceLabel(p), value: 'announce' }] : []),
           ...(g.canCompanion(p) ? [{ label: `Companion: ${p.companion.card.name} to hand ({3})`, value: 'companion' }] : []),
-          ...(loop ? [{ label: `Repeat this loop ×10`, value: { repeat: 10 } }, { label: `Repeat ×99`, value: { repeat: 99 } }] : []),
+          // (on this PC the loop runner below replaces these two; they stay for the old answers' numbering and online seats)
+          ...(loop ? [{ label: `Repeat this loop ×10`, value: { repeat: 10 }, hidden: !!this.ui.panels }, { label: `Repeat ×99`, value: { repeat: 99 }, hidden: !!this.ui.panels }] : []),
           // (rules 21) a loop that taps something for mana can be repeated as many times as needed (727.1c)
           ...(loop && g.rules >= 21 && loop.some(x => x.k === 'mana') && !g.infinite(p) ? [{ label: 'Repeat as many times as needed (unbounded mana)', value: { repeat: 'unbounded' } }] : []),
           { label: `${phase === 'main1' ? 'Go to combat' : 'End turn'}${playable ? ` (${playable} playable)` : ''}`, value: 'pass', primary: !combos.length },
           { label: 'Let the AI play this phase', value: 'ai' },
         ],
+        panel: loop && this.ui.panels && !this.ui.replaying ? (host, answer) => loopPanel(host, {
+          g, p, block: loop, reps: this.loopCount, auto: this.loopAuto, answer,
+          preview: n => previewLoop(g, p, loop, n),
+        }) : null,
       });
+      if (r.data?.repeat != null && loop) { await this.runLoop(g, p, loop, r.data, r.rec); continue; }
       if (r.button === 'pass' || r.button === 'cancel') return;
       if (r.button === 'ai') return super.mainPhase(g, p, phase);
       if (r.button === 'announce') { await announceHuman(g, p, this.ui); continue; }
@@ -773,30 +838,78 @@ export class HumanAgent extends Agent {
     }
   }
 
+  // Declare attackers (1.65.0). Root of the old multiplayer problem: "Attack <player>" answered the whole question, so
+  // every selected creature went to that one player and a split attack couldn't be declared. Now:
+  //  • on this PC the attack planner (attackplan.js) gives each creature its own target (players, planeswalkers,
+  //    battles), and the finished plan is one recorded answer ({ d: { attack } });
+  //  • on every seat (online friends too) "Send selected to <player>" buttons build a split attack step by step, and
+  //    "Confirm attackers" declares it. Those buttons come after the old ones, so the old answers' numbers (and so
+  //    replays from before 1.65.0) are unchanged: "Attack <player>" still sends whatever is selected and declares.
+  // Creatures with 0 power can attack too (they're offered; "Select all" keeps its old meaning, creatures with power).
   async declareAttackers(g, p) {
-    const ready = p.battlefield.filter(o => g.canAttack(o) && g.power(o) > 0);
-    if (!ready.length) return [];
+    const eligible = p.battlefield.filter(o => g.canAttack(o));
+    const ready = eligible.filter(o => g.power(o) > 0);
+    if (!eligible.length) return [];
     const chosen = new Set();
+    /** @type {Map<any, any>} creature → { player, obj? } sent so far with "Send selected to …" */
+    const sent = new Map();
+    // (the planner's starting point: creatures that must attack, at the target the engine would give them)
+    const initial = new Map();
+    const opps0 = g.opponents(p);
+    for (const o of eligible) {
+      if (o.goaded && o.goaded.until >= g.turn) { const others = opps0.filter(q => q.idx !== o.goaded.by); const q = [...(others.length ? others : opps0)].sort((a, b) => a.life - b.life)[0]; if (q) initial.set(o.iid, `p${q.idx}`); }
+      else if (o.fx.mustAttack || (o.fx.condBuff?.mustAttack && g.condBuff(o)) || (g.rules >= 27 && o.mustAttack27 === g.turn)) { const q = this.weakestOpponent(g, p); if (q) initial.set(o.iid, `p${q.idx}`); }
+    }
+    const declare = list => { this.lastAttack = new Map(list.map(d => [d.o.iid, d.obj ? `o${d.obj.iid}` : `p${d.target}`])); return list; };
     for (;;) {
       const opps = g.opponents(p);
       // (and the battles and planeswalkers they can attack)
       const perms = g.alive().flatMap(q => q.battlefield.filter(o => g.attackable(p, o)));
-      const r = await this.ui.ask(`<b>Declare attackers.</b> Click creatures to add or remove them (${chosen.size} selected), then choose who to attack.`, {
-        objs: ready,
-        buttons: [...(chosen.size ? opps.map(q => ({ label: `Attack ${q.name}${g.dealBetween(p.idx, q.idx) ? ' (breaks truce)' : ''}`, value: q.idx, primary: true })) : []),
-          ...(chosen.size ? perms.map(o => ({ label: `Attack ${o.card.name} (${o.fx.type.battle ? `${o.defense} defense` : `${o.loyalty} loyalty`})`, value: { attackObj: o.iid } })) : []),
-          { label: 'Select all', value: 'all' }, { label: 'No attack', value: 'none' }],
+      const n = chosen.size + sent.size;
+      const usePanel = !!this.ui.panels && !this.ui.replaying;
+      const hide = usePanel;
+      for (const [o, t] of sent) initial.set(o.iid, t.obj ? `o${t.obj.iid}` : `p${t.target}`);
+      const r = await this.ui.ask(`<b>Declare attackers.</b> ${usePanel ? 'Give each creature a target: select creatures (here or on your board), then click a player — or drag them onto a player. Confirm when the plan is ready.' : `Click creatures to add or remove them (${chosen.size} selected${sent.size ? `, ${sent.size} already sent` : ''}), then choose who to attack.`}`, {
+        objs: eligible,
+        buttons: [...(chosen.size ? opps.map(q => ({ label: `Attack ${q.name}${g.dealBetween(p.idx, q.idx) ? ' (breaks truce)' : ''}`, value: q.idx, primary: true, hidden: hide })) : []),
+          ...(chosen.size ? perms.map(o => ({ label: `Attack ${o.card.name} (${o.fx.type.battle ? `${o.defense} defense` : `${o.loyalty} loyalty`})`, value: { attackObj: o.iid }, hidden: hide })) : []),
+          { label: 'Select all', value: 'all', hidden: hide }, { label: 'No attack', value: 'none', hidden: hide },
+          // (1.65.0) split attacks from the buttons alone
+          ...(chosen.size && opps.length > 1 ? opps.map(q => ({ label: `Send selected to ${q.name}`, value: { send: q.idx }, hidden: hide })) : []),
+          ...(sent.size ? [{ label: `Confirm attackers (${n})`, value: 'confirm', primary: !chosen.size, hidden: hide }] : []),
+          { label: 'Let the AI attack', value: 'ai', hidden: hide }],
+        panel: usePanel ? (host, answer) => {
+          const api = attackPlanner(host, {
+            g, p, view: this.ui.view, style: this.style, initial, last: this.lastAttack || null,
+            done: v => answer({ attack: v === 'none' ? [] : v === 'ai' ? 'ai' : declToRecord(v) }),
+          });
+          return {
+            onObj: o => api.toggle(o),
+            onDrop: (iid, seat) => api.assignTo(iid, seat),
+            key: e => { if (e.key === 'Enter') { api.confirm(); return true; } return false; },
+            api,
+          };
+        } : null,
       });
-      for (const o of ready) this.ui.view?.cards.get(o.iid)?.classList.remove('chosen');
-      if (r.obj) { chosen.has(r.obj) ? chosen.delete(r.obj) : chosen.add(r.obj); }
-      else if (r.button === 'all') ready.forEach(o => chosen.add(o));
+      for (const o of eligible) this.ui.view?.cards.get(o.iid)?.classList.remove('chosen');
+      // The planner's answer: the whole declaration at once, checked against the game as it is
+      if (r.data?.attack !== undefined) {
+        if (r.data.attack === 'ai') return declare(await super.declareAttackers(g, p));
+        return declare(recordToDecl(g, p, r.data.attack));
+      }
+      const withSent = list => [...[...sent].map(([o, t]) => ({ o, ...t })), ...list];
+      if (r.obj) { if (sent.has(r.obj)) sent.delete(r.obj); else chosen.has(r.obj) ? chosen.delete(r.obj) : chosen.add(r.obj); }
+      else if (r.button === 'all') ready.forEach(o => { if (!sent.has(o)) chosen.add(o); });
       else if (r.button === 'none' || r.button === 'cancel') return [];
-      else if (typeof r.button === 'number') return [...chosen].map(o => ({ o, target: r.button }));
+      else if (r.button === 'ai') return declare(await super.declareAttackers(g, p));
+      else if (r.button === 'confirm') return declare(withSent([]));
+      else if (typeof r.button === 'number') return declare(withSent([...chosen].map(o => ({ o, target: r.button }))));
+      else if (r.button?.send != null) { for (const o of chosen) sent.set(o, { target: r.button.send }); chosen.clear(); }
       else if (r.button?.attackObj) {
         const t = g.objects.get(r.button.attackObj);
-        if (t) return [...chosen].map(o => ({ o, target: t.fx.type.battle ? t.protector : t.controller, obj: t }));
+        if (t) return declare(withSent([...chosen].map(o => ({ o, target: t.fx.type.battle ? t.protector : t.controller, obj: t }))));
       }
-      for (const o of chosen) this.ui.view?.cards.get(o.iid)?.classList.add('chosen');
+      for (const o of [...chosen, ...sent.keys()]) this.ui.view?.cards.get(o.iid)?.classList.add('chosen');
     }
   }
 

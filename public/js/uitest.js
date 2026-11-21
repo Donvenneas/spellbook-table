@@ -84,6 +84,14 @@ function clickButton(re) {
   expect(b, `no action bar button ${re} (buttons: ${[...D.getElementById('abButtons').querySelectorAll('button')].map(x => x.textContent).join(' | ')})`);
   b.click();
 }
+// (1.65.0) the panels inside the action bar: the attack planner and the loop runner
+function clickPanel(re) {
+  const b = [...D.querySelectorAll('.ab-panel button')].find(x => re.test(x.textContent || ''));
+  expect(b, `no panel button ${re} (buttons: ${[...D.querySelectorAll('.ab-panel button')].map(x => x.textContent).join(' | ')})`);
+  /** @type {HTMLButtonElement} */ (b).click();
+}
+function clickLane(seat) { const h = /** @type {HTMLElement | null} */ (D.querySelector(`.atk-lane[data-key="p${seat}"] .atk-lane-head`)); expect(h, `no lane for seat ${seat + 1}`); h?.click(); }
+const chip = o => /** @type {HTMLElement | null} */ (D.querySelector(`.atk-chip[data-iid="${o.iid}"]`));
 // Every card the table shows sits where the engine has it: each board's rows hold exactly that player's battlefield,
 // the command zone its command zone, your hand row your hand; piles and life totals show the engine's numbers.
 function boardMatchesEngine() {
@@ -456,10 +464,14 @@ async function suite() {
     clickButton(/Go to combat/);
     await waitAsk(/Declare attackers/i, 'the attackers question');
     const giant = find(0, 'Hill Giant');
+    // (1.65.0) the attack planner: a click on the board selects the creature in the planner, a click on the
+    // opponent's lane sends it there, and Confirm declares it
     clickCard(giant);
-    await waitFor(() => /1 selected/.test(askText()), 'Hill Giant to be selected');
+    await waitFor(() => D.querySelector(`.atk-chip.sel[data-iid="${giant.iid}"]`), 'Hill Giant to be selected in the attack planner');
     expect(cardEl(giant).classList.contains('chosen'), 'the chosen attacker is not marked');
-    clickButton(/^Attack Opponent/);
+    clickLane(1);
+    await waitFor(() => /Attacking with 1/.test(D.querySelector('.atk-sum')?.textContent || ''), 'Hill Giant to be sent to the opponent');
+    clickPanel(/^Confirm attackers/);
     await waitFor(() => giant.attacking != null, 'the engine to have Hill Giant attacking', 8000);
     await settle();
     synced();
@@ -498,6 +510,84 @@ async function suite() {
     return `${boards.map(b => b.querySelector('.lv')?.textContent).join(' / ')} life`;
   });
 
+  await check('1.65.0. Attack planner: a split attack on three opponents, chosen by clicks, declared as planned', async () => {
+    await puzzle([
+      { name: 'You', commander: KENRITH, battlefield: ['Grizzly Bears', 'Grizzly Bears', 'Grizzly Bears', 'Grizzly Bears', 'Hill Giant', 'Serra Angel', 'Wall of Omens'] },
+      { name: 'North', commander: KENRITH, life: 31, battlefield: ['Island'] },
+      { name: 'East', commander: KENRITH, life: 32, battlefield: ['Swamp'] },
+      { name: 'West', commander: KENRITH, life: 33, battlefield: ['Plains'] },
+    ], 'Attack planner');
+    const G = g();
+    await waitAsk(/main phase/i);
+    clickButton(/Go to combat/);
+    await waitAsk(/Declare attackers/i, 'the attackers question');
+    await waitFor(() => D.querySelector('.atk-plan'), 'the attack planner');
+    // three lanes with name and life; the Wall (defender) is shown but can't be picked
+    const lanes = [...D.querySelectorAll('.atk-lane')];
+    expect(lanes.length === 3 && /North/.test(lanes[0].textContent || '') && /31 life/.test(lanes[0].textContent || ''), `lanes: ${lanes.map(l => l.textContent?.replace(/\s+/g, ' ').trim())}`);
+    const wall = find(0, 'Wall of Omens');
+    expect(chip(wall)?.classList.contains('off') && /defender/.test(chip(wall)?.textContent || ''), `the Wall is not shown as unable to attack (${chip(wall)?.className}: ${chip(wall)?.textContent})`);
+    const bears = G.players[0].battlefield.filter(o => o.card.name === 'Grizzly Bears');
+    const giant = find(0, 'Hill Giant'), angel = find(0, 'Serra Angel');
+    // two Bears (chips in the planner) to North; one Bear and the Giant (clicked on the board) to East; the Angel to West
+    chip(bears[0])?.click(); chip(bears[1])?.click();
+    clickLane(1);
+    clickCard(bears[2]); clickCard(giant);
+    clickLane(2);
+    chip(angel)?.click();
+    clickLane(3);
+    // changed mind: the second Bear moves from North to West, without starting again
+    chip(bears[1])?.click();
+    clickLane(3);
+    const counts = () => [...D.querySelectorAll('.atk-lane .atk-count')].map(x => x.textContent?.trim()).join(' | ');
+    await waitFor(() => counts() === '⚔ 1 · 2 | ⚔ 2 · 5 | ⚔ 2 · 6', `the lane counts (now ${counts()})`);
+    expect(/Attacking with 5/.test(D.querySelector('.atk-sum')?.textContent || '') && /1 stays home/.test(D.querySelector('.atk-sum')?.textContent || ''), 'the summary is wrong');
+    clickPanel(/^Confirm attackers \(5\)/);
+    await waitFor(() => giant.attacking != null, 'the engine to have the attackers', 8000);
+    expect(bears[0].attacking === 1 && bears[1].attacking === 3 && bears[2].attacking === 2 && giant.attacking === 2 && angel.attacking === 3 && bears[3].attacking == null, `attacking: ${[...bears, giant, angel].map(o => o.attacking)}`);
+    await waitFor(() => !G.players.some(p => p.battlefield.some(o => o.attacking != null)), 'combat to end', 20000);
+    await settle();
+    synced();
+    // (the AI may block with its commander: each opponent loses at most what was sent at them)
+    const lost = [31, 32, 33].map((v, i) => v - G.players[i + 1].life);
+    expect(lost[0] <= 2 && lost[1] <= 5 && lost[2] <= 6 && lost.some(x => x > 0), `life lost ${lost}`);
+    return `sent North 2, East 5, West 6 power; they lost ${lost.join(', ')}`;
+  });
+
+  await check('1.65.0. Loop runner: a loop played twice, then repeated 5 times from the count box with progress', async () => {
+    await puzzle([
+      { name: 'You', commander: KENRITH, battlefield: ["Ashnod's Altar", 'Grizzly Bears', 'Grizzly Bears', 'Grizzly Bears', 'Grizzly Bears', 'Grizzly Bears', 'Grizzly Bears', 'Grizzly Bears', 'Grizzly Bears', 'Grizzly Bears'] },
+      { name: 'Opponent', commander: KENRITH, life: 20, battlefield: ['Island'] },
+    ], 'Loop runner');
+    const G = g(), altarO = find(0, "Ashnod's Altar");
+    for (let k = 0; k < 2; k++) {
+      await waitAsk(/main phase/i);
+      clickCard(altarO);
+      await waitAsk(/sacrifice which creature|use another ability/i);
+      if (/use another ability/.test(askText())) { clickButton(/Other ability/); await waitAsk(/sacrifice which creature/i); }
+      clickCard(G.players[0].battlefield.find(o => o.card.name === 'Grizzly Bears'));
+    }
+    await waitAsk(/main phase/i);
+    await waitFor(() => D.querySelector('.loop-ctl'), 'the loop controls');
+    expect([...D.querySelectorAll('.loop-sel option')].map(o => o.textContent).join() === '1,2,3,5,10,25,50,Custom…', 'the count list');
+    const sel = /** @type {HTMLSelectElement} */ (D.querySelector('.loop-sel')), num = /** @type {HTMLInputElement} */ (D.querySelector('.loop-n'));
+    sel.value = '5'; sel.dispatchEvent(new W.Event('change'));
+    expect(num.value === '5' && /×5/.test(D.querySelector('.loop-go')?.textContent || ''), 'the list did not set the count');
+    num.value = '6'; num.dispatchEvent(new W.Event('input'));
+    expect(sel.value === 'custom', 'typing a count did not switch the list to Custom');
+    num.value = '5'; num.dispatchEvent(new W.Event('input'));
+    clickPanel(/^Preview/);
+    await waitFor(() => /each repetition/.test(D.querySelector('.loop-out')?.textContent || ''), 'the preview');
+    expect(G.players[0].battlefield.filter(o => o.card.name === 'Grizzly Bears').length === 7, 'the preview changed the real game');
+    clickPanel(/^Execute loop ×5/);
+    await waitFor(() => /Done: the loop ran 5 of 5/.test(D.querySelector('.loop-run')?.textContent || ''), 'the completion message', 15000);
+    const left = G.players[0].battlefield.filter(o => o.card.name === 'Grizzly Bears').length;
+    expect(left === 2 && G.players[0].pool.length === 14, `${left} Bears left, ${G.players[0].pool.length} mana`);
+    const rec = ui().record.find(r => r.d?.repeat);
+    expect(rec?.d.repeat === 5, 'the count was not recorded as one answer');
+    return `7 → 2 Bears, ${G.players[0].pool.length} mana; recorded ${JSON.stringify(rec.d)}`;
+  });
+
   await check('18. Screen sizes: no sideways scrolling, the game buttons and your hand stay on screen', async () => {
     const out = [];
     for (const [w, h] of [[1920, 1080], [1600, 900], [1366, 768], [1280, 720], [768, 1024], [375, 812]]) {
@@ -531,7 +621,8 @@ async function suite() {
   // The four-player puzzle above ends at the end of your turn (a puzzle is "win this turn"): the results window says so
   await check('Results screen: the end of a game shows who won and every seat\'s place', async () => {
     const G = g();
-    const bs = () => [...D.querySelectorAll('#abButtons button')].filter(x => x.offsetParent);
+    // (the attack planner's buttons are in the bar's panel: its No attack is one of them)
+    const bs = () => [...D.querySelectorAll('#abButtons button, .ab-panel .atk-acts button')].filter(x => x.offsetParent);
     await waitFor(() => { if (G.over) return true; if (ui().pending) (bs().find(x => /^(Go to combat|End turn|No attack|Pass|No block|Done)/.test(x.textContent || '')) || bs().find(x => x.classList.contains('primary')))?.click(); return false; }, 'the puzzle to end', 30000);
     const res = await waitFor(() => (!D.getElementById('results').hidden ? D.getElementById('results') : null), 'the results window', 8000);
     const head = res.querySelector('h2')?.textContent || '';
