@@ -49,7 +49,7 @@ export function snapshotDecks(decks) {
 // is refused here with a plain reason, before anything about the current table changes. seats: how many the format has.
 export function replayShapeProblem(data, seats) {
   const foreign = "That isn't a Spellbook Table replay file";
-  if (!data || typeof data !== 'object' || Array.isArray(data) || data.app !== 'commander-table') return foreign;
+  if (!data || typeof data !== 'object' || Array.isArray(data) || !['spellbook-table', 'commander-table'].includes(data.app)) return foreign; // (files saved before 1.69.0 say commander-table)
   if (!Array.isArray(data.seats) || data.seats.length !== seats) return foreign;
   if (data.seats.some(s => !s || typeof s !== 'object' || typeof s.deck !== 'string')) return 'The replay file is damaged: a seat has no deck';
   if (typeof data.seed !== 'number' || !Number.isFinite(data.seed)) return 'The replay file is damaged: it has no game seed';

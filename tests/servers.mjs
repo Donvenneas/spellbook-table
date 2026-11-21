@@ -29,7 +29,7 @@ await test('Host-only calls from another website are refused', async () => {
 await test('The deck library saves, overwrites and deletes a deck, with no temporary file left', async () => {
   const name = 'zz servers test deck';
   const lib = () => fetch(base + '/api/library').then(r => r.json());
-  const post = text => fetch(`${base}/api/library?name=${encodeURIComponent(name)}`, { method: 'POST', headers: { 'X-Commander-Table': 'library' }, body: text });
+  const post = text => fetch(`${base}/api/library?name=${encodeURIComponent(name)}`, { method: 'POST', headers: { 'X-Spellbook-Table': 'library' }, body: text });
   try {
     eq((await post('1 Island\n')).status, 200, 'first save');
     eq((await post('1 Island\n1 Forest\n')).status, 200, 'overwrite');
@@ -37,7 +37,7 @@ await test('The deck library saves, overwrites and deletes a deck, with no tempo
     eq(mine.map(d => [d.name, d.text]), [[name, '1 Island\n1 Forest\n']], 'one deck, the last text');
     eq((await fetch(`${base}/api/library?name=${encodeURIComponent(name)}`, { method: 'POST', body: 'x' })).status, 400, 'a save without the header is refused');
   } finally {
-    await fetch(`${base}/api/library?name=${encodeURIComponent(name)}`, { method: 'DELETE', headers: { 'X-Commander-Table': 'library' } });
+    await fetch(`${base}/api/library?name=${encodeURIComponent(name)}`, { method: 'DELETE', headers: { 'X-Spellbook-Table': 'library' } });
   }
   eq((await lib()).filter(d => d.name.startsWith(name)).length, 0, 'deleted');
 });

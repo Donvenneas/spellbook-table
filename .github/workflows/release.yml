@@ -2,7 +2,7 @@
 #     git tag v1.16.0 && git push origin v1.16.0
 # This builds Spellbook Table.exe and the shareable zip on Windows and attaches the zip to a GitHub release.
 # The game's Updates window can then always use:
-#     https://github.com/<owner>/commander-table/releases/latest/download/commander-table.zip
+#     https://github.com/<owner>/spellbook-table/releases/latest/download/spellbook-table.zip
 name: Release
 
 on:
@@ -18,28 +18,31 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          path: commander-table
+          path: spellbook-table
 
       - name: Check the tag matches VERSION
         shell: pwsh
-        working-directory: commander-table
+        working-directory: spellbook-table
         run: |
           $version = (Get-Content VERSION -Raw).Trim()
           if ("v$version" -ne $env:GITHUB_REF_NAME) { throw "Tag $env:GITHUB_REF_NAME doesn't match VERSION ($version). Bump VERSION first." }
 
       - name: Build Spellbook Table.exe
         shell: pwsh
-        working-directory: commander-table
+        working-directory: spellbook-table
         run: powershell -ExecutionPolicy Bypass -File launcher\build.ps1
 
       - name: Build the shareable zip
         shell: pwsh
-        working-directory: commander-table
+        working-directory: spellbook-table
         run: |
           powershell -ExecutionPolicy Bypass -File make-shareable-zip.ps1
-          Move-Item -LiteralPath '..\Spellbook Table (portable).zip' -Destination '..\commander-table.zip'
+          Move-Item -LiteralPath '..\Spellbook Table (portable).zip' -Destination '..\spellbook-table.zip'
           # (item 183) the zip's SHA-256, published next to it; the Updates window checks downloads against it
-          $hash = (Get-FileHash -Algorithm SHA256 -LiteralPath '..\commander-table.zip').Hash.ToLower()
+          $hash = (Get-FileHash -Algorithm SHA256 -LiteralPath '..\spellbook-table.zip').Hash.ToLower()
+          Set-Content -LiteralPath '..\spellbook-table.zip.sha256' -Value "$hash  spellbook-table.zip" -Encoding ascii -NoNewline
+          # The same zip under its name before 1.69.0, so update addresses saved in older copies keep working
+          Copy-Item -LiteralPath '..\spellbook-table.zip' -Destination '..\commander-table.zip'
           Set-Content -LiteralPath '..\commander-table.zip.sha256' -Value "$hash  commander-table.zip" -Encoding ascii -NoNewline
 
       - name: Publish the release
@@ -47,4 +50,4 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create $env:GITHUB_REF_NAME commander-table.zip commander-table.zip.sha256 --repo $env:GITHUB_REPOSITORY --title "Spellbook Table $($env:GITHUB_REF_NAME.TrimStart('v'))" --generate-notes
+          gh release create $env:GITHUB_REF_NAME spellbook-table.zip spellbook-table.zip.sha256 commander-table.zip commander-table.zip.sha256 --repo $env:GITHUB_REPOSITORY --title "Spellbook Table $($env:GITHUB_REF_NAME.TrimStart('v'))" --generate-notes

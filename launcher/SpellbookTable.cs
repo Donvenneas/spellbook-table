@@ -62,7 +62,11 @@ static class SpellbookTable
         }
         catch
         {
-            var fallback = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "CommanderTable");
+            var appData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            var fallback = Path.Combine(appData, "SpellbookTable");
+            // (before 1.69.0 this folder was called CommanderTable: keep using it so nothing is lost)
+            var older = Path.Combine(appData, "CommanderTable");
+            if (!Directory.Exists(fallback) && Directory.Exists(older)) return older;
             Directory.CreateDirectory(fallback);
             return fallback;
         }
@@ -100,7 +104,7 @@ static class SpellbookTable
 
         // Only one copy at a time: a second launch just opens another window on the running game
         bool first;
-        using (var mutex = new Mutex(true, "CommanderTable.SingleInstance", out first))
+        using (var mutex = new Mutex(true, "SpellbookTable.SingleInstance", out first))
         {
             if (!first) { OpenWindow(FindRunningUrl()); return; }
 
@@ -342,7 +346,7 @@ static class SpellbookTable
             else if (path == "/api/exit")
             {
                 // The custom header forces a CORS preflight, so other websites can't shut the app down
-                if (req.HttpMethod != "POST" || req.Headers["X-Commander-Table"] != "exit") SendText(ctx, 400, "Use the Exit button in the app.");
+                if (req.HttpMethod != "POST" || req.Headers["X-Spellbook-Table"] != "exit") SendText(ctx, 400, "Use the Exit button in the app.");
                 else
                 {
                     SendText(ctx, 200, "Spellbook Table has shut down.");
@@ -414,7 +418,7 @@ static class SpellbookTable
                 return;
             }
             // The custom header forces a CORS preflight, so other websites can't change the library
-            if (req.Headers["X-Commander-Table"] != "library") { SendText(ctx, 400, "Use the deck library in the app."); return; }
+            if (req.Headers["X-Spellbook-Table"] != "library") { SendText(ctx, 400, "Use the deck library in the app."); return; }
             if (safe.Length == 0) { SendText(ctx, 400, "The deck needs a name."); return; }
             var file = Path.Combine(dir, safe + ".txt");
             if (req.HttpMethod == "POST")
@@ -457,7 +461,7 @@ static class SpellbookTable
             Send(ctx, 200, "application/json", Encoding.UTF8.GetBytes("{\"version\":" + Js(LocalVersion()) + ",\"url\":" + Js(saved) + "}"));
             return;
         }
-        if (req.HttpMethod != "POST" || req.Headers["X-Commander-Table"] != "update") { SendText(ctx, 400, "Use the Updates window in the app."); return; }
+        if (req.HttpMethod != "POST" || req.Headers["X-Spellbook-Table"] != "update") { SendText(ctx, 400, "Use the Updates window in the app."); return; }
         lock (UpdateLock)
         {
             var step = req.QueryString["step"];
@@ -609,13 +613,13 @@ static class SpellbookTable
         try { int mb; if (int.TryParse(File.ReadAllText(Path.Combine(DataDir, "image-cache-mb.txt")).Trim(), out mb)) return Math.Max(100, Math.Min(20000, mb)) * 1024L * 1024; } catch { }
         return ImageCacheMax;
     }
-    // GET: how much the image folder holds; POST (from the app only, X-Commander-Table: images) a new cap in MB
+    // GET: how much the image folder holds; POST (from the app only, X-Spellbook-Table: images) a new cap in MB
     static void ImageCacheInfo(HttpListenerContext ctx)
     {
         var req = ctx.Request;
         if (req.HttpMethod == "POST")
         {
-            if (req.Headers["X-Commander-Table"] != "images") { SendText(ctx, 400, "Use the Updates window in the app."); return; }
+            if (req.Headers["X-Spellbook-Table"] != "images") { SendText(ctx, 400, "Use the Updates window in the app."); return; }
             int mb;
             if (!int.TryParse(ReadBody(req.InputStream, req.ContentLength64).Trim(), out mb)) { SendText(ctx, 400, "The cap is a number of MB."); return; }
             try { Directory.CreateDirectory(DataDir); File.WriteAllText(Path.Combine(DataDir, "image-cache-mb.txt"), Math.Max(100, Math.Min(20000, mb)).ToString()); } catch { }

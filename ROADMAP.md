@@ -1511,7 +1511,7 @@ on top of the ones above:
     make-shareable-zip.ps1 refreshes it when Node.js is there. Tested by setting an older seen version.
 - [x] 183. Update checksums: release.yml publishes a SHA-256 next to each release zip; the installer shows and checks
   it and refuses a mismatch.
-  - Done: release.yml attaches commander-table.zip.sha256; the update check in all three servers hashes the download,
+  - Done: release.yml attaches spellbook-table.zip.sha256; the update check in all three servers hashes the download,
     fetches <address>.sha256 and refuses a mismatch (nothing saved); Updates shows the hash and whether it matched.
     Tested server.py's check with a stubbed download (match, mismatch refused, none published); server.ps1 parses and
     the .exe builds, but neither was run against a real address.
@@ -1536,6 +1536,8 @@ chat or model can take any item). Reproductions: `node tests/audit-probes.mjs` (
 ## Round 8 (from `DESIGN-ROADMAP.md`: design, interface and accessibility)
 
 ### Name and icon
+- [x] 496. Finish the rename: the GitHub repository and every old name left inside (asked 2026-11-21).
+  - Done: 1.69.0. The repository is `spellbook-table`; saved files say `app: 'spellbook-table'` (and `-puzzle`, `-challenge`, `-report`), the servers' header is `X-Spellbook-Table`, the release file is `spellbook-table.zip`, the test skill is `test-spellbook-table`. Older things keep working: replays and challenge codes saying `commander-table` still load (tests/replay.mjs keeps an old one), the page also sends `X-Commander-Table` so an older program serving updated pages until its restart still answers, releases also carry `commander-table.zip` for update addresses saved in older copies, and an existing `%LOCALAPPDATA%\CommanderTable` fallback folder is still used. The browser's saved-setting keys (`ct-…`) are unchanged so nobody loses settings.
 - [x] 495. Rename the project to Spellbook Table, with a new program icon in the spirit of a robed figure holding an open spellbook (asked 2026-11-21).
   - Done: 1.68.0. `Spellbook Table.exe` (built from `launcher/SpellbookTable.cs`), the window, tray, pages, help, docs and the shareable zip use the new name. The icon is drawn for the game in `launcher/icon.ps1` (an armoured figure with a glowing open book on golden clouds; the taskbar and tray sizes show the book alone) and is also the page's favicon. Internal ids are unchanged so old replays, puzzles, challenge codes, update addresses and saved data keep working (`app: 'commander-table'`, the `X-Commander-Table` header, the release file `commander-table.zip`). Not connected to Commander Spellbook; the README says so.
 
@@ -1741,7 +1743,7 @@ What's new window lists the newest "## Round" section, so an empty one would lea
   More samples, whole opponent turns and other margins changed nothing measurable, so the cheap settings were kept.
   Testing tip: in a hidden browser pane, setTimeout is throttled; yield between batch games with a MessageChannel.
   Python on Windows writes CRLF in text mode: write files in binary to keep the repo's LF endings.
-- 2026-11-07 (interactive session): project put in git and on GitHub; CLAUDE.md and the `test-commander-table` project
+- 2026-11-07 (interactive session): project put in git and on GitHub; CLAUDE.md and the `test-spellbook-table` project
   skill added; CI self-test (Playwright, server.py) and tag-based release workflow added. Security review of the three
   servers: server.py had no Host-header check, so a DNS-rebinding website could reach /api/update and replace the
   game's code; and all three servers let any website trigger host-only room actions (open the network port, start the

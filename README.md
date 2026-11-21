@@ -2,7 +2,7 @@
 
 Watch four AI pilots play a game of Magic: The Gathering Commander in real time, or take a seat and play against them.
 
-Spellbook Table was called Commander Table until 1.68.0. It is not connected to Commander Spellbook, the combo database it reads combos from. If you update an older copy, start `Spellbook Table.exe` from then on; the old `Commander Table.exe` can be deleted. Your decks, settings and saves stay in `data/`.
+Spellbook Table was called Commander Table until 1.68.0 (the GitHub repository was `commander-table`; that address forwards to the new one). Replays and challenge codes saved under the old name still load. It is not connected to Commander Spellbook, the combo database it reads combos from. If you update an older copy, start `Spellbook Table.exe` from then on; the old `Commander Table.exe` can be deleted. Your decks, settings and saves stay in `data/`.
 
 ## Run it
 
@@ -78,7 +78,7 @@ After a deck has been loaded once, it loads without an internet connection:
 
 Only use an address you trust: an update replaces the game's code.
 
-For the official versions, use the project's GitHub releases address, which always points at the newest one: `https://github.com/<owner>/commander-table/releases/latest/download/commander-table.zip`.
+For the official versions, use the project's GitHub releases address, which always points at the newest one: `https://github.com/<owner>/spellbook-table/releases/latest/download/spellbook-table.zip`.
 
 **Safety:** only the game's own page on this PC can use the local server's controls (deck library, updates, opening online seats, exit). Requests from other websites you have open are refused.
 

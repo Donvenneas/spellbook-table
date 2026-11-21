@@ -124,7 +124,7 @@ const settle = () => sleep(260);
 // A puzzle: seat 1 is you, in your first main phase
 const KENRITH = 'Kenrith, the Returned King';
 async function puzzle(players, name = 'Interface test') {
-  await T.startPuzzle({ app: 'commander-table-puzzle', name, goal: 'test', players });
+  await T.startPuzzle({ app: 'spellbook-table-puzzle', name, goal: 'test', players });
   await waitAsk(/main phase/i, 'your first main phase', 60000);
   T.clock().speed = 3;
   await settle();

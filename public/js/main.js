@@ -924,7 +924,7 @@ function replayData() {
   return {
     // (format 7: the replay keeps its own card data, card and reading hashes, Commander Spellbook combos and the
     // built-in combo list's fingerprint, so it never depends on Scryfall or Spellbook answering the same later)
-    app: 'commander-table', version: REPLAY_FORMAT, seed: setup.seed, decisions: setup.decisions,
+    app: 'spellbook-table', version: REPLAY_FORMAT, seed: setup.seed, decisions: setup.decisions,
     ...(setup.snapshot || {}),
     ...(setup.remote.length ? { remoteDecisions: setup.remoteDecisions } : {}),
     learned: setup.learned,
@@ -1329,7 +1329,7 @@ $('budgetMode').addEventListener('change', e => {
 });
 
 // ---------- updates: only when you ask, from an address you choose (see /api/update)
-const UPD = { 'X-Commander-Table': 'update' };
+const UPD = { 'X-Spellbook-Table': 'update', 'X-Commander-Table': 'update' };
 $('btnUpdates').addEventListener('click', async () => {
   $('updateModal').hidden = false;
   $('btnUpdApply').hidden = true;
@@ -2546,7 +2546,7 @@ function peRead() {
     }
     return p;
   });
-  return { app: 'commander-table-puzzle', name: $('peName').value.trim() || 'Puzzle', goal: $('peGoal').value.trim() || 'win this turn', ...($('peHint').value.trim() ? { hint: $('peHint').value.trim() } : {}), players };
+  return { app: 'spellbook-table-puzzle', name: $('peName').value.trim() || 'Puzzle', goal: $('peGoal').value.trim() || 'win this turn', ...($('peHint').value.trim() ? { hint: $('peHint').value.trim() } : {}), players };
 }
 const PE_START = { name: 'My puzzle', goal: 'win this turn', players: [{ name: 'You', commander: 'Krenko, Tin Street Kingpin', battlefield: ['Mountain', 'Mountain', 'Mountain'], hand: ['Lightning Bolt'] }, { name: 'Opponent', commander: 'Kenrith, the Returned King', life: 3, battlefield: ['Plains'] }] };
 $('btnPuzzleEdit').addEventListener('click', () => { peRender(store('ct.puzzleDraft') || PE_START); $('peStatus').textContent = ''; $('puzzleEditModal').hidden = false; });
@@ -3507,7 +3507,7 @@ $('btnExitConfirm').addEventListener('click', async () => {
   clock?.abort();
   $('exitModal').hidden = true;
   let ok = false;
-  try { ok = (await fetch('/api/exit', { method: 'POST', headers: { 'X-Commander-Table': 'exit' } })).ok; } catch { /* server already gone */ }
+  try { ok = (await fetch('/api/exit', { method: 'POST', headers: { 'X-Spellbook-Table': 'exit', 'X-Commander-Table': 'exit' } })).ok; } catch { /* server already gone */ }
   if (!ok) $('goodbyeMsg').textContent = "Spellbook Table didn't answer, so it may already be stopped. If its window is still open, close it.";
   $('goodbye').hidden = false;
 });
@@ -4027,7 +4027,7 @@ async function saveReport() {
   const names = game ? game.players.map(p => p.name) : [];
   const plain = h => { let t = String(h).replace(/<[^>]+>/g, ''); names.forEach((n, i) => { if (n) t = t.split(n).join(`Player ${i + 1}`); }); return t; };
   const report = {
-    app: 'commander-table-report', made: new Date().toISOString(), version, note: scrub(note),
+    app: 'spellbook-table-report', made: new Date().toISOString(), version, note: scrub(note),
     browser: navigator.userAgent.replace(/\(([^)]*)\)/, (m, inner) => `(${inner.split(';')[0]})`),
     screen: `${innerWidth}x${innerHeight}`, format: setup?.format || formatKey,
     turn: game ? `turn ${game.turn}, step ${game.steps}` : 'no game',
@@ -4035,7 +4035,7 @@ async function saveReport() {
     log: game ? game.logEntries.slice(-400).map(e => scrub(plain(e.html))) : [],
     replay: replay ? JSON.parse(scrub(JSON.stringify(replay))) : null,
   };
-  download(`commander-table-report-${stamp()}.json`, JSON.stringify(report, null, 1));
+  download(`spellbook-table-report-${stamp()}.json`, JSON.stringify(report, null, 1));
   notice('The report is in your Downloads folder. Nothing was sent anywhere: share it by hand if you want to.', { tone: 'good' });
 }
 $('btnReport').addEventListener('click', saveReport);

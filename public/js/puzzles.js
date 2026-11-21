@@ -1,6 +1,6 @@
 // Puzzles: a set board where seat 1 has one turn (starting in its first main phase) to win.
 // A puzzle is plain JSON, so boards can be saved, shared and loaded as files:
-// { app: 'commander-table-puzzle', name, goal, players: [{ name, commander, life, battlefield: [name |
+// { app: 'spellbook-table-puzzle', name, goal, players: [{ name, commander, life, battlefield: [name |
 //   { name, tapped, counters }], hand, graveyard, exile, library: [names], libraryTop: [names],
 //   commanderOnBattlefield, commanderDamage: { seat: n } }] }
 
@@ -53,7 +53,7 @@ export function validPuzzle(pz) {
 export function boardToPuzzle(g, name) {
   const n = o => o.card.name;
   return {
-    app: 'commander-table-puzzle', name, goal: 'win this turn',
+    app: 'spellbook-table-puzzle', name, goal: 'win this turn',
     players: g.players.map((p, i) => ({
       name: p.name,
       commander: (p.command[0] || p.battlefield.find(o => o.isCommander))?.card.name || p.commanders?.[0]?.name || '',

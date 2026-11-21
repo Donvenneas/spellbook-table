@@ -43,16 +43,16 @@ Problems found (each reproduced):
 public/js: ui.js, main.js, human.js, remote.js, net.js, engine.js (flipFace, beat), combat.js, zones.js, resolve.js
 (legalTargets, targetFits), triggers.js, ai.js (STYLES), fx.js, dialogs.js, builder.js, scryfall.js, util.js, manual.js,
 puzzles.js, selftest.js, windows.js. public: index.html, play.html, selftest.html, css/style.css, fonts, roles.
-Servers: server.py, server.ps1, launcher/CommanderTable.cs. tests: scenario.mjs, servers.mjs, selftest_ci.py, ids.mjs,
+Servers: server.py, server.ps1, launcher/SpellbookTable.cs. tests: scenario.mjs, servers.mjs, selftest_ci.py, ids.mjs,
 csslint.mjs. DESIGN-ROADMAP.md.
 
 ## 3. Files modified
 
 public/js: ui.js, human.js, main.js, util.js, builder.js, remote.js, manual.js, fx.js, scryfall.js (pictures of a
 back face only). public/css/style.css (Grimoire layer 21). New: public/uitest.html, public/js/uitest.js. Servers:
-server.py, server.ps1, launcher/CommanderTable.cs (one header value) and the rebuilt Commander Table.exe. tests:
+server.py, server.ps1, launcher/SpellbookTable.cs (one header value) and the rebuilt Spellbook Table.exe. tests:
 servers.mjs, selftest_ci.py, phase-2l-report.md. Also .github/workflows/selftest.yml, README.md, ROADMAP.md,
-DESIGN-ROADMAP.md, CLAUDE.md, the test-commander-table skill, VERSION.
+DESIGN-ROADMAP.md, CLAUDE.md, the test-spellbook-table skill, VERSION.
 
 ## 4–13. Changes, by area
 

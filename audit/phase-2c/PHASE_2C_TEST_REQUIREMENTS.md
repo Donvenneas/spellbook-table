@@ -9,7 +9,7 @@ What must be tested before any Phase 2C defect is called fixed. The project alre
 3. The test checks the sequence of events where timing matters (`record(g)`, `inOrder`), not only the end state.
 4. Both seats are covered where choices exist: the AI choice and a scripted person's answer (HumanAgent with scripted answers), and for targets: the menu a person sees equals the targets the engine accepts at cast and at resolution.
 5. `node tests/cards.mjs` changes only the intended cards' readings; `node tests/coverage.mjs` drops the card from its MISREAD/RESTRICTION group by itself.
-6. Regression suites below all pass; golden games show no rules 4/5/6 difference; fuzz games have 0 simulator errors; the browser self-test passes (test-commander-table skill).
+6. Regression suites below all pass; golden games show no rules 4/5/6 difference; fuzz games have 0 simulator errors; the browser self-test passes (test-spellbook-table skill).
 
 ## 2. Phase 0 audit suite (`tests/audit-2c.mjs`, to add)
 
@@ -99,7 +99,7 @@ Each line: card — board — what to assert. Cards in **bold** are Critical/Hig
 | Hidden info | `node tests/hidden.mjs` | unchanged |
 | AI | `node tests/ai.mjs` | decisions still pass; mana-heavy decisions not slower (`node --expose-gc tests/perf.mjs` for numbers) |
 | Types | `node tests/typecheck.mjs` | no new errors |
-| Browser self-test | test-commander-table skill (`selftest.html?run`, `uitest.html?run`) | every check passes, 0 simulator errors |
+| Browser self-test | test-spellbook-table skill (`selftest.html?run`, `uitest.html?run`) | every check passes, 0 simulator errors |
 
 ## 6. Missing test infrastructure
 

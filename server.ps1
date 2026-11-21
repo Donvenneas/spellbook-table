@@ -375,7 +375,7 @@ try {
       }
       elseif ($path -eq '/api/exit') {
         # The custom header forces a CORS preflight, so other websites can't shut the server down
-        if ($req.HttpMethod -ne 'POST' -or $req.Headers['X-Commander-Table'] -ne 'exit') {
+        if ($req.HttpMethod -ne 'POST' -or $req.Headers['X-Spellbook-Table'] -ne 'exit') {
           Send-Text $ctx 400 'Use the Exit button in the app.'
         } else {
           Send-Text $ctx 200 'Spellbook Table has shut down.'
@@ -404,7 +404,7 @@ try {
         $bad = $null
         if ($req.HttpMethod -eq 'POST') {
           $reader = New-Object IO.StreamReader($req.InputStream); $mb = 0
-          if ($req.Headers['X-Commander-Table'] -ne 'images') { $bad = 'Use the Updates window in the app.' }
+          if ($req.Headers['X-Spellbook-Table'] -ne 'images') { $bad = 'Use the Updates window in the app.' }
           elseif (-not [int]::TryParse($reader.ReadToEnd().Trim(), [ref]$mb)) { $bad = 'The cap is a number of MB.' }
           else {
             $dataDir = Join-Path $PSScriptRoot 'data'
@@ -459,7 +459,7 @@ try {
           }
           $json = if ($items.Count) { ConvertTo-Json -InputObject @($items) -Compress } else { '[]' }
           Send-Response $ctx 200 'application/json' ([Text.Encoding]::UTF8.GetBytes($json))
-        } elseif ($req.Headers['X-Commander-Table'] -ne 'library') {
+        } elseif ($req.Headers['X-Spellbook-Table'] -ne 'library') {
           Send-Text $ctx 400 'Use the deck library in the app.'
         } elseif (-not $safe) {
           Send-Text $ctx 400 'The deck needs a name.'
@@ -505,7 +505,7 @@ try {
         if ($req.HttpMethod -eq 'GET') {
           $saved = if (Test-Path $urlFile) { (Get-Content $urlFile -Raw).Trim() } else { '' }
           Send-Response $ctx 200 'application/json' ([Text.Encoding]::UTF8.GetBytes((ConvertTo-Json @{ version = $local; url = $saved } -Compress)))
-        } elseif ($req.HttpMethod -ne 'POST' -or $req.Headers['X-Commander-Table'] -ne 'update') {
+        } elseif ($req.HttpMethod -ne 'POST' -or $req.Headers['X-Spellbook-Table'] -ne 'update') {
           Send-Text $ctx 400 'Use the Updates window in the app.'
         } elseif ($req.QueryString['step'] -eq 'check') {
           $url = (New-Object IO.StreamReader($req.InputStream, [Text.Encoding]::UTF8)).ReadToEnd().Trim()

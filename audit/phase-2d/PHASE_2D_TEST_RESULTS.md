@@ -46,7 +46,7 @@ After every increment, `tests/mechanics.mjs` (that increment's tests), `cards.mj
 | Type check | `node tests/typecheck.mjs` | 0 findings; strict null checks 0 findings |
 | Golden games | `node tests/golden.mjs` | **132 played, 0 differ, 0 simulator errors**. This includes the six rules-24 games recorded by 1.61.0 (restored and re-checked: identical) and six new rules-25 games. |
 | Fuzz | `node tests/fuzz.mjs --games 60 --seed 7000` and `node tests/fuzz.mjs` | 60 + 12 games finished, **0 simulator errors, 0 broken rules**, first game replayed identically |
-| Browser self-test | `Commander Table.exe --no-window`, `selftest.html?run` | **All 19 checks passed**: 50 games with 0 simulator errors, rules check with no rule broken, look-ahead 6/6 replayed, determinism 6/6 identical, Kingdoms 10/10 role wins |
+| Browser self-test | `Spellbook Table.exe --no-window`, `selftest.html?run` | **All 19 checks passed**: 50 games with 0 simulator errors, rules check with no rule broken, look-ahead 6/6 replayed, determinism 6/6 identical, Kingdoms 10/10 role wins |
 | Interface test | `uitest.html?run` | **17 passed, 0 failed**, 1 not run (online seats, by design) |
 
 A note on fuzz: the "Targets chosen that were not legal (by source)" lines come from the fuzz seat's random answers being refused. The same kind of line appears in the 1.61.0 baseline. They are not engine failures.

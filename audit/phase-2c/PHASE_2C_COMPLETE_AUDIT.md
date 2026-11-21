@@ -1,6 +1,6 @@
 # Phase 2C — Incorrect Card Simulation Audit
 
-Round 2, Phase 2C. Baseline: Commander Table **1.61.0** (rules 24), branch `replay-exactness`, commit `b45b0e4`. No game code, card data or tests were changed for this audit. The probes in `probes/` only read the project.
+Round 2, Phase 2C. Baseline: Spellbook Table **1.61.0** (rules 24), branch `replay-exactness`, commit `b45b0e4`. No game code, card data or tests were changed for this audit. The probes in `probes/` only read the project.
 
 Companion files: `PHASE_2C_CARD_DEFECTS.csv` (one row per card, sortable), `PHASE_2C_ROOT_CAUSE_ANALYSIS.md`, `PHASE_2C_IMPLEMENTATION_ROADMAP.md`, `PHASE_2C_TEST_REQUIREMENTS.md`.
 

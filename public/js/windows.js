@@ -128,7 +128,7 @@ export async function showImages(msg = '') {
   } catch { $('imgBody').textContent = 'Restart Spellbook Table to see the image folder here.'; }
 }
 $('imgCap').addEventListener('change', async e => {
-  await fetch('/api/imgcache', { method: 'POST', headers: { 'X-Commander-Table': 'images' }, body: /** @type {HTMLSelectElement} */ (e.target).value }).catch(() => {});
+  await fetch('/api/imgcache', { method: 'POST', headers: { 'X-Spellbook-Table': 'images', 'X-Commander-Table': 'images' }, body: /** @type {HTMLSelectElement} */ (e.target).value }).catch(() => {});
   showImages('Cap changed.');
 });
 let imgStop = false;

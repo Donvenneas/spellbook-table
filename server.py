@@ -572,7 +572,7 @@ class Handler(BaseHTTPRequestHandler):
             if path == '/api/imgcache':
                 # GET: how much the image folder holds; POST (from the app only) a new cap in MB
                 if self.command == 'POST':
-                    if self.headers.get('X-Commander-Table') != 'images':
+                    if self.headers.get('X-Spellbook-Table') != 'images':
                         return self.text(400, 'Use the Updates window in the app.')
                     try:
                         mb = max(100, min(20000, int(self.body().strip())))
@@ -588,7 +588,7 @@ class Handler(BaseHTTPRequestHandler):
                 return self.update(q)
             if path == '/api/exit':
                 # The custom header forces a CORS preflight, so other websites can't shut the server down
-                if self.command != 'POST' or self.headers.get('X-Commander-Table') != 'exit':
+                if self.command != 'POST' or self.headers.get('X-Spellbook-Table') != 'exit':
                     return self.text(400, 'Use the Exit button in the app.')
                 self.text(200, 'Spellbook Table has shut down.')
                 QUITTING.set()
@@ -632,7 +632,7 @@ class Handler(BaseHTTPRequestHandler):
                                       'text': open(p, encoding='utf-8', errors='replace').read()})
             return self.send(200, 'application/json', json.dumps(items))
         # The custom header forces a CORS preflight, so other websites can't change the library
-        if self.headers.get('X-Commander-Table') != 'library':
+        if self.headers.get('X-Spellbook-Table') != 'library':
             return self.text(400, 'Use the deck library in the app.')
         name = safe_name(q.get('name'))
         if not name:
@@ -664,7 +664,7 @@ class Handler(BaseHTTPRequestHandler):
         if self.command == 'GET':
             saved = open(url_file, encoding='utf-8').read().strip() if os.path.exists(url_file) else ''
             return self.send(200, 'application/json', json.dumps({'version': local_version(), 'url': saved}))
-        if self.command != 'POST' or self.headers.get('X-Commander-Table') != 'update':
+        if self.command != 'POST' or self.headers.get('X-Spellbook-Table') != 'update':
             return self.text(400, 'Use the Updates window in the app.')
         step = q.get('step')
         try:

@@ -29,7 +29,7 @@ Open work list for the look, interface and accessibility: `DESIGN-ROADMAP.md` (i
 
 ## Testing
 
-Use the `test-commander-table` project skill (`.claude/skills/test-commander-table/SKILL.md`). In short: run
+Use the `test-spellbook-table` project skill (`.claude/skills/test-spellbook-table/SKILL.md`). In short: run
 `Spellbook Table.exe --no-window`, open http://localhost:8777/selftest.html?run in the browser pane, make sure every check
 passes with 0 simulator errors, and stop every `Spellbook Table` and `cloudflared` process you started.
 

@@ -41,7 +41,7 @@ Reading diffs (`node tests/cards.mjs`) were reviewed at every step:
 | Fuzz | `node tests/fuzz.mjs --games 60 --seed 7000` | 60 games finished, **0 simulator errors, 0 broken rules**, first game replayed identically |
 | Fuzz (default seed) | `node tests/fuzz.mjs` | 12 games finished, 0 simulator errors, 0 broken rules, first game replayed identically |
 | Hidden information | `node tests/hidden.mjs` | 8 games, 6,687 decisions re-asked with hidden cards scrambled, **0 changed** |
-| Browser self-test | `Commander Table.exe --no-window`, `selftest.html?run` | **All 19 checks passed**: 50 games with 0 simulator errors, rules check with no rule broken, look-ahead 6/6 replayed, determinism 6/6 identical, Kingdoms 10/10, version 1.63.0 served |
+| Browser self-test | `Spellbook Table.exe --no-window`, `selftest.html?run` | **All 19 checks passed**: 50 games with 0 simulator errors, rules check with no rule broken, look-ahead 6/6 replayed, determinism 6/6 identical, Kingdoms 10/10, version 1.63.0 served |
 | Interface test | `uitest.html?run` | **17 passed, 0 failed**, 1 not run (online seats, by design) |
 
 The fuzz "Targets chosen that were not legal" lines are the random seat's answers being refused, the same as in the 1.61.0 baseline.

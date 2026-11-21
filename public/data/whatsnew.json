@@ -1,7 +1,13 @@
 {
- "version": "1.68.0",
+ "version": "1.69.0",
  "round": "Round 8",
  "items": [
+  {
+   "n": 496,
+   "section": "Name and icon",
+   "title": "Finish the rename: the GitHub repository and every old name left inside (asked 2026-11-21).",
+   "done": "1.69.0."
+  },
   {
    "n": 495,
    "section": "Name and icon",

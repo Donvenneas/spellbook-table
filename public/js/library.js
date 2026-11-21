@@ -6,7 +6,7 @@
 import { store } from './util.js';
 import { parseText } from './decks.js';
 
-const H = { 'X-Commander-Table': 'library' };
+const H = { 'X-Spellbook-Table': 'library', 'X-Commander-Table': 'library' }; // (the old header too: after an update the older program serves these pages until it restarts)
 const VERSIONS = 'ct.libVersions';
 
 export async function listDecks() {

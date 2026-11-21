@@ -22,13 +22,14 @@ async function unsqueeze(code) {
 
 // table: { format, bestOf, seats: [{ name, style, bracket, source }] } or { puzzle }
 export async function encodeChallenge(table) {
-  return squeeze(JSON.stringify({ app: 'commander-table-challenge', v: 1, ...table }));
+  return squeeze(JSON.stringify({ app: 'spellbook-table-challenge', v: 1, ...table }));
 }
 export async function decodeChallenge(code) {
   // (a whole link, "challenge=…" from the address bar, or the bare code)
   code = String(code || '').trim().replace(/^.*challenge=/, '').replace(/[&#].*$/, '');
   const data = JSON.parse(await unsqueeze(code));
-  if (data.app !== 'commander-table-challenge') throw new Error('That isn\'t a challenge code.');
+  if (data.app !== 'spellbook-table-challenge' && data.app !== 'commander-table-challenge') // (codes made before 1.69.0)
+    throw new Error('That isn\'t a challenge code.');
   return data;
 }
 export const challengeLink = code => `${location.origin}/#challenge=${code}`;

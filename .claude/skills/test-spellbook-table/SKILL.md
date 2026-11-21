@@ -1,5 +1,5 @@
 ---
-name: test-commander-table
+name: test-spellbook-table
 description: Test a change to Spellbook Table end to end - start the local server, run the self-test page (endpoint checks, 50 fast games, rules check, Kingdoms games) in the browser pane, run extra targeted games, and clean up processes. Use after any change to public/, the servers or the launcher, and before ticking a ROADMAP item.
 ---
 

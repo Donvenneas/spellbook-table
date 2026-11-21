@@ -54,7 +54,7 @@ await test('Settings saved as something other than an object are ignored, not us
 
 const { replayShapeProblem, checkReplay, REPLAY_FORMAT } = await import('../public/js/replaydata.js');
 const { RULES } = await import('../public/js/engine.js');
-const good = () => ({ app: 'commander-table', version: REPLAY_FORMAT, seed: 42, rules: RULES, decisions: [], seats: [1, 2, 3, 4].map(i => ({ name: `P${i}`, style: 'balanced', deck: '1 Island' })), cards: {}, hashes: {}, spellbook: [] });
+const good = () => ({ app: 'spellbook-table', version: REPLAY_FORMAT, seed: 42, rules: RULES, decisions: [], seats: [1, 2, 3, 4].map(i => ({ name: `P${i}`, style: 'balanced', deck: '1 Island' })), cards: {}, hashes: {}, spellbook: [] });
 await test('Replay files: damaged, foreign and missing-field files are refused with a reason, a good one passes', async () => {
   eq(replayShapeProblem(good(), 4), '', 'a good file');
   const cases = [

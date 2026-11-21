@@ -28,7 +28,7 @@ AI decision time, memory and other browsers had no evidence (Untested). Security
 | `public/js/util.js` | `store()` reports damaged reads and failed writes (`ct-store` event, `storeProblems`), returns true/false on writes, keeps the last saved value; IndexedDB write errors are now heard |
 | `public/js/prefs.js` | saved settings that aren't an object are ignored |
 | `public/js/replaydata.js`, `public/js/main.js` | `replayShapeProblem` checks a replay file's shape before anything changes; main.js shows one notice per storage problem kind |
-| `server.py`, `server.ps1`, `launcher/CommanderTable.cs` (+ rebuilt `Commander Table.exe`) | the deck library writes `<name>.txt.tmp` and swaps it in, so a failed save keeps the last one |
+| `server.py`, `server.ps1`, `launcher/SpellbookTable.cs` (+ rebuilt `Spellbook Table.exe`) | the deck library writes `<name>.txt.tmp` and swaps it in, so a failed save keeps the last one |
 | `tests/scenario.mjs` | event recorder `record(g)`, `inOrder`, `evText` |
 | `tests/rules.mjs` (new) | 27 rules tests asserting event sequences, with id, rules, files, severity, expected/actual; `--report tests/rules-report.md` |
 | `tests/storage.mjs` (new) | 8 saved-data tests |
@@ -61,7 +61,7 @@ Final run, after the last change (command: each `node tests/<suite>.mjs`, last l
 | carddata | 30/30 |
 | **rules (new)** | 27: 26 passed, 1 known deviation, 0 failed |
 | **storage (new)** | 8/8 |
-| servers.mjs (not CI) | 11/11 on Commander Table.exe, server.py and server.ps1 |
+| servers.mjs (not CI) | 11/11 on Spellbook Table.exe, server.py and server.ps1 |
 | audit-probes (not CI) | 1 run, 1 failing as expected (Blood Moon + Urborg, item 212) |
 | selftest.html | built-in pane (Chrome 156), on the final code: all 19 checks passed (50 games 0 simulator errors, rules check clean, determinism 6/6, Kingdoms 10/10); Chrome 157 and Firefox 160: all 19 passed on the code before the last change (the Humility lookup cache, an engine-only speed fix) |
 | uitest.html | Chrome 157 and Firefox 160: 17 passed, 0 failed, 1 not run (online seats, by design), on the code before the last change |

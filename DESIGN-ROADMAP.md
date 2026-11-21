@@ -23,7 +23,7 @@ without the conversation that produced it. Rules fixes are in `AUDIT-ROADMAP.md`
   beside the file. No stock photos, no icon packs that need attribution on screen.
 - **New text** is written in English in the code; add it to `i18n.js` / `i18n_more.js` for the six other languages
   in the same change, or list it under item 372.
-- **Test every item:** `node tests/typecheck.mjs`; then the `test-commander-table` skill (self-test page: all checks
+- **Test every item:** `node tests/typecheck.mjs`; then the `test-spellbook-table` skill (self-test page: all checks
   pass, 0 simulator errors). Look at the changed screen in the browser pane at 1440, 1280 and 375 wide, in dark and
   light, and read the console for errors. The pane pauses animations while hidden: a screenshot taken right after a
   window opens can catch it half faded in; wait a second and take another.

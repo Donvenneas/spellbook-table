@@ -93,7 +93,7 @@ New: `tests/multiplayer.mjs`, 36 tests covering the 25 cases of the brief (numbe
 Run after the change, all passing: multiplayer 36/36, golden 90 games (0 differ), interactions 218/218, stack 22/22,
 abilities 47/47, replacements 15/15, loops 18/18, combos 21/21, mana 21/21, hidden 8 games (0 changed), net 7/7,
 replays 10/10, card readings 3,500 (0 changed), element ids, stylesheet lint, type check (0 findings), fuzz 12 games
-(0 errors, 0 broken rules). Browser self-test on Commander Table.exe: all 19 checks passed, 50 games with 0 simulator
+(0 errors, 0 broken rules). Browser self-test on Spellbook Table.exe: all 19 checks passed, 50 games with 0 simulator
 errors, rules check clean, determinism 6/6, Kingdoms 10/10.
 
 Not run: `tests/servers.mjs` (no endpoint changed), and a live online game with a second device.

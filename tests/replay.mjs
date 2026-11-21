@@ -86,7 +86,7 @@ async function play(decks, seed, rules = SB_RULES) {
 const same = (a, b) => a.winner === b.winner && a.round === b.round && a.steps === b.steps && a.log === b.log;
 
 // Saving: what main.js replayData() writes (as a file: through JSON)
-const save = (decks, seed) => clone({ app: 'commander-table', version: REPLAY_FORMAT, seed, rules: SB_RULES, seats: decks.map(d => ({ deck: deckText(d), deckName: d.deckName })), ...snapshotDecks(decks) });
+const save = (decks, seed) => clone({ app: 'spellbook-table', version: REPLAY_FORMAT, seed, rules: SB_RULES, seats: decks.map(d => ({ deck: deckText(d), deckName: d.deckName })), ...snapshotDecks(decks) });
 // Loading: the steps of main.js loadReplayData (check, decks built from the replay's own cards, its own combos)
 async function restore(data) {
   const check = checkReplay(data);

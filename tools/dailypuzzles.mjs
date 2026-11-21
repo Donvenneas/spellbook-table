@@ -70,5 +70,5 @@ for (let i = 0; i < GAMES; i++) {
     console.log(`kept: ${pz.name} (seed ${seed}, ${combo ? 'combo' : 'damage'})`);
   }
 }
-writeFileSync(new URL('../public/data/daily-puzzles.json', import.meta.url), JSON.stringify({ made: new Date().toISOString().slice(0, 10), puzzles: found.map(({ style, ...p }) => ({ ...p, app: 'commander-table-puzzle', aiStyle: style })) }) + '\n');
+writeFileSync(new URL('../public/data/daily-puzzles.json', import.meta.url), JSON.stringify({ made: new Date().toISOString().slice(0, 10), puzzles: found.map(({ style, ...p }) => ({ ...p, app: 'spellbook-table-puzzle', aiStyle: style })) }) + '\n');
 console.log(`${found.length} puzzles from ${GAMES} games saved to public/data/daily-puzzles.json`);
