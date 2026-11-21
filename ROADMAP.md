@@ -1535,6 +1535,10 @@ chat or model can take any item). Reproductions: `node tests/audit-probes.mjs` (
 
 ## Round 8 (from `DESIGN-ROADMAP.md`: design, interface and accessibility)
 
+### Skins
+- [x] 394. Three skins to choose from (asked 2026-11-21: a gothic dark fantasy look, a heroic online-RPG feel and a high fantasy steampunk look, built from free assets, chosen from the menus).
+  - Done: 1.66.0. **Display → Skin**: Grimoire (the standard look), Nightspire (gold line-work, rune circles, night-blue marble), Highkeep (carved gold frames with ruby studs, navy panels, oak table, plaque headings) and Brass Meridian (riveted brass frames, brushed metal, gear-ringed portraits that turn for the active player, brass life plates). Frames, rings, plates and the gear are drawn for the game (design/skins/tools/make-assets.mjs); textures from ambientCG (CC0); four Open Font License faces with their licences in public/skins/fonts. One stylesheet, css/skins.css, does nothing until a skin is chosen; skins are dark, so ☀ goes back to Grimoire in light. The previews and source art are in design/skins (left out of the zip).
+
 ### Windows and keyboard
 - [x] 234. Every window is a proper dialog: focus moves into it and back out, Tab stays inside, Escape and a click beside it close it.
   - Done: 1.33.0. One controller in `public/js/dialogs.js` watches every window, so each still closes its own way. The table's shortcuts wait while a window is open.

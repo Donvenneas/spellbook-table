@@ -1281,6 +1281,7 @@ $('displayModal').addEventListener('click', e => {
 $('btnDisplay').addEventListener('click', () => {
   $('dispBg').value = prefs.bg || 'art';
   $('dispTheme').value = prefs.theme || '';
+  $('dispSkin').value = currentSkin();
   $('dispCard').value = String(+prefs.cardScale || 100);
   $('dispCard').setAttribute('aria-valuetext', `${+prefs.cardScale || 100}%`);
   $('dispCardSay').textContent = `${+prefs.cardScale || 100}%`;
@@ -1775,10 +1776,25 @@ function applyTheme(t) {
   $('btnTheme').title = t === 'dark' ? 'Switch to the light theme' : 'Switch to the dark theme';
 }
 const systemTheme = () => (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
-applyTheme(prefs.theme || systemTheme());
-matchMedia('(prefers-color-scheme: light)').addEventListener('change', () => { if (!prefs.theme) applyTheme(systemTheme()); });
-$('dispTheme').addEventListener('change', e => { if (e.target.value) prefs.theme = e.target.value; else delete prefs.theme; store('ct.prefs', prefs); applyTheme(prefs.theme || systemTheme()); });
-$('btnTheme').addEventListener('click', () => { prefs.theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'; store('ct.prefs', prefs); applyTheme(prefs.theme); });
+// Skins (Display → Skin, css/skins.css): Nightspire, Highkeep, Brass Meridian. They are dark looks, so the dark theme
+// stays on while one is chosen; Grimoire (no skin) follows the Theme setting as before.
+const SKINS = ['nightspire', 'highkeep', 'brass'];
+const currentSkin = () => (SKINS.includes(prefs.skin) ? prefs.skin : '');
+function applySkin() {
+  const s = currentSkin();
+  if (s) document.documentElement.dataset.skin = s; else delete document.documentElement.dataset.skin;
+  applyTheme(s ? 'dark' : (prefs.theme || systemTheme()));
+}
+applySkin();
+matchMedia('(prefers-color-scheme: light)').addEventListener('change', () => { if (!prefs.theme && !currentSkin()) applyTheme(systemTheme()); });
+$('dispTheme').addEventListener('change', e => { if (e.target.value) prefs.theme = e.target.value; else delete prefs.theme; store('ct.prefs', prefs); applySkin(); });
+$('dispSkin').addEventListener('change', e => { if (SKINS.includes(e.target.value)) prefs.skin = e.target.value; else delete prefs.skin; store('ct.prefs', prefs); applySkin(); });
+// ☀ / ☾: with a skin on, the light theme means going back to Grimoire (skins have no light version)
+$('btnTheme').addEventListener('click', () => {
+  prefs.theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+  if (prefs.theme === 'light') delete prefs.skin;
+  store('ct.prefs', prefs); applySkin();
+});
 $('btnFull').addEventListener('click', () => { if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen?.().catch(() => notice("This window can't go full screen.", { tone: 'warn' })); });
 document.addEventListener('fullscreenchange', () => { const on = !!document.fullscreenElement; $('btnFull').setAttribute('aria-pressed', String(on)); $('btnFull').dataset.tip = on ? 'Leave full screen' : 'Full screen'; });
 {

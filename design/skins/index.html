@@ -1,0 +1,554 @@
+<title>Commander Table Skins</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cinzel+Decorative:wght@700&family=Cormorant+Garamond:wght@500;600&family=Metamorphous&family=Marcellus&family=Marcellus+SC&family=Alegreya+Sans:wght@400;500;700&family=IM+Fell+English+SC&family=Spectral:wght@400;600&family=Special+Elite&display=swap">
+<style>
+/* Bundled copies of the same open-licence fonts (assets/fonts); the Google link above is the fallback for the preview. */
+@font-face{font-family:"CT Cinzel Deco";src:url("assets/fonts/cinzel-decorative-700.woff2") format("woff2");font-weight:700;font-display:swap}
+@font-face{font-family:"CT Cormorant";src:url("assets/fonts/cormorant-garamond.woff2") format("woff2");font-weight:500 600;font-display:swap}
+@font-face{font-family:"CT Marcellus SC";src:url("assets/fonts/marcellus-sc.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"CT Marcellus";src:url("assets/fonts/marcellus.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"CT Metamorphous";src:url("assets/fonts/metamorphous.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"CT Fell SC";src:url("assets/fonts/im-fell-english-sc.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"CT Spectral";src:url("assets/fonts/spectral-400.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"CT Special Elite";src:url("assets/fonts/special-elite.woff2") format("woff2");font-display:swap}
+
+/* Layout: past | present | future table (zones and log left, board and hand centre, focus card, mana and Pass right),
+   opponents as a strip on top. Each skin = textures (ambientCG, CC0) + SVG frames drawn for this project + tokens. */
+:root{
+  color-scheme:dark;
+  --page:#0b0b0e; --page-fg:#e8e2d5; --page-muted:#9a9385; --page-line:#2a2731; --page-card:#131218; --page-link:#9cc4f5; --page-accent:#c9a24b;
+  --ui:"Alegreya Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --t-creature:#d39a45; --t-instant:#4d9be6; --t-sorcery:#e0604a; --t-artifact:#aab3bd; --t-enchant:#e6d27a; --t-land:#9b7a52;
+}
+body{background:var(--page);color:var(--page-fg);font-family:var(--ui);font-size:15px;line-height:1.5}
+.wrap{max-width:1360px;margin:0 auto;padding-block:28px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:24px}
+.intro{display:grid;gap:6px;max-width:76ch}
+.intro h1{font-family:"Cinzel",Georgia,serif;font-weight:600;font-size:clamp(1.5rem,3vw,2rem);margin:0;letter-spacing:.05em;text-wrap:balance}
+.intro p{margin:0;color:var(--page-muted)}
+a{color:var(--page-link)}
+.picker{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.pick{appearance:none;cursor:pointer;text-align:left;border:1px solid var(--page-line);border-radius:8px;padding:0;overflow:hidden;color:var(--page-fg);font:inherit;display:grid;background:var(--page-card)}
+.pick .sw{height:46px;background-size:cover;background-position:center}
+.pick .tx{display:grid;gap:2px;padding:10px 14px}
+.pick b{font-family:"Cinzel",Georgia,serif;font-weight:600;letter-spacing:.06em}
+.pick span{color:var(--page-muted);font-size:.86rem}
+.pick:hover{border-color:#4f4858}
+.pick:focus-visible{outline:2px solid var(--page-accent);outline-offset:2px}
+.pick[aria-selected="true"]{border-color:var(--page-accent);box-shadow:0 0 0 1px var(--page-accent)}
+@media (max-width:640px){.picker{grid-template-columns:1fr}}
+
+/* ================= skin tokens ================= */
+[data-skin="nightspire"]{
+  --stage-bg:radial-gradient(ellipse 70% 50% at 50% 0,rgba(64,120,255,.22),transparent 70%),radial-gradient(ellipse 60% 60% at 50% 60%,transparent,rgba(0,0,0,.65)),linear-gradient(rgba(5,8,22,.78),rgba(3,5,14,.9)),url("assets/textures/rock031.jpg") center/520px;
+  --zone-bg:linear-gradient(rgba(10,15,34,.9),rgba(5,8,20,.94)),url("assets/textures/marble023.jpg") center/420px;
+  --frame-img:url("assets/frames/ns-frame.svg"); --fw:24px; --fo:4px; --frame-glow:drop-shadow(0 0 5px rgba(90,150,255,.35));
+  --btn-img:url("assets/frames/ns-button.svg"); --go-img:url("assets/frames/ns-button-go.svg"); --btn-slice:0 30 fill; --btn-w:0 20px;
+  --text:#ece7f1; --muted:#9ea6bf; --metal:#cfa54e; --metal-hi:#f7e4a6; --accent:#b8293f; --accent-hi:#ef6b7d; --glow:#6fb0ff; --surface:#0b1226;
+  --display:"CT Cinzel Deco","Cinzel Decorative","Cinzel",Georgia,serif; --head:"Cinzel",Georgia,serif; --body:"CT Cormorant","Cormorant Garamond",Georgia,serif; --num:"Cinzel",Georgia,serif; --log:"CT Cormorant","Cormorant Garamond",Georgia,serif;
+  --body-size:1.06rem; --tile-r:3px;
+}
+[data-skin="highkeep"]{
+  --stage-bg:radial-gradient(ellipse 65% 60% at 50% 55%,transparent,rgba(0,0,0,.7)),linear-gradient(rgba(36,20,8,.62),rgba(18,9,3,.82)),url("assets/textures/wood094.jpg") center/640px;
+  --zone-bg:radial-gradient(ellipse at 50% 0,rgba(60,90,170,.25),transparent 70%),linear-gradient(rgba(14,22,52,.9),rgba(6,10,28,.95)),url("assets/textures/leather037.jpg") center/360px;
+  --frame-img:url("assets/frames/hk-frame.svg"); --fw:20px; --fo:3px; --frame-glow:drop-shadow(0 3px 4px rgba(0,0,0,.7));
+  --btn-img:url("assets/frames/hk-button-plain.svg"); --go-img:url("assets/frames/hk-button.svg"); --btn-slice:0 26 fill; --btn-w:0 18px;
+  --text:#f6ecd2; --muted:#b8b0a0; --metal:#c99b3e; --metal-hi:#ffd96b; --accent:#a92a1f; --accent-hi:#ff6a55; --glow:#4cb5ff; --surface:#0c1430;
+  --display:"CT Metamorphous","Metamorphous",Georgia,serif; --head:"CT Marcellus SC","Marcellus SC",Georgia,serif; --body:"CT Marcellus","Marcellus",Georgia,serif; --num:"CT Metamorphous","Metamorphous",Georgia,serif; --log:"Alegreya Sans",system-ui,sans-serif;
+  --body-size:.97rem; --tile-r:5px;
+}
+[data-skin="brass"]{
+  --stage-bg:radial-gradient(ellipse 60% 50% at 70% 10%,rgba(92,226,239,.12),transparent 70%),radial-gradient(ellipse 65% 60% at 50% 55%,transparent,rgba(0,0,0,.7)),linear-gradient(rgba(10,18,17,.55),rgba(4,9,9,.78)),url("assets/textures/leather026.jpg") center/520px;
+  --zone-bg:linear-gradient(rgba(14,30,28,.86),rgba(7,16,15,.93)),url("assets/textures/metal009.jpg") center/380px;
+  --frame-img:url("assets/frames/bm-frame.svg"); --fw:22px; --fo:3px; --frame-glow:drop-shadow(0 3px 4px rgba(0,0,0,.7));
+  --btn-img:url("assets/frames/bm-plate.svg"); --go-img:url("assets/frames/bm-plate-go.svg"); --btn-slice:0 30 fill; --btn-w:0 20px;
+  --text:#efe7d2; --muted:#a8b8ae; --metal:#b38a3f; --metal-hi:#efd28a; --accent:#c4703c; --accent-hi:#f0a066; --glow:#5ce2ef; --surface:#0e1c1b;
+  --display:"CT Fell SC","IM Fell English SC",Georgia,serif; --head:"CT Fell SC","IM Fell English SC",Georgia,serif; --body:"CT Spectral","Spectral",Georgia,serif; --num:"CT Fell SC","IM Fell English SC",Georgia,serif; --log:"CT Special Elite","Special Elite","Courier New",monospace;
+  --body-size:.92rem; --tile-r:6px;
+}
+
+/* ================= table ================= */
+.stage{position:relative;overflow:hidden;border-radius:12px;color:var(--text);font-family:var(--body);font-size:var(--body-size);background:var(--stage-bg);background-color:#050608;
+  box-shadow:0 0 0 1px var(--page-line),0 30px 80px rgba(0,0,0,.55);
+  display:grid;grid-template-columns:220px minmax(0,1fr) 250px;grid-template-areas:"top top top" "past now next";gap:22px;padding:22px}
+.zone{position:relative;background:var(--zone-bg);border-radius:4px;padding:calc(var(--fw) * .6 + 8px);box-shadow:0 14px 30px rgba(0,0,0,.5)}
+.zone::after{content:"";position:absolute;inset:calc(var(--fo) * -1);pointer-events:none;border:var(--fw) solid transparent;border-image:var(--frame-img) 40 / var(--fw) stretch;filter:var(--frame-glow)}
+.label{display:flex;align-items:center;gap:8px;font-family:var(--head);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--metal-hi);margin:0 0 10px}
+.ic{display:inline-block;width:var(--s,16px);height:var(--s,16px);flex:none;background:currentColor;-webkit-mask:var(--i) center/contain no-repeat;mask:var(--i) center/contain no-repeat}
+
+/* opponents */
+.opps{grid-area:top;display:grid;grid-template-columns:auto repeat(3,minmax(0,1fr));gap:22px;align-items:stretch}
+.logo{display:flex;align-items:center;gap:12px;padding-right:4px;font-family:var(--display);font-size:1.25rem;color:var(--metal-hi);white-space:nowrap;letter-spacing:.03em;text-shadow:0 2px 0 #000,0 0 18px rgba(0,0,0,.8)}
+.logo .mark{width:46px;height:46px;flex:none;background:center/contain no-repeat}
+.opp{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:6px 12px;align-items:center}
+.opp .tiles{grid-column:1/-1;display:flex;gap:6px;flex-wrap:wrap}
+.pt-wrap{position:relative;width:48px;height:48px;flex:none;display:grid;place-items:center}
+.portrait{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);color:#fff;font-size:1.05rem;text-shadow:0 1px 2px #000;
+  background:radial-gradient(circle at 50% 30%,var(--c1),var(--c2) 75%);box-shadow:inset 0 -6px 12px rgba(0,0,0,.55)}
+.pt-wrap::after{content:"";position:absolute;inset:-6px;background:var(--ring) center/contain no-repeat;pointer-events:none}
+.on .pt-wrap::before{content:"";position:absolute;inset:-4px;border-radius:50%;box-shadow:0 0 18px 4px var(--glow);opacity:.7}
+.name{min-width:0;display:grid;line-height:1.2}
+.name b{font-family:var(--head);font-weight:600;font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.name small{color:var(--muted);font-size:.8em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.life{display:grid;justify-items:end;gap:3px}
+.life .num{font-family:var(--num);font-size:1.5rem;line-height:1;color:var(--metal-hi);font-variant-numeric:tabular-nums;text-shadow:0 2px 0 #000}
+.life.low .num{color:var(--accent-hi)}
+.life .bar,.life .dial{display:none}
+
+/* tiles */
+.tile{appearance:none;font:inherit;color:inherit;cursor:pointer;position:relative;width:54px;height:54px;padding:0;border:0;border-radius:var(--tile-r);
+  background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.3),transparent 55%),linear-gradient(200deg,var(--a1),var(--a2));
+  box-shadow:0 0 0 1px #000,0 0 0 2px var(--metal),inset 0 3px 0 var(--type),0 4px 10px rgba(0,0,0,.55);transition:transform .14s}
+.tile .nm{position:absolute;left:0;right:0;bottom:0;font-family:var(--ui);font-size:.58rem;line-height:1.25;padding:1px 3px;background:rgba(0,0,0,.66);color:#f3efe6;border-radius:0 0 var(--tile-r) var(--tile-r);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tile .pt{position:absolute;right:-7px;bottom:-8px;z-index:2;min-width:26px;padding:1px 4px;font-family:var(--num);font-size:.7rem;text-align:center;border-radius:3px;background:var(--surface);color:var(--metal-hi);box-shadow:0 0 0 1px #000,0 0 0 2px var(--metal),0 2px 4px rgba(0,0,0,.6)}
+.tile .pt.up{color:#fff;background:var(--accent)}
+.tile.sm{width:38px;height:38px}.tile.sm .nm{display:none}.tile.sm .pt{font-size:.6rem;min-width:22px;right:-6px;bottom:-7px}
+.tile.tapped{transform:rotate(90deg);opacity:.75}
+.tile:hover,.tile:focus-visible{transform:translateY(-3px);outline:none;box-shadow:0 0 0 1px #000,0 0 0 2px var(--glow),0 0 14px var(--glow),inset 0 3px 0 var(--type)}
+.tile.tapped:hover,.tile.tapped:focus-visible{transform:rotate(90deg) translateX(-3px)}
+.tile.focus{box-shadow:0 0 0 1px #000,0 0 0 2px var(--accent-hi),0 0 16px var(--accent),inset 0 3px 0 var(--type)}
+.creature{--type:var(--t-creature)}.instant{--type:var(--t-instant)}.sorcery{--type:var(--t-sorcery)}.artifact{--type:var(--t-artifact)}.enchant{--type:var(--t-enchant)}.land{--type:var(--t-land)}
+
+/* past */
+.past{grid-area:past;display:grid;gap:22px;align-content:start;min-width:0}
+.piles{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pile{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:3px;background:rgba(0,0,0,.32);box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)}
+.pile .ic{color:var(--metal)}
+.pile b{font-family:var(--num);font-size:1.05rem;color:var(--metal-hi);line-height:1;font-variant-numeric:tabular-nums}
+.pile span{display:block;font-size:.68rem;color:var(--muted);letter-spacing:.06em}
+.cmdzone{display:flex;align-items:center;gap:12px;margin-top:12px}
+.cmdzone small{color:var(--muted);font-size:.8em;line-height:1.3}
+.log{display:grid;gap:6px;font-family:var(--log);font-size:.84em;line-height:1.35}
+.log div{padding-left:8px;border-left:2px solid rgba(255,255,255,.1)}
+.log .hot{border-left-color:var(--accent-hi)}
+.log em{font-style:normal;color:var(--metal-hi)}
+
+/* present */
+.now{grid-area:now;display:grid;gap:22px;min-width:0;align-content:start}
+.stackbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.stackbar .label{margin:0}
+.chip{display:flex;align-items:center;gap:8px;padding:4px 12px 4px 4px;border-radius:999px;background:rgba(0,0,0,.4);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);font-size:.88em}
+.chip.top{box-shadow:inset 0 0 0 1px var(--glow),0 0 16px -4px var(--glow)}
+.chip i{width:22px;height:22px;border-radius:50%;background:linear-gradient(200deg,var(--a1),var(--a2));box-shadow:0 0 0 2px var(--type)}
+.chip small{color:var(--muted)}
+.prompt{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px 18px;align-items:center}
+.prompt h3{margin:0;font-family:var(--display);font-weight:700;font-size:1.05rem;color:var(--metal-hi);letter-spacing:.02em;text-wrap:balance;text-shadow:0 2px 0 #000}
+.prompt p{margin:0;color:var(--muted);font-size:.92em}
+.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{appearance:none;cursor:pointer;font-family:var(--head);font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--metal-hi);background:none;
+  border-style:solid;border-width:var(--btn-w);border-image:var(--btn-img) var(--btn-slice) / var(--btn-w) stretch;padding:11px 4px;min-width:110px;text-shadow:0 1px 0 #000;transition:filter .14s,transform .1s}
+.btn.go{border-image-source:var(--go-img);color:#fff}
+.btn:hover{filter:brightness(1.2)}.btn:active{transform:translateY(1px)}
+.btn:disabled{opacity:.45;filter:grayscale(.6);cursor:not-allowed}
+.btn:focus-visible{outline:2px solid var(--glow);outline-offset:3px}
+.divider{height:16px;background:url("assets/frames/ns-divider.svg") center/240px 16px no-repeat;margin:2px 0}
+.field{display:grid;gap:14px}
+.me{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.lane{display:grid;grid-template-columns:92px minmax(0,1fr);gap:12px;align-items:center}
+.lane .label{margin:0}
+.lane .row{display:flex;gap:12px 18px;flex-wrap:wrap;align-items:center;min-height:58px}
+.hand{display:flex;justify-content:center;padding-top:8px}
+.hcard{appearance:none;font:inherit;cursor:pointer;width:86px;aspect-ratio:63/88;margin-inline:-5px;border:0;padding:4px;border-radius:calc(var(--tile-r) + 2px);display:grid;grid-template-rows:auto 1fr;gap:3px;
+  background:var(--surface);box-shadow:0 0 0 1px #000,0 0 0 2px var(--metal),inset 0 3px 0 var(--type),0 8px 16px rgba(0,0,0,.55);transition:transform .16s;color:var(--text);position:relative}
+.hcard .nm{font-family:var(--head);font-size:.55rem;text-align:left;padding-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hcard .art{border-radius:var(--tile-r);background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.3),transparent 55%),linear-gradient(200deg,var(--a1),var(--a2))}
+.hcard .cost{position:absolute;top:-9px;right:-7px;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-family:var(--num);font-size:.74rem;background:var(--surface);color:var(--metal-hi);box-shadow:0 0 0 1px #000,0 0 0 2px var(--metal),0 2px 4px rgba(0,0,0,.6)}
+.hand .hcard:nth-child(1){transform:rotate(-8deg) translateY(8px)}.hand .hcard:nth-child(2){transform:rotate(-4deg) translateY(2px)}
+.hand .hcard:nth-child(4){transform:rotate(4deg) translateY(2px)}.hand .hcard:nth-child(5){transform:rotate(8deg) translateY(8px)}
+.hand .hcard:hover,.hand .hcard:focus-visible{transform:translateY(-16px);z-index:3;outline:none;box-shadow:0 0 0 1px #000,0 0 0 2px var(--glow),0 0 18px var(--glow),inset 0 3px 0 var(--type)}
+
+/* future */
+.next{grid-area:next;display:grid;gap:22px;align-content:start;min-width:0}
+.focus-wrap{position:relative}
+.focus-card{position:relative;display:grid;gap:6px;padding:10px;border-radius:6px;background:linear-gradient(var(--surface),#000);box-shadow:0 0 0 1px #000,0 0 0 2px var(--metal),inset 0 4px 0 var(--type),0 16px 30px rgba(0,0,0,.6)}
+.focus-card .fname{display:flex;justify-content:space-between;gap:8px;font-family:var(--head);font-weight:600;font-size:.88rem;padding:2px 2px 0}
+.focus-card .fcost{font-family:var(--num);color:var(--metal-hi);white-space:nowrap}
+.focus-card .fart{aspect-ratio:4/3;border-radius:3px;background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.3),transparent 55%),linear-gradient(200deg,var(--a1),var(--a2));box-shadow:inset 0 0 0 1px rgba(0,0,0,.5),0 0 0 1px var(--metal)}
+.focus-card .ftype{font-size:.8em;color:var(--muted);padding:0 2px;letter-spacing:.03em}
+.focus-card .ftext{font-size:.88em;line-height:1.4;padding:0 2px 6px;min-height:5.6em}
+.focus-card .fpt{position:absolute;right:-9px;bottom:-11px;font-family:var(--num);font-size:.98rem;padding:2px 10px;border-radius:3px;background:var(--surface);color:var(--metal-hi);box-shadow:0 0 0 1px #000,0 0 0 2px var(--metal),0 3px 6px rgba(0,0,0,.6)}
+.focus-card .fpt:empty{display:none}
+.mana{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;align-items:end;justify-items:center}
+.m{display:grid;justify-items:center;gap:5px;font-family:var(--num);font-size:.82rem;font-variant-numeric:tabular-nums}
+.m .vis{position:relative;display:block}
+.m.empty{opacity:.4}
+.mw{--mc:#f3ead0}.mu{--mc:#3f8fe2}.mb{--mc:#a58ccc}.mr{--mc:#ea5c44}.mg{--mc:#4dbb74}.mcl{--mc:#b8bfc8}
+.phase{display:grid;gap:3px;margin:0;padding:0;list-style:none;font-family:var(--head);font-size:.74rem;letter-spacing:.12em;text-transform:uppercase}
+.phase li{display:flex;align-items:center;gap:8px;color:var(--muted);padding:3px 6px;border-radius:3px}
+.phase li::before{content:"";width:7px;height:7px;transform:rotate(45deg);box-shadow:inset 0 0 0 1px var(--metal)}
+.phase li.done{opacity:.5}.phase li.done::before{background:var(--metal)}
+.phase li.cur{color:var(--text);background:linear-gradient(90deg,rgba(255,255,255,.08),transparent)}
+.phase li.cur::before{background:var(--accent-hi);box-shadow:0 0 8px var(--accent-hi)}
+.pass{width:100%;padding:16px 4px;font-size:.95rem}
+
+/* ---------- Nightspire ---------- */
+[data-skin="nightspire"] .logo .mark{background-image:url("assets/frames/ns-rune.svg")}
+[data-skin="nightspire"] .logo{font-size:1.15rem}
+[data-skin="nightspire"] .pt-wrap{--ring:url("assets/frames/ns-rune.svg")}
+[data-skin="nightspire"] .pt-wrap::after{inset:-8px}
+[data-skin="nightspire"] .focus-wrap{padding-top:44px}
+[data-skin="nightspire"] .focus-wrap::before{content:"";position:absolute;left:-2px;right:-2px;top:0;height:60px;background:url("assets/frames/ns-arch.svg") center bottom/100% 100% no-repeat;filter:drop-shadow(0 0 6px rgba(90,150,255,.4))}
+[data-skin="nightspire"] .focus-card{border-radius:2px}
+[data-skin="nightspire"] .m .vis{width:34px;height:34px;background:radial-gradient(circle,var(--mc) 0 18%,color-mix(in srgb,var(--mc) 35%,transparent) 32%,transparent 46%),url("assets/frames/ns-rune.svg") center/contain no-repeat;filter:drop-shadow(0 0 6px color-mix(in srgb,var(--mc) 60%,transparent))}
+[data-skin="nightspire"] .m.empty .vis{background:url("assets/frames/ns-rune.svg") center/contain no-repeat;filter:none}
+[data-skin="nightspire"] .label{color:var(--metal)}
+[data-skin="nightspire"] .life .num{font-family:var(--display);font-size:1.45rem}
+
+/* ---------- Highkeep ---------- */
+[data-skin="highkeep"] .logo .mark{background-image:url("assets/frames/hk-ring.svg");display:grid;place-items:center}
+[data-skin="highkeep"] .logo{font-size:1.45rem;background:linear-gradient(#fff4c4,#e2b24c 55%,#8a5d14);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none;filter:drop-shadow(0 2px 0 #000)}
+[data-skin="highkeep"] .pt-wrap{--ring:url("assets/frames/hk-ring.svg")}
+[data-skin="highkeep"] .pt-wrap::after{inset:-9px}
+[data-skin="highkeep"] .label{justify-content:center;color:#ffe9a8;text-shadow:0 1px 0 #000;border-style:solid;border-width:0 30px;border-image:url("assets/frames/hk-plaque.svg") 0 60 fill / 0 30px stretch;padding:8px 2px;margin:-4px 0 12px;font-size:.7rem}
+[data-skin="highkeep"] .stackbar .label,[data-skin="highkeep"] .lane .label{margin:0}
+[data-skin="highkeep"] .life .bar{display:block;width:100px;height:12px;border-radius:2px;background:#170a05;box-shadow:0 0 0 1px #000,0 0 0 2px var(--metal),0 0 0 3px #000;overflow:hidden}
+[data-skin="highkeep"] .life .bar i{display:block;height:100%;width:var(--pct);background:linear-gradient(#8ff07a,#2ca52b 55%,#1a6a19)}
+[data-skin="highkeep"] .life.low .bar i{background:linear-gradient(#ff9a7a,#c8301f 55%,#73140a)}
+[data-skin="highkeep"] .life .num{font-size:1.05rem;color:var(--text)}
+[data-skin="highkeep"] .focus-card{border-radius:4px;box-shadow:inset 0 4px 0 var(--type),0 16px 30px rgba(0,0,0,.6)}
+[data-skin="highkeep"] .focus-card::after{content:"";position:absolute;inset:-5px;pointer-events:none;border:18px solid transparent;border-image:url("assets/frames/hk-frame.svg") 40 / 18px stretch}
+[data-skin="highkeep"] .focus-card{padding:16px}
+[data-skin="highkeep"] .m .vis{width:36px;height:36px;border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.9) 0 7%,transparent 26%),radial-gradient(circle at 50% 62%,var(--mc),color-mix(in srgb,var(--mc) 35%,#000) 72%);box-shadow:0 0 14px -2px var(--mc)}
+[data-skin="highkeep"] .m .vis::after{content:"";position:absolute;inset:-6px;background:url("assets/frames/hk-socket.svg") center/contain no-repeat}
+[data-skin="highkeep"] .m.empty .vis{background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.35) 0 7%,transparent 26%),#120c08;box-shadow:none}
+[data-skin="highkeep"] .btn{text-transform:none;letter-spacing:.04em;font-family:var(--display);font-size:.95rem;color:#ffe9a8}
+[data-skin="highkeep"] .btn.go{color:#fff4d8}
+[data-skin="highkeep"] .pass{font-size:1.15rem;padding:18px 4px}
+[data-skin="highkeep"] .divider{background:none;height:2px;background:linear-gradient(90deg,transparent,var(--metal),transparent)}
+
+/* ---------- Brass Meridian ---------- */
+[data-skin="brass"] .logo .mark{background-image:url("assets/frames/bm-gear.svg");animation:turn 18s linear infinite}
+[data-skin="brass"] .logo{font-size:1.4rem}
+[data-skin="brass"] .pt-wrap{--ring:none}
+[data-skin="brass"] .pt-wrap::before{content:"";position:absolute;inset:-9px;border-radius:0;box-shadow:none;opacity:.9;background:url("assets/frames/bm-gear.svg") center/contain no-repeat}
+[data-skin="brass"] .on .pt-wrap::before{animation:turn 12s linear infinite;filter:drop-shadow(0 0 6px var(--glow))}
+[data-skin="brass"] .portrait{position:relative;box-shadow:0 0 0 2px #241503,inset 0 -6px 12px rgba(0,0,0,.55)}
+[data-skin="brass"] .life .num{display:none}
+[data-skin="brass"] .life .dial{display:block;position:relative;width:64px;height:64px;background:url("assets/frames/bm-dial.svg") center/contain no-repeat;filter:drop-shadow(0 3px 4px rgba(0,0,0,.6))}
+[data-skin="brass"] .life .dial::before{content:"";position:absolute;left:50%;top:50%;width:2px;height:23px;background:#7d1d14;border-radius:2px;transform-origin:50% 100%;transform:translate(-50%,-100%) rotate(calc(-135deg + var(--v) / 40 * 270deg))}
+[data-skin="brass"] .life .dial::after{content:"";position:absolute;left:50%;top:50%;width:7px;height:7px;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff3c8,#8f6828)}
+[data-skin="brass"] .life .dial b{position:absolute;left:0;right:0;bottom:9px;text-align:center;font-family:var(--num);font-size:.72rem;color:#241706}
+[data-skin="brass"] .focus-card{border-radius:8px;box-shadow:0 0 0 1px #000,0 0 0 3px var(--metal),0 0 0 4px #241503,inset 0 4px 0 var(--type),0 16px 30px rgba(0,0,0,.6);background:linear-gradient(rgba(8,10,10,.75),rgba(0,0,0,.9)),url("assets/textures/leather026.jpg") center/300px}
+[data-skin="brass"] .focus-wrap::before,[data-skin="brass"] .focus-wrap::after{content:"";position:absolute;width:46px;height:46px;z-index:2;pointer-events:none;background:url("assets/frames/bm-filigree.svg") center/contain no-repeat}
+[data-skin="brass"] .focus-wrap::before{left:-8px;top:-8px}
+[data-skin="brass"] .focus-wrap::after{right:-8px;bottom:-8px;transform:rotate(180deg)}
+[data-skin="brass"] .focus-card .ftype{color:var(--glow)}
+[data-skin="brass"] .m .vis{width:22px;height:66px;background:url("assets/frames/bm-vial.svg") center/100% 100% no-repeat}
+[data-skin="brass"] .m .vis::before{content:"";position:absolute;left:5px;right:5px;bottom:7px;height:calc(var(--n) / 4 * 50px);max-height:50px;border-radius:2px 2px 3px 3px;background:linear-gradient(90deg,color-mix(in srgb,var(--mc) 70%,#000),var(--mc) 45%,color-mix(in srgb,var(--mc) 60%,#fff));box-shadow:0 0 10px var(--mc)}
+[data-skin="brass"] .btn{color:#241706;text-shadow:0 1px 0 rgba(255,255,255,.4)}
+[data-skin="brass"] .btn.go{color:#2a1205}
+[data-skin="brass"] .chip.top{box-shadow:inset 0 0 0 1px var(--glow),0 0 16px -2px var(--glow)}
+[data-skin="brass"] .log div{border-left:2px dotted var(--metal)}
+[data-skin="brass"] .divider{background:none;height:8px;background:radial-gradient(circle,var(--metal) 1.5px,transparent 2px) center/12px 8px repeat-x}
+@keyframes turn{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){[data-skin="brass"] .logo .mark,[data-skin="brass"] .on .pt-wrap::before{animation:none}.tile,.hcard,.btn{transition:none}}
+
+@media (max-width:1140px){.stage{grid-template-columns:minmax(0,1fr) 250px;grid-template-areas:"top top" "now next" "past past"}.past{grid-template-columns:1fr 1fr}.opps{grid-template-columns:repeat(3,minmax(0,1fr))}.logo{grid-column:1/-1}}
+@media (max-width:780px){.stage{grid-template-columns:minmax(0,1fr);grid-template-areas:"top" "now" "next" "past";padding:14px}.opps,.past{grid-template-columns:1fr}.prompt{grid-template-columns:1fr}.lane{grid-template-columns:1fr}.hcard{width:64px}}
+
+/* ---------- real card pictures (Scryfall), shown the way the game shows them ---------- */
+.tile{width:64px;height:auto;aspect-ratio:63/88;border-radius:4px;background:var(--img) center/cover,linear-gradient(200deg,var(--a1),var(--a2))}
+.tile.sm{width:48px;height:auto}
+.tile .nm,.tile .pt{display:none}
+.tile .pt.up{display:block}
+.tile.tapped{margin-inline:12px}
+.tile.sm.tapped{margin-inline:8px}
+.lane .row{min-height:92px}
+.hcard{width:104px;padding:0;border-radius:6px;background:var(--img) center/cover,var(--surface);margin-inline:-8px}
+.hcard .nm,.hcard .art,.hcard .cost{display:none}
+.hand{padding-top:14px}
+.portrait{background:var(--img) center 30%/cover,radial-gradient(circle at 50% 30%,var(--c1),var(--c2) 75%);font-size:0}
+.chip i{background:var(--img) center/cover}
+.focus-card .fname,.focus-card .ftype,.focus-card .ftext{display:none}
+.focus-card .fart{aspect-ratio:63/88;background:var(--img) center/cover;border-radius:4.6%/3.3%;box-shadow:0 0 0 1px #000}
+.focus-card{padding:8px}
+[data-skin="highkeep"] .focus-card{padding:14px}
+.credit{font-size:.72rem;color:var(--muted);text-align:center;margin-top:-10px}
+
+/* ================= asset sheet ================= */
+.sheet{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px;align-items:start}
+@media (max-width:880px){.sheet{grid-template-columns:1fr}}
+.panel{background:var(--page-card);border:1px solid var(--page-line);border-radius:10px;padding:18px;display:grid;gap:12px;min-width:0}
+.panel h2{margin:0;font-family:"Cinzel",Georgia,serif;font-weight:600;font-size:1.05rem;letter-spacing:.06em}
+.panel p{margin:0;color:#cfc8ba;max-width:66ch}
+.sub{color:var(--page-muted);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:10px}
+.gallery figure{margin:0;display:grid;gap:4px}
+.gallery .thumb{height:84px;border-radius:6px;background:#06070b center/contain no-repeat;box-shadow:inset 0 0 0 1px var(--page-line)}
+.gallery .thumb.tex{background-size:cover}
+.gallery figcaption{font-size:.74rem;color:var(--page-muted);line-height:1.3}
+.gallery figcaption b{color:var(--page-fg);font-weight:500;display:block}
+.assets{width:100%;border-collapse:collapse;font-size:.88rem}
+.assets th,.assets td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--page-line);vertical-align:top}
+.assets th{font-weight:500;color:var(--page-muted);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase}
+.lic{display:inline-block;padding:1px 7px;border-radius:999px;font-size:.72rem;border:1px solid var(--page-line);white-space:nowrap}
+.lic.cc0{border-color:#3f7f5f;color:#7fd3a5}.lic.ofl{border-color:#6b5a2a;color:#e3c66d}.lic.by{border-color:#7a4a3a;color:#f0a27f}.lic.own{border-color:#4a5a8a;color:#a9bdf0}
+.scroll{overflow-x:auto}
+.wide{grid-column:1/-1}
+</style>
+
+<main class="wrap">
+  <header class="intro">
+    <h1>Three skins for the table</h1>
+    <p>Rebuilt from the dark-fantasy reference sheets with real free assets: CC0 textures from ambientCG, open-licence fonts, game-icons.net icons, and frames, plaques, rings, gears, dials and vials drawn for this project. The table holds real cards from Scryfall, shown the way the game shows them. Hover or tab to any card to see it in full on the right.</p>
+  </header>
+
+  <div class="picker" role="tablist" aria-label="Skins">
+    <button class="pick" role="tab" data-skin="nightspire" aria-selected="true" aria-controls="stage"><span class="sw" style="background-image:linear-gradient(rgba(5,8,22,.55),rgba(5,8,22,.75)),url('assets/textures/marble023.jpg')"></span><span class="tx"><b>Nightspire</b><span>Gothic dark fantasy: gold line-work, rune circles, night blue.</span></span></button>
+    <button class="pick" role="tab" data-skin="highkeep" aria-selected="false" aria-controls="stage"><span class="sw" style="background-image:linear-gradient(rgba(36,20,8,.5),rgba(18,9,3,.7)),url('assets/textures/wood094.jpg')"></span><span class="tx"><b>Highkeep</b><span>Heroic online-RPG feel: carved gold, gems, navy plaques.</span></span></button>
+    <button class="pick" role="tab" data-skin="brass" aria-selected="false" aria-controls="stage"><span class="sw" style="background-image:linear-gradient(rgba(10,18,17,.3),rgba(4,9,9,.6)),url('assets/textures/metal009.jpg')"></span><span class="tx"><b>Brass Meridian</b><span>High fantasy steampunk: brass, gears, dials, aether glass.</span></span></button>
+  </div>
+
+  <section class="stage" id="stage" data-skin="nightspire" role="tabpanel" aria-label="Table preview">
+    <div class="opps">
+      <div class="logo"><span class="mark" aria-hidden="true"></span><span>Commander Table</span></div>
+      <div class="zone opp">
+        <div class="pt-wrap"><div class="portrait" data-art="atraxa" style="--c1:#7aa0d8;--c2:#25233f">A</div></div>
+        <div class="name"><b>Atraxa</b><small>Control AI · hand 5</small></div>
+        <div class="life"><span class="num">31</span><span class="bar"><i style="--pct:78%"></i></span><span class="dial" style="--v:31"><b>31</b></span></div>
+        <div class="tiles"><button class="tile sm artifact" data-card="solring" style="--a1:#e6eaef;--a2:#5a6069"><span class="nm">Sol Ring</span></button><button class="tile sm enchant" data-card="rhystic" style="--a1:#a6d4ff;--a2:#1d3e7a"><span class="nm">Rhystic</span></button><button class="tile sm creature" data-card="atraxa" style="--a1:#f6e4a8;--a2:#3b6b8f"><span class="nm">Atraxa</span><span class="pt">4/4</span></button></div>
+      </div>
+      <div class="zone opp">
+        <div class="pt-wrap"><div class="portrait" data-art="yuriko" style="--c1:#6d6480;--c2:#120c18">Y</div></div>
+        <div class="name"><b>Yuriko</b><small>Tempo AI · hand 3</small></div>
+        <div class="life"><span class="num">24</span><span class="bar"><i style="--pct:60%"></i></span><span class="dial" style="--v:24"><b>24</b></span></div>
+        <div class="tiles"><button class="tile sm creature" data-card="yuriko" style="--a1:#7b5d8f;--a2:#1a1220"><span class="nm">Yuriko</span><span class="pt">1/3</span></button><button class="tile sm artifact" data-card="ornithopter" style="--a1:#c9cfd6;--a2:#4f5560"><span class="nm">Ornithopter</span><span class="pt">0/2</span></button><button class="tile sm land tapped" data-card="island" style="--a1:#8ec2ef;--a2:#2c5c8a"><span class="nm">Island</span></button></div>
+      </div>
+      <div class="zone opp">
+        <div class="pt-wrap"><div class="portrait" data-art="korvold" style="--c1:#e07a4a;--c2:#3a1010">K</div></div>
+        <div class="name"><b>Korvold</b><small>Aggro AI · hand 1</small></div>
+        <div class="life low"><span class="num">9</span><span class="bar"><i style="--pct:22%"></i></span><span class="dial" style="--v:9"><b>9</b></span></div>
+        <div class="tiles"><button class="tile sm creature focus" data-card="korvold" style="--a1:#ffb35a;--a2:#5a1a10"><span class="nm">Korvold</span><span class="pt up">8/8</span></button><button class="tile sm creature" data-card="tracker" style="--a1:#c7e88c;--a2:#1f5130"><span class="nm">Tracker</span><span class="pt">3/2</span></button><button class="tile sm artifact" data-card="signet" style="--a1:#e6eaef;--a2:#6b717a"><span class="nm">Signet</span></button></div>
+      </div>
+    </div>
+
+    <aside class="past">
+      <div class="zone">
+        <h4 class="label"><span class="ic" style="--i:url('assets/icons/castle.svg')"></span>Your zones</h4>
+        <div class="piles">
+          <div class="pile"><span class="ic" style="--i:url('assets/icons/book-cover.svg');--s:18px"></span><div><b>61</b><span>Library</span></div></div>
+          <div class="pile"><span class="ic" style="--i:url('assets/icons/tombstone.svg');--s:18px"></span><div><b>7</b><span>Graveyard</span></div></div>
+          <div class="pile"><span class="ic" style="--i:url('assets/icons/portal.svg');--s:18px"></span><div><b>2</b><span>Exile</span></div></div>
+          <div class="pile"><span class="ic" style="--i:url('assets/icons/crown.svg');--s:18px"></span><div><b>0</b><span>Cmdr tax</span></div></div>
+        </div>
+        <div class="cmdzone"><button class="tile creature" data-card="najeela" style="--a1:#f6e4a8;--a2:#6b3f1f"><span class="nm">Najeela</span><span class="pt">3/2</span></button><small>Commander on the battlefield since turn 3</small></div>
+      </div>
+      <div class="zone">
+        <h4 class="label"><span class="ic" style="--i:url('assets/icons/scroll-unfurled.svg')"></span>Chronicle</h4>
+        <div class="log">
+          <div>Turn 7. <em>You</em> draw a card.</div>
+          <div><em>You</em> play Forest.</div>
+          <div><em>Korvold</em> sacrifices a Treasure and grows.</div>
+          <div><em>Atraxa</em> draws from Rhystic Study.</div>
+          <div class="hot"><em>You</em> cast Swords to Plowshares on Korvold.</div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="now">
+      <div class="zone stackbar">
+        <h4 class="label"><span class="ic" style="--i:url('assets/icons/spell-book.svg')"></span>Stack</h4>
+        <span class="chip top instant" data-card="swords" tabindex="0"><i data-art="swords" style="--a1:#f5ecc8;--a2:#c59f54"></i>Swords to Plowshares <small>· you → Korvold</small></span>
+        <span class="chip creature" data-card="korvold" tabindex="0"><i data-art="korvold" style="--a1:#ffb35a;--a2:#5a1a10"></i>Korvold trigger <small>· sacrifice</small></span>
+      </div>
+      <div class="zone prompt">
+        <div><h3>Choose a target for Swords to Plowshares</h3><p>Korvold is marked. Click another creature to change it.</p></div>
+        <div class="actions"><button class="btn go">Confirm</button><button class="btn">Cancel</button></div>
+      </div>
+      <div class="zone field">
+        <div class="me on">
+          <div class="pt-wrap"><div class="portrait" data-art="najeela" style="--c1:#d9c26a;--c2:#3f2a10">N</div></div>
+          <div class="name"><b>You · Najeela</b><small>Your turn 7 · you have priority</small></div>
+          <div class="life" style="margin-left:auto"><span class="num">28</span><span class="bar"><i style="--pct:70%"></i></span><span class="dial" style="--v:28"><b>28</b></span></div>
+        </div>
+        <div class="divider" aria-hidden="true"></div>
+        <div class="lane"><h4 class="label">Creatures</h4><div class="row">
+          <button class="tile creature" data-card="najeela" style="--a1:#f6e4a8;--a2:#6b3f1f"><span class="nm">Najeela</span><span class="pt">3/2</span></button>
+          <button class="tile creature" data-card="safekeeper" style="--a1:#c7e88c;--a2:#2b6a3d"><span class="nm">Safekeeper</span><span class="pt">1/1</span></button>
+          <button class="tile creature" data-card="warrior" style="--a1:#e0b48a;--a2:#5a2a14"><span class="nm">Warrior</span><span class="pt">1/1</span></button>
+          <button class="tile creature" data-card="warrior" style="--a1:#e0b48a;--a2:#5a2a14"><span class="nm">Warrior</span><span class="pt">1/1</span></button>
+          <button class="tile creature tapped" data-card="warrior" style="--a1:#e0b48a;--a2:#5a2a14"><span class="nm">Warrior</span><span class="pt">1/1</span></button>
+        </div></div>
+        <div class="lane"><h4 class="label">Other</h4><div class="row">
+          <button class="tile artifact" data-card="vault" style="--a1:#e6eaef;--a2:#5a6069"><span class="nm">Mana Vault</span></button>
+          <button class="tile enchant" data-card="smothering" style="--a1:#f5ecc8;--a2:#9f7d3a"><span class="nm">Tithe</span></button>
+        </div></div>
+        <div class="lane"><h4 class="label">Lands</h4><div class="row">
+          <button class="tile land tapped" data-card="tower" style="--a1:#cbb48c;--a2:#4b3a2a"><span class="nm">Tower</span></button>
+          <button class="tile land tapped" data-card="plains" style="--a1:#f4ebcd;--a2:#a8955f"><span class="nm">Plains</span></button>
+          <button class="tile land" data-card="forest" style="--a1:#9ccf86;--a2:#244a2a"><span class="nm">Forest</span></button>
+          <button class="tile land" data-card="mountain" style="--a1:#e59a7c;--a2:#5a2418"><span class="nm">Mountain</span></button>
+          <button class="tile land" data-card="island" style="--a1:#8ec2ef;--a2:#2c5c8a"><span class="nm">Island</span></button>
+        </div></div>
+        <div class="hand" aria-label="Your hand">
+          <button class="hcard instant" data-card="rift" style="--a1:#a6d4ff;--a2:#1d3e7a"><span class="cost">2</span><span class="nm">Cyclonic Rift</span><span class="art"></span></button>
+          <button class="hcard sorcery" data-card="tutor" style="--a1:#9b7cb3;--a2:#1a1220"><span class="cost">2</span><span class="nm">Demonic Tutor</span><span class="art"></span></button>
+          <button class="hcard instant" data-card="teferi" style="--a1:#f5ecc8;--a2:#9f7d3a"><span class="cost">3</span><span class="nm">Teferi's Protection</span><span class="art"></span></button>
+          <button class="hcard instant" data-card="swat" style="--a1:#ffb35a;--a2:#7d1d14"><span class="cost">3</span><span class="nm">Deflecting Swat</span><span class="art"></span></button>
+          <button class="hcard land" data-card="savannah" style="--a1:#d9e3a0;--a2:#5e6b2a"><span class="cost">–</span><span class="nm">Savannah</span><span class="art"></span></button>
+        </div>
+        <div class="actions" style="justify-content:flex-end"><button class="btn"><span class="ic" style="--i:url('assets/icons/crossed-swords.svg');vertical-align:-3px;margin-right:6px"></span>Attack</button><button class="btn" disabled><span class="ic" style="--i:url('assets/icons/checked-shield.svg');vertical-align:-3px;margin-right:6px"></span>Block</button></div>
+      </div>
+    </div>
+
+    <aside class="next">
+      <div class="focus-wrap">
+        <div class="focus-card creature" id="focus" aria-live="polite">
+          <div class="fname"><span id="f-name">Korvold, Fae-Cursed King</span><span class="fcost" id="f-cost">2BRG</span></div>
+          <div class="fart" id="f-art" style="--a1:#ffb35a;--a2:#5a1a10"></div>
+          <div class="ftype" id="f-type">Legendary Creature · Dragon Noble</div>
+          <div class="ftext" id="f-text">Flying. When it enters or attacks, its controller sacrifices another permanent. Each sacrifice grows it and draws a card.</div>
+          <div class="fpt" id="f-pt">8/8</div>
+        </div>
+      </div>
+      <div class="credit" id="f-credit"></div>
+      <div class="zone">
+        <h4 class="label"><span class="ic" style="--i:url('assets/icons/crystal-ball.svg')"></span>Mana pool</h4>
+        <div class="mana">
+          <div class="m mw" style="--n:1"><span class="vis"></span>1</div>
+          <div class="m mu empty" style="--n:0"><span class="vis"></span>0</div>
+          <div class="m mb empty" style="--n:0"><span class="vis"></span>0</div>
+          <div class="m mr" style="--n:1"><span class="vis"></span>1</div>
+          <div class="m mg" style="--n:2"><span class="vis"></span>2</div>
+          <div class="m mcl" style="--n:3"><span class="vis"></span>3</div>
+        </div>
+      </div>
+      <div class="zone">
+        <h4 class="label"><span class="ic" style="--i:url('assets/icons/hourglass.svg')"></span>Turn 7</h4>
+        <ol class="phase"><li class="done">Untap</li><li class="done">Upkeep</li><li class="done">Draw</li><li class="cur">Main</li><li>Combat</li><li>Main 2</li><li>End</li></ol>
+      </div>
+      <button class="btn go pass">Pass priority</button>
+    </aside>
+  </section>
+
+  <section class="sheet" id="sheet"></section>
+</main>
+
+<script>
+const ARTISTS = { korvold:"Wisnu Tan", tracker:"Greg Staples", signet:"Tomáš Honz", atraxa:"Victor Adame Minguez", solring:"Hector Ortiz", rhystic:"Tatiana Kirgetova", yuriko:"Yongjae Choi", ornithopter:"Franz Vohwinkel", island:"Adam Paquette", najeela:"Matt Stewart", safekeeper:"Magali Villeneuve", vault:"Christine Choi", smothering:"Mark Behm", tower:"Arthur Yuan", plains:"Adam Paquette", forest:"Adam Paquette", mountain:"Adam Paquette", rift:"Isis", tutor:"Zack Stella", teferi:"Chase Stone", swat:"Izzy", savannah:"Charles Urbach", swords:"Pablo Mendoza", warrior:"Forrest Imel" };
+const pic = (id, crop) => `url("cardart/${id}${crop ? "-art" : ""}.jpg")`;
+const CARDS = {
+  swords:{n:"Swords to Plowshares",c:"W",t:"Instant",x:"Exile target creature. Its controller gains life equal to its power.",p:"",a:["#f5ecc8","#c59f54"],k:"instant"},
+  korvold:{n:"Korvold, Fae-Cursed King",c:"2BRG",t:"Legendary Creature · Dragon Noble",x:"Flying. When it enters or attacks, its controller sacrifices another permanent. Each sacrifice grows it and draws a card.",p:"8/8",a:["#ffb35a","#5a1a10"],k:"creature"},
+  tracker:{n:"Tireless Tracker",c:"2G",t:"Creature · Human Scout",x:"Landfall: investigate. Whenever you sacrifice a Clue, it gets a +1/+1 counter.",p:"3/2",a:["#c7e88c","#1f5130"],k:"creature"},
+  signet:{n:"Arcane Signet",c:"2",t:"Artifact",x:"Tap: add one mana of any color in your commander's color identity.",p:"",a:["#e6eaef","#6b717a"],k:"artifact"},
+  atraxa:{n:"Atraxa, Praetors' Voice",c:"GWUB",t:"Legendary Creature · Phyrexian Angel Horror",x:"Flying, vigilance, deathtouch, lifelink. At the end of your turn, proliferate.",p:"4/4",a:["#f6e4a8","#3b6b8f"],k:"creature"},
+  solring:{n:"Sol Ring",c:"1",t:"Artifact",x:"Tap: add two colorless mana.",p:"",a:["#e6eaef","#5a6069"],k:"artifact"},
+  rhystic:{n:"Rhystic Study",c:"2U",t:"Enchantment",x:"Whenever an opponent casts a spell, you may draw a card unless that player pays 1.",p:"",a:["#a6d4ff","#1d3e7a"],k:"enchant"},
+  yuriko:{n:"Yuriko, the Tiger's Shadow",c:"1UB",t:"Legendary Creature · Human Ninja",x:"Commander ninjutsu. When a Ninja deals combat damage to a player, reveal the top card of your library; each opponent loses life equal to its mana value.",p:"1/3",a:["#7b5d8f","#1a1220"],k:"creature"},
+  ornithopter:{n:"Ornithopter",c:"0",t:"Artifact Creature · Thopter",x:"Flying.",p:"0/2",a:["#c9cfd6","#4f5560"],k:"artifact"},
+  island:{n:"Island",c:"",t:"Basic Land · Island",x:"Tap: add blue mana.",p:"",a:["#8ec2ef","#2c5c8a"],k:"land"},
+  najeela:{n:"Najeela, the Blade-Blossom",c:"2R",t:"Legendary Creature · Human Warrior",x:"Whenever a Warrior attacks, you may create a 1/1 Warrior token that's tapped and attacking. Pay WUBRG: untap attackers and take an extra combat.",p:"3/2",a:["#f6e4a8","#6b3f1f"],k:"creature"},
+  safekeeper:{n:"Sylvan Safekeeper",c:"G",t:"Creature · Human Wizard",x:"Sacrifice a land: target creature you control gains shroud until end of turn.",p:"1/1",a:["#c7e88c","#2b6a3d"],k:"creature"},
+  warrior:{n:"Warrior token",c:"",t:"Token Creature · Warrior",x:"Made by Najeela, the Blade-Blossom.",p:"1/1",a:["#e0b48a","#5a2a14"],k:"creature"},
+  vault:{n:"Mana Vault",c:"1",t:"Artifact",x:"Doesn't untap normally. Tap: add three colorless mana.",p:"",a:["#e6eaef","#5a6069"],k:"artifact"},
+  smothering:{n:"Smothering Tithe",c:"3W",t:"Enchantment",x:"Whenever an opponent draws a card, you create a Treasure unless that player pays 2.",p:"",a:["#f5ecc8","#9f7d3a"],k:"enchant"},
+  tower:{n:"Command Tower",c:"",t:"Land",x:"Tap: add one mana of any color in your commander's color identity.",p:"",a:["#cbb48c","#4b3a2a"],k:"land"},
+  plains:{n:"Plains",c:"",t:"Basic Land · Plains",x:"Tap: add white mana.",p:"",a:["#f4ebcd","#a8955f"],k:"land"},
+  forest:{n:"Forest",c:"",t:"Basic Land · Forest",x:"Tap: add green mana.",p:"",a:["#9ccf86","#244a2a"],k:"land"},
+  mountain:{n:"Mountain",c:"",t:"Basic Land · Mountain",x:"Tap: add red mana.",p:"",a:["#e59a7c","#5a2418"],k:"land"},
+  rift:{n:"Cyclonic Rift",c:"1U",t:"Instant",x:"Return target nonland permanent you don't control to its owner's hand. Overload 6U.",p:"",a:["#a6d4ff","#1d3e7a"],k:"instant"},
+  tutor:{n:"Demonic Tutor",c:"1B",t:"Sorcery",x:"Search your library for a card, put it into your hand, then shuffle.",p:"",a:["#9b7cb3","#1a1220"],k:"sorcery"},
+  teferi:{n:"Teferi's Protection",c:"2W",t:"Instant",x:"Until your next turn, your life total can't change and you gain protection from everything. Your permanents phase out.",p:"",a:["#f5ecc8","#9f7d3a"],k:"instant"},
+  swat:{n:"Deflecting Swat",c:"2R",t:"Instant",x:"Free if you control a commander. Change the target of a spell or ability.",p:"",a:["#ffb35a","#7d1d14"],k:"instant"},
+  savannah:{n:"Savannah",c:"",t:"Land · Forest Plains",x:"Tap: add green or white mana.",p:"",a:["#d9e3a0","#5e6b2a"],k:"land"}
+};
+
+const T = "assets/textures/", F = "assets/frames/";
+const TEX = { rock031:"Rock031 · dark rock", marble023:"Marble023 · black-blue marble", wood094:"Wood094 · wood", leather037:"Leather037 · brown leather", leather026:"Leather026 · black leather", metal009:"Metal009 · brushed metal", metal051a:"Metal051A · circular brushed metal" };
+const SHEETS = {
+  nightspire:{
+    name:"Nightspire",
+    idea:"Taken from the dark-fantasy element sheets: thin double gold lines with notched corners and diamond studs, sacred-geometry rune circles, a pointed arch over the card in focus, and a cold blue glow on night-blue marble. Crimson is kept for the one action that matters.",
+    tex:["rock031","marble023"],
+    art:[["ns-frame.svg","Panel frame","9-slice, 40px corners"],["ns-rune.svg","Rune circle","Portraits, logo, mana"],["ns-arch.svg","Pointed arch","Card in focus"],["ns-button.svg","Button","Elongated hexagon"],["ns-button-go.svg","Main button","Crimson fill"],["ns-divider.svg","Divider","Centre diamond"]],
+    fonts:"Cinzel Decorative (logo, prompts, life), Cinzel (labels, buttons), Cormorant Garamond (text, log)",
+    icons:["castle","book-cover","tombstone","portal","crown","scroll-unfurled","spell-book","crystal-ball","hourglass","crossed-swords","checked-shield"]
+  },
+  highkeep:{
+    name:"Highkeep",
+    idea:"Taken from the carved-plaque and gold-and-navy menu sheets: heavy bevelled gold frames with stepped corners and ruby studs, navy panels, title plaques with gem ends, portraits in studded gold rings, health bars, glass mana orbs in gold sockets and lacquered buttons. A dark oak table under everything.",
+    tex:["wood094","leather037"],
+    art:[["hk-frame.svg","Panel frame","Stepped corners, ruby studs"],["hk-plaque.svg","Title plaque","Bronze with navy inset"],["hk-ring.svg","Portrait ring","Four sapphire studs"],["hk-socket.svg","Orb socket","Mana orbs"],["hk-button.svg","Main button","Red lacquer"],["hk-button-plain.svg","Button","Navy lacquer"]],
+    fonts:"Metamorphous (logo, buttons, life), Marcellus SC (plaques), Marcellus (text)",
+    icons:["castle","book-cover","tombstone","portal","crown","scroll-unfurled","spell-book","crystal-ball","hourglass","crossed-swords","checked-shield"]
+  },
+  brass:{
+    name:"Brass Meridian",
+    idea:"Taken from the black-and-gold engraved card sheets, pushed toward engineering: brushed-metal panels in riveted brass frames, gears behind portraits that turn for the active player, pressure dials for life, glass vials that fill with mana, brass and copper name-plate buttons, engraved filigree corners and a typewriter log on black leather.",
+    tex:["leather026","metal009","metal051a"],
+    art:[["bm-frame.svg","Panel frame","Brass bar, rivets"],["bm-gear.svg","Gear","16 teeth, spoked"],["bm-dial.svg","Life dial","0 to 40 scale"],["bm-vial.svg","Mana vial","Liquid drawn by CSS"],["bm-plate.svg","Button","Brass plate, screws"],["bm-plate-go.svg","Main button","Copper plate"],["bm-filigree.svg","Filigree corner","Card in focus"]],
+    fonts:"IM Fell English SC (logo, titles, numbers), Spectral (text), Special Elite (log)",
+    icons:["castle","book-cover","tombstone","portal","crown","scroll-unfurled","spell-book","crystal-ball","hourglass","crossed-swords","checked-shield"]
+  }
+};
+
+const stage = document.getElementById("stage"), sheet = document.getElementById("sheet");
+const tabs = [...document.querySelectorAll(".pick")];
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function focusCard(id){
+  const c = CARDS[id]; if(!c) return;
+  document.getElementById("focus").className = "focus-card " + c.k;
+  document.getElementById("f-name").textContent = c.n;
+  document.getElementById("f-cost").textContent = c.c;
+  document.getElementById("f-type").textContent = c.t;
+  document.getElementById("f-text").textContent = c.x;
+  document.getElementById("f-pt").textContent = c.p;
+  const art = document.getElementById("f-art"); art.style.setProperty("--a1", c.a[0]); art.style.setProperty("--a2", c.a[1]);
+  art.style.setProperty("--img", pic(id)); art.setAttribute("role", "img"); art.setAttribute("aria-label", c.n);
+  document.getElementById("f-credit").textContent = ARTISTS[id] ? "Art by " + ARTISTS[id] : "";
+}
+document.querySelectorAll("[data-card]").forEach(el => el.style.setProperty("--img", pic(el.dataset.card)));
+document.querySelectorAll("[data-art]").forEach(el => el.style.setProperty("--img", pic(el.dataset.art, true)));
+document.querySelectorAll("[data-card]").forEach(el => {
+  el.addEventListener("mouseenter", () => focusCard(el.dataset.card));
+  el.addEventListener("focus", () => focusCard(el.dataset.card));
+  el.addEventListener("click", () => {
+    if (!el.classList.contains("tile") || CARDS[el.dataset.card].k !== "creature" || el.closest(".cmdzone")) return;
+    document.querySelectorAll(".tile.focus").forEach(t => t.classList.remove("focus"));
+    el.classList.add("focus");
+  });
+});
+
+function renderSheet(key){
+  const s = SHEETS[key];
+  const art = s.art.map(([f,n,d]) => `<figure><div class="thumb" style="background-image:url('${F}${f}')"></div><figcaption><b>${esc(n)}</b>${esc(d)}</figcaption></figure>`).join("");
+  const tex = s.tex.map(t => `<figure><div class="thumb tex" style="background-image:url('${T}${t}.jpg')"></div><figcaption><b>${esc(TEX[t].split(" · ")[0])}</b>${esc(TEX[t].split(" · ")[1])}</figcaption></figure>`).join("");
+  const icons = s.icons.map(i => `<span class="ic" title="${i}" style="--i:url('assets/icons/${i}.svg');--s:26px;color:#e3c66d"></span>`).join("");
+  sheet.innerHTML = `
+    <div class="panel"><span class="sub">The look</span><h2>${esc(s.name)}</h2><p>${esc(s.idea)}</p><p><b>Fonts:</b> ${esc(s.fonts)}</p></div>
+    <div class="panel"><span class="sub">Drawn for this project (SVG)</span><div class="gallery">${art}</div></div>
+    <div class="panel"><span class="sub">Downloaded textures (ambientCG, CC0)</span><div class="gallery">${tex}</div></div>
+    <div class="panel"><span class="sub">Icons (game-icons.net, CC BY 3.0)</span><div style="display:flex;flex-wrap:wrap;gap:14px">${icons}</div></div>
+    <div class="panel wide"><span class="sub">Sources and licences</span><div class="scroll"><table class="assets"><thead><tr><th>Asset</th><th>Source</th><th>Licence</th><th>What it needs</th></tr></thead><tbody>
+      <tr><td>Textures: Rock031, Marble023, Wood094, Leather037, Leather026, Metal009, Metal051A (1K colour maps)</td><td><a href="https://ambientcg.com/" target="_blank" rel="noopener">ambientCG</a></td><td><span class="lic cc0">CC0</span></td><td>Nothing; a thank-you in credits is kind</td></tr>
+      <tr><td>Fonts: Cinzel Decorative, Cormorant Garamond, Marcellus, Marcellus SC, Metamorphous, IM Fell English SC, Spectral</td><td><a href="https://fonts.google.com/" target="_blank" rel="noopener">Google Fonts</a></td><td><span class="lic ofl">OFL 1.1</span></td><td>Ship each font's licence text beside it</td></tr>
+      <tr><td>Font: Special Elite</td><td><a href="https://fonts.google.com/specimen/Special+Elite" target="_blank" rel="noopener">Google Fonts</a></td><td><span class="lic ofl">Apache 2.0</span></td><td>Ship the licence text</td></tr>
+      <tr><td>18 icons (castle, tombstone, portal, crown, gears and others)</td><td><a href="https://game-icons.net/" target="_blank" rel="noopener">game-icons.net</a> (Lorc, Delapouite and others)</td><td><span class="lic by">CC BY 3.0</span></td><td>A credit line in Help</td></tr>
+      <tr><td>Card pictures (24 cards, artists credited under the card in focus)</td><td><a href="https://scryfall.com/" target="_blank" rel="noopener">Scryfall</a>; art by Wizards of the Coast's artists</td><td><span class="lic by">Fan content</span></td><td>Loaded by the game from Scryfall as it does today; never bundled or shared</td></tr>
+      <tr><td>All frames, plaques, rings, sockets, gear, dial, vials, buttons, dividers, filigree</td><td>Drawn for Commander Table (<code>design/skins/tools/make-assets.mjs</code>)</td><td><span class="lic own">Ours</span></td><td>Nothing</td></tr>
+    </tbody></table></div></div>`;
+}
+
+function show(key, push){
+  if(!SHEETS[key]) key = "nightspire";
+  stage.dataset.skin = key;
+  tabs.forEach(t => t.setAttribute("aria-selected", String(t.dataset.skin === key)));
+  renderSheet(key);
+  if(push) history.replaceState(null, "", "#" + key);
+  try{ localStorage.setItem("ct-skin", key); }catch(e){}
+}
+tabs.forEach(t => t.addEventListener("click", () => show(t.dataset.skin, true)));
+document.querySelector(".picker").addEventListener("keydown", e => {
+  const d = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0; if(!d) return;
+  const i = tabs.findIndex(t => t.getAttribute("aria-selected") === "true");
+  const n = tabs[(i + d + tabs.length) % tabs.length]; n.focus(); show(n.dataset.skin, true);
+});
+window.addEventListener("hashchange", () => show(location.hash.slice(1), false));
+let start = location.hash.slice(1);
+if(!SHEETS[start]){ try{ start = localStorage.getItem("ct-skin") || "nightspire"; }catch(e){ start = "nightspire"; } }
+focusCard("korvold");
+show(start, false);
+</script>

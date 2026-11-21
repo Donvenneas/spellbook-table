@@ -8,6 +8,7 @@
   <link rel="preload" href="fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/cinzel.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/skins.css">
 </head>
 <body>
   <a class="skip-link" href="#table">Skip to the table</a>
@@ -561,6 +562,9 @@
         <span class="muted">(the interface; card previews show the card's name and image in your language when Scryfall has them; the game log and rules text stay in English)</span></label>
       <label class="disp-row">Theme
         <select id="dispTheme" class="input" data-seg="Theme"><option value="">Match the system</option><option value="dark">Dark</option><option value="light">Light</option></select></label>
+      <label class="disp-row">Skin
+        <select id="dispSkin" class="input" data-seg="Skin"><option value="">Grimoire</option><option value="nightspire">Nightspire</option><option value="highkeep">Highkeep</option><option value="brass">Brass Meridian</option></select>
+        <span class="muted">(Grimoire is the standard look. Nightspire: gothic gold and night blue. Highkeep: carved gold and oak. Brass Meridian: brass, gears and verdigris. Skins are dark; the Theme setting applies to Grimoire.)</span></label>
       <label class="disp-row">Card size on the table <input type="range" id="dispCard" min="70" max="150" step="10" value="100"> <span id="dispCardSay" class="muted mono">100%</span></label>
       <label class="disp-row">Card preview
         <select id="dispPreview" class="input"><option value="pointer">Beside the pointer</option><option value="dock">Docked in the bottom right corner</option><option value="off">Off (right-click a card for its details)</option></select></label>

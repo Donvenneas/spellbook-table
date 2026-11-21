@@ -1,7 +1,13 @@
 {
- "version": "1.65.0",
+ "version": "1.66.0",
  "round": "Round 8",
  "items": [
+  {
+   "n": 394,
+   "section": "Skins",
+   "title": "Three skins to choose from (asked 2026-11-21: a gothic dark fantasy look, a heroic online-RPG feel and a high fantasy steampunk look, built from free assets, chosen from the menus).",
+   "done": "1.66.0."
+  },
   {
    "n": 234,
    "section": "Windows and keyboard",

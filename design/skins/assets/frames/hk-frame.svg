@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120"><defs><linearGradient id="goldb" x1="0" y1="0" x2="0" y2="40" gradientUnits="userSpaceOnUse" spreadMethod="reflect"><stop offset="0" stop-color="#fbe9b0"/><stop offset=".35" stop-color="#d9b25c"/><stop offset=".7" stop-color="#9c7128"/><stop offset="1" stop-color="#5e3f12"/></linearGradient><radialGradient id="ruby" cx=".38" cy=".32" r=".8"><stop offset="0" stop-color="#ff9b8a"/><stop offset=".45" stop-color="#c0251a"/><stop offset="1" stop-color="#3d0503"/></radialGradient><g id="c">
+    <path d="M0 0H34V8H16V16H8V34H0Z" fill="url(#goldb)" stroke="#2a1806" stroke-width="1"/>
+    <path d="M3 3H31V5H13V13H5V31H3Z" fill="#fff2c4" opacity=".35"/>
+    <path d="M6 6H40V10H10V40H6Z" fill="url(#goldb)" stroke="#2a1806" stroke-width=".8"/>
+    <path d="M13 21 21 13 29 21 21 29Z" fill="url(#goldb)" stroke="#2a1806" stroke-width="1"/>
+    <path d="M15.5 21 21 15.5 26.5 21 21 26.5Z" fill="url(#ruby)"/>
+    <path d="M18 19 21 16.5 22 18Z" fill="#fff" opacity=".7"/>
+  </g></defs>
+    <path d="M40 0H80V8H40ZM40 112H80V120H40ZM0 40H8V80H0ZM112 40H120V80H112Z" fill="url(#goldb)"/>
+    <path d="M40 .5H80M40 119.5H80M.5 40V80M119.5 40V80" stroke="#2a1806"/>
+    <path d="M40 7.5H80M40 112.5H80M7.5 40V80M112.5 40V80" stroke="#2a1806"/>
+    <path d="M40 2.5H80M2.5 40V80" stroke="#fff2c4" stroke-opacity=".4"/>
+    <path d="M40 10.5H80M40 109.5H80M10.5 40V80M109.5 40V80" stroke="#d9b25c" stroke-opacity=".55"/><use href="#c"/><use href="#c" transform="translate(120,0) scale(-1,1)"/><use href="#c" transform="translate(0,120) scale(1,-1)"/><use href="#c" transform="translate(120,120) scale(-1,-1)"/></svg>

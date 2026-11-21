@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 48" width="240" height="48"><defs><linearGradient id="bronze" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f3d892"/><stop offset=".4" stop-color="#b78a3c"/><stop offset=".75" stop-color="#7a531a"/><stop offset="1" stop-color="#4a300b"/></linearGradient><radialGradient id="ruby" cx=".38" cy=".32" r=".8"><stop offset="0" stop-color="#ff9b8a"/><stop offset=".45" stop-color="#c0251a"/><stop offset="1" stop-color="#3d0503"/></radialGradient></defs>
+    <path d="M2 24 16 6H60V42H16Z M238 24 224 6H180V42H224Z" fill="url(#bronze)" stroke="#1e1103" stroke-width="1.2"/>
+    <rect x="40" y="8" width="160" height="32" fill="url(#bronze)"/>
+    <path d="M40 8H200M40 40H200" stroke="#1e1103" stroke-width="1.2"/>
+    <path d="M40 11H200" stroke="#fff2c4" stroke-opacity=".45"/>
+    <rect x="40" y="13" width="160" height="22" fill="#0c1430" stroke="#1e1103"/>
+    <path d="M40 14H200" stroke="#4d6aa8" stroke-opacity=".5"/>
+    <path d="M9 24 18 13H44V35H18Z M231 24 222 13H196V35H222Z" fill="#0c1430" stroke="#1e1103"/>
+    <path d="M14 24 20 18 26 24 20 30Z M226 24 220 18 214 24 220 30Z" fill="url(#ruby)" stroke="#e7c46d" stroke-width="1"/></svg>

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120"><defs><linearGradient id="brass" x1="0" y1="0" x2="0" y2="40" gradientUnits="userSpaceOnUse" spreadMethod="reflect"><stop offset="0" stop-color="#f6e0a2"/><stop offset=".3" stop-color="#c79d4b"/><stop offset=".62" stop-color="#8f6828"/><stop offset=".85" stop-color="#b8904a"/><stop offset="1" stop-color="#5a3d14"/></linearGradient><linearGradient id="brassE" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9cd85"/><stop offset=".5" stop-color="#a77d35"/><stop offset="1" stop-color="#5a3d14"/></linearGradient><radialGradient id="rivet" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#fff3c8"/><stop offset=".35" stop-color="#d0a853"/><stop offset=".8" stop-color="#6e4c18"/><stop offset="1" stop-color="#2b1b05"/></radialGradient><g id="c">
+    <path d="M0 0H40V12H22A10 10 0 0 0 12 22V40H0Z" fill="url(#brass)" stroke="#241503" stroke-width="1"/>
+    <path d="M3 3H38" stroke="#fff3c8" stroke-opacity=".45"/>
+    <path d="M6 38V18A12 12 0 0 1 18 6H38" fill="none" stroke="#3a2507" stroke-width=".7" opacity=".7"/>
+    <path d="M9 30c0-9 5-17 14-20M14 34c2-6 6-11 12-13" fill="none" stroke="#5a3d14" stroke-width=".8" opacity=".6"/>
+    <circle cx="9" cy="9" r="4.2" fill="url(#rivet)" stroke="#241503" stroke-width=".6"/>
+    <circle cx="31" cy="6.5" r="2.4" fill="url(#rivet)"/><circle cx="6.5" cy="31" r="2.4" fill="url(#rivet)"/>
+  </g></defs>
+    <path d="M40 0H80V12H40ZM40 108H80V120H40ZM0 40H12V80H0ZM108 40H120V80H108Z" fill="url(#brassE)"/>
+    <path d="M40 .5H80M40 119.5H80M.5 40V80M119.5 40V80M40 11.5H80M40 108.5H80M11.5 40V80M108.5 40V80" stroke="#241503"/>
+    <path d="M40 3H80M3 40V80" stroke="#fff3c8" stroke-opacity=".4"/>
+    <path d="M40 6H80M40 114H80M6 40V80M114 40V80" stroke="#3a2507" stroke-width=".6" stroke-dasharray="1 3" opacity=".7"/><use href="#c"/><use href="#c" transform="translate(120,0) scale(-1,1)"/><use href="#c" transform="translate(0,120) scale(1,-1)"/><use href="#c" transform="translate(120,120) scale(-1,-1)"/></svg>

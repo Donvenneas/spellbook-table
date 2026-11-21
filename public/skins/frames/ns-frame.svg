@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120"><defs><linearGradient id="gold" x1="0" y1="0" x2="0" y2="120" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#f7e4a6"/><stop offset=".45" stop-color="#cfa54e"/><stop offset="1" stop-color="#8a6322"/></linearGradient><g id="c" fill="none" stroke="url(#gold)">
+    <path d="M3 40V15L15 3H40" stroke-width=".8" opacity=".55"/>
+    <path d="M7 40V19L19 7H40" stroke-width="1.6"/>
+    <path d="M12 40V23L23 12H40" stroke-width=".7" opacity=".7"/>
+    <path d="M27 7.5c4 0 7 2 7.5 5.5.4 3-2.4 4.6-4.4 3.2-1.4-1-.6-3.2 1-2.8" stroke-width=".9"/>
+    <path d="M7.5 27c0 4 2 7 5.5 7.5 3 .4 4.6-2.4 3.2-4.4-1-1.4-3.2-.6-2.8 1" stroke-width=".9"/>
+    <path d="M17 10.5 23.5 17 17 23.5 10.5 17Z" fill="url(#gold)" stroke="none"/>
+    <path d="M17 13.5 20.5 17 17 20.5 13.5 17Z" fill="#0b1226" stroke="none"/>
+    <circle cx="17" cy="17" r="1.3" fill="#8fc3ff" stroke="none"/>
+  </g></defs><g fill="none" stroke="url(#gold)"><path d="M40 7H80M40 113H80M7 40V80M113 40V80" stroke-width="1.6"/><path d="M40 3H80M40 117H80M3 40V80M117 40V80" stroke-width=".8" opacity=".55"/><path d="M40 12H80M40 108H80M12 40V80M108 40V80" stroke-width=".7" opacity=".7"/></g><use href="#c"/><use href="#c" transform="translate(120,0) scale(-1,1)"/><use href="#c" transform="translate(0,120) scale(1,-1)"/><use href="#c" transform="translate(120,120) scale(-1,-1)"/></svg>

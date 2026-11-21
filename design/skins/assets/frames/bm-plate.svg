@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 50" width="200" height="50"><defs><linearGradient id="brass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6e0a2"/><stop offset=".3" stop-color="#c79d4b"/><stop offset=".62" stop-color="#8f6828"/><stop offset=".85" stop-color="#b8904a"/><stop offset="1" stop-color="#5a3d14"/></linearGradient><radialGradient id="rivet" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#fff3c8"/><stop offset=".35" stop-color="#d0a853"/><stop offset=".8" stop-color="#6e4c18"/><stop offset="1" stop-color="#2b1b05"/></radialGradient></defs>
+    <rect x="1" y="1" width="198" height="48" rx="10" fill="url(#brass)" stroke="#241503" stroke-width="1.2"/>
+    <rect x="7" y="7" width="186" height="36" rx="6" fill="none" stroke="#3a2507" stroke-opacity=".6"/>
+    <path d="M12 3H188" stroke="#fff3c8" stroke-opacity=".5"/>
+    <circle cx="14" cy="25" r="4" fill="url(#rivet)" stroke="#241503" stroke-width=".6"/><path d="M11.5 22.5 16.5 27.5" stroke="#2b1b05" stroke-width=".9"/>
+    <circle cx="186" cy="25" r="4" fill="url(#rivet)" stroke="#241503" stroke-width=".6"/><path d="M183.5 22.5 188.5 27.5" stroke="#2b1b05" stroke-width=".9"/></svg>

@@ -21,3 +21,6 @@ running-url.txt
 # Python bytecode
 __pycache__/
 tests/fuzz-failures/
+
+# Card pictures for the skin preview (Wizards of the Coast art; never shared)
+design/skins/_cardart/

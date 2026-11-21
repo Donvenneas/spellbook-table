@@ -723,6 +723,7 @@ Choose **A cube** in Draft / Sealed to draft or open a cube instead of a set.
   During combat, arrows run from attackers to the players they attack, with dashed lines from blockers. Summoning-sick creatures show a ☾, tapped cards dim slightly, and a banner announces each turn. Online seats use the same look.
 - **Viewing**:
   - dark or light theme (☀ / ☾): dark is obsidian and antique gold, light is a parchment page. Until you choose, the game follows your system's setting; **Display → Theme → Match the system** goes back to that
+  - **Display → Skin** changes the whole look: **Grimoire** (the standard look above), **Nightspire** (gothic: gold line-work, rune circles, night-blue marble), **Highkeep** (carved gold frames, navy panels, an oak table) or **Brass Meridian** (steampunk: riveted brass, brushed metal, gears around the portraits). Skins are dark looks; ☀ switches back to Grimoire in light
   - animations are cut back when your system asks for reduced motion (or with **Fewer animations** in Display); since 1.55.0 that includes cards gliding between zones, the copies flying to the graveyard and the turn banner
   - (1.55.0) **on a touch screen** a tap on a card shows its preview docked at the bottom of the screen (tap anywhere to close it); a card you can pick is still picked by a tap, and a long press shows its preview
   - (1.55.0) **choosing a target:** while a spell or ability asks you to choose cards or players, everything it doesn't offer is faded, so the choices stand out

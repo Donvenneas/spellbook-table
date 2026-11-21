@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "skin-previews",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["design/skins/tools/serve.mjs"],
+      "port": 8790
+    }
+  ]
+}

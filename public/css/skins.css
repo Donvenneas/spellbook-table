@@ -1,0 +1,164 @@
+/* =========================================================================================
+   Skins (Display → Skin): Nightspire, Highkeep and Brass Meridian. With no skin chosen this file does nothing
+   and the Grimoire look in style.css stays as it is. A skin is a dark look: main.js keeps data-theme="dark"
+   while one is on. Each skin sets the Grimoire tokens plus its own --sk-* values; the shared rules below
+   draw the frames, buttons and portrait rings from those values.
+   Textures: ambientCG (CC0). Frames, rings, plates, gear: drawn for Commander Table (design/skins/tools/make-assets.mjs).
+   Fonts: SIL Open Font License, licence texts in public/skins/fonts.
+   ========================================================================================= */
+@font-face { font-family: "Cinzel Decorative"; src: url("../skins/fonts/cinzel-decorative-700.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+@font-face { font-family: "Metamorphous"; src: url("../skins/fonts/metamorphous.woff2") format("woff2"); font-display: swap; }
+@font-face { font-family: "Marcellus SC"; src: url("../skins/fonts/marcellus-sc.woff2") format("woff2"); font-display: swap; }
+@font-face { font-family: "IM Fell English SC"; src: url("../skins/fonts/im-fell-english-sc.woff2") format("woff2"); font-display: swap; }
+
+/* ---------------------------------------------------------------- Nightspire: gold line-work on night blue */
+:root[data-skin="nightspire"] {
+  --bg: #05070f; --felt: #080b16; --panel: #0b1022; --panel-2: #111830; --line: #1f2846; --line-2: #34406a;
+  --deep: #04060d; --subbar: #070a16; --board-bg: rgba(8, 12, 28, .86); --overlay: rgba(6, 9, 20, .96);
+  --hover: #18213e; --hover-line: #cfa54e;
+  --text: #ece7f1; --muted: #a3abc4; --accent: #cfa54e; --accent-2: #a9852f; --gold-hi: #f7e4a6; --on-accent: #120d02; --focus: #8fc3ff;
+  --font-display: "Cinzel", "Trajan Pro", Georgia, serif;
+  --topbar: linear-gradient(rgba(10, 15, 34, .95), rgba(5, 8, 20, .97));
+  --table-bg: radial-gradient(ellipse 70% 50% at 50% 0, rgba(64, 120, 255, .16), transparent 70%), linear-gradient(rgba(5, 8, 22, .8), rgba(3, 5, 14, .9)), url("../skins/textures/rock031.jpg") center / 420px;
+  --sk-title: "Cinzel Decorative", "Cinzel", Georgia, serif; --sk-label: "Cinzel", Georgia, serif;
+  --sk-metal: #cfa54e; --sk-metal-lo: #5a4418; --sk-glow: #6fb0ff; --sk-on: linear-gradient(#9b2235, #5c0f1c); --sk-on-ink: #fff4f5;
+  --sk-page: radial-gradient(ellipse 70% 45% at 50% 0, rgba(64, 120, 255, .2), transparent 70%), linear-gradient(rgba(5, 8, 22, .8), rgba(3, 5, 14, .92)), url("../skins/textures/rock031.jpg") center / 420px #05070f;
+  --sk-panel: linear-gradient(rgba(10, 15, 34, .9), rgba(5, 8, 20, .94)), url("../skins/textures/marble023.jpg") center / 360px #0b1022;
+  --sk-frame: url("../skins/frames/ns-frame.svg"); --sk-fw: 14px; --sk-fw-big: 20px; --sk-frame-glow: 0 0 22px -6px rgba(90, 150, 255, .45);
+  --sk-go: url("../skins/frames/ns-button-go.svg"); --sk-go-slice: 0 30 fill; --sk-go-w: 0 15px; --sk-go-ink: #fff4f5;
+  --sk-ring: url("../skins/frames/ns-rune.svg"); --sk-ring-out: -9px;
+  --sk-life-bg: radial-gradient(circle at 50% 120%, rgba(111, 176, 255, .18), transparent 70%), rgba(5, 8, 20, .7);
+  --sk-mark: url("../skins/frames/ns-rune.svg");
+}
+/* ---------------------------------------------------------------- Highkeep: carved gold, gems, navy and oak */
+:root[data-skin="highkeep"] {
+  --bg: #100a05; --felt: #150d06; --panel: #0d1532; --panel-2: #142048; --line: #2a3566; --line-2: #4a5a92;
+  --deep: #0a0603; --subbar: #1a1009; --board-bg: rgba(12, 20, 48, .88); --overlay: rgba(8, 12, 30, .97);
+  --hover: #1d2a5a; --hover-line: #ffd96b;
+  --text: #f6ecd2; --muted: #bdb5a2; --accent: #d8a945; --accent-2: #a87a22; --gold-hi: #ffd96b; --on-accent: #1d1203; --focus: #4cb5ff;
+  --font-display: "Metamorphous", "Cinzel", Georgia, serif;
+  --topbar: linear-gradient(rgba(58, 36, 16, .9), rgba(26, 15, 6, .96)), url("../skins/textures/wood094.jpg") center / 380px;
+  --table-bg: radial-gradient(ellipse 65% 60% at 50% 50%, transparent, rgba(0, 0, 0, .6)), linear-gradient(rgba(40, 22, 8, .6), rgba(18, 9, 3, .8)), url("../skins/textures/wood094.jpg") center / 520px;
+  --sk-title: "Metamorphous", "Cinzel", Georgia, serif; --sk-label: "Marcellus SC", "Cinzel", Georgia, serif;
+  --sk-metal: #d8a945; --sk-metal-lo: #5e3f12; --sk-glow: #4cb5ff; --sk-on: linear-gradient(#d4473a, #8e1a14); --sk-on-ink: #fff4d8;
+  --sk-page: radial-gradient(ellipse 65% 60% at 50% 50%, transparent, rgba(0, 0, 0, .65)), linear-gradient(rgba(40, 22, 8, .6), rgba(18, 9, 3, .82)), url("../skins/textures/wood094.jpg") center / 520px #100a05;
+  --sk-panel: radial-gradient(ellipse at 50% 0, rgba(60, 90, 170, .22), transparent 70%), linear-gradient(rgba(14, 22, 52, .92), rgba(6, 10, 28, .95)), url("../skins/textures/leather037.jpg") center / 300px #0d1532;
+  --sk-frame: url("../skins/frames/hk-frame.svg"); --sk-fw: 13px; --sk-fw-big: 18px; --sk-frame-glow: 0 12px 26px rgba(0, 0, 0, .6);
+  --sk-go: url("../skins/frames/hk-button.svg"); --sk-go-slice: 0 26 fill; --sk-go-w: 0 14px; --sk-go-ink: #fff4d8;
+  --sk-ring: url("../skins/frames/hk-ring.svg"); --sk-ring-out: -10px;
+  --sk-life-bg: linear-gradient(#18265a, #0a1131);
+  --sk-mark: url("../skins/frames/hk-ring.svg");
+}
+/* ---------------------------------------------------------------- Brass Meridian: brass, rivets, gears, verdigris */
+:root[data-skin="brass"] {
+  --bg: #050b0a; --felt: #081211; --panel: #0e1c1b; --panel-2: #142826; --line: #213c38; --line-2: #3a5c55;
+  --deep: #040908; --subbar: #0a1514; --board-bg: rgba(12, 26, 24, .86); --overlay: rgba(8, 18, 17, .97);
+  --hover: #1b3532; --hover-line: #efd28a;
+  --text: #efe7d2; --muted: #a8b8ae; --accent: #c9a052; --accent-2: #9a7430; --gold-hi: #efd28a; --on-accent: #1f1406; --focus: #5ce2ef;
+  --font-display: "IM Fell English SC", "Cinzel", Georgia, serif;
+  --topbar: linear-gradient(rgba(16, 30, 28, .92), rgba(6, 14, 13, .96)), url("../skins/textures/metal009.jpg") center / 320px;
+  --table-bg: radial-gradient(ellipse 60% 50% at 70% 10%, rgba(92, 226, 239, .1), transparent 70%), radial-gradient(ellipse 65% 60% at 50% 55%, transparent, rgba(0, 0, 0, .6)), linear-gradient(rgba(10, 18, 17, .55), rgba(4, 9, 9, .78)), url("../skins/textures/leather026.jpg") center / 420px;
+  --sk-title: "IM Fell English SC", "Cinzel", Georgia, serif; --sk-label: "IM Fell English SC", "Cinzel", Georgia, serif;
+  --sk-metal: #c9a052; --sk-metal-lo: #5b3f17; --sk-glow: #5ce2ef; --sk-on: linear-gradient(#f0a46c, #c06a38 50%, #7d3d17); --sk-on-ink: #1f1106;
+  --sk-page: radial-gradient(ellipse 60% 50% at 70% 10%, rgba(92, 226, 239, .1), transparent 70%), linear-gradient(rgba(10, 18, 17, .55), rgba(4, 9, 9, .8)), url("../skins/textures/leather026.jpg") center / 420px #050b0a;
+  --sk-panel: linear-gradient(rgba(14, 30, 28, .86), rgba(7, 16, 15, .93)), url("../skins/textures/metal009.jpg") center / 320px #0e1c1b;
+  --sk-frame: url("../skins/frames/bm-frame.svg"); --sk-fw: 13px; --sk-fw-big: 18px; --sk-frame-glow: 0 12px 26px rgba(0, 0, 0, .6);
+  --sk-go: url("../skins/frames/bm-plate-go.svg"); --sk-go-slice: 0 30 fill; --sk-go-w: 0 15px; --sk-go-ink: #1f1106;
+  --sk-ring: url("../skins/frames/bm-gear.svg"); --sk-ring-out: -9px;
+  --sk-life-bg: none;
+  --sk-mark: url("../skins/frames/bm-gear.svg");
+}
+
+/* ================================================================ shared skin rules */
+:root[data-skin] body { background: var(--sk-page); }
+:root[data-skin] .start-menu { background: var(--sk-page); }
+:root[data-skin] .table-wrap { background: var(--table-bg); }
+:root[data-skin] .table-wrap::before { opacity: .45; }
+:root[data-skin] .topbar { background: var(--topbar); border-bottom: 1px solid var(--sk-metal-lo); box-shadow: 0 1px 0 color-mix(in srgb, var(--sk-metal) 35%, transparent), 0 6px 18px rgba(0, 0, 0, .5); }
+:root[data-skin] .timeline { background: color-mix(in srgb, var(--subbar) 92%, transparent); border-bottom-color: var(--sk-metal-lo); }
+:root[data-skin] .brand { font-family: var(--sk-title); font-weight: 700; color: var(--gold-hi); letter-spacing: .04em; }
+:root[data-skin] .brand .logo { color: var(--sk-metal); }
+:root[data-skin] .turn-label { font-family: var(--sk-label); color: var(--gold-hi); }
+:root[data-skin] .credit { background: var(--deep); border-top: 1px solid var(--sk-metal-lo); }
+
+/* framed panels: boards, the start menu's panels, windows */
+:root[data-skin] .board, :root[data-skin] .sm-panel, :root[data-skin] .modal-card {
+  background: var(--sk-panel); border-style: solid; border-color: transparent; border-radius: 3px;
+  border-image: var(--sk-frame) 40 / var(--sk-fw) stretch; border-width: var(--sk-fw);
+  box-shadow: var(--sk-frame-glow), 0 12px 28px rgba(0, 0, 0, .5); backdrop-filter: none;
+}
+:root[data-skin] .modal-card { border-image-width: var(--sk-fw-big); border-width: var(--sk-fw-big); }
+:root[data-skin] .board.active { box-shadow: 0 0 0 1px var(--pc), 0 0 30px -4px var(--pc), 0 12px 28px rgba(0, 0, 0, .5); }
+:root[data-skin] .board::before { opacity: .75; height: 2px; }
+:root[data-skin] .bhead { background: linear-gradient(rgba(0, 0, 0, .38), rgba(0, 0, 0, .12)); border-bottom-color: color-mix(in srgb, var(--sk-metal) 30%, transparent); }
+:root[data-skin] .pname { font-family: var(--font-display); font-weight: 400; letter-spacing: .04em; color: var(--gold-hi); }
+:root[data-skin] .zlabel { font-family: var(--sk-label); font-weight: 400; letter-spacing: .12em; }
+
+/* portrait rings */
+:root[data-skin] .board .avatar { position: relative; border: 0; box-shadow: 0 0 0 1px #000, inset 0 -6px 12px rgba(0, 0, 0, .5); }
+:root[data-skin] .board .avatar::before { content: ""; position: absolute; inset: var(--sk-ring-out); background: var(--sk-ring) center / contain no-repeat; pointer-events: none; }
+:root[data-skin] .board.active .avatar { box-shadow: 0 0 0 1px #000, 0 0 22px 3px var(--pc), inset 0 -6px 12px rgba(0, 0, 0, .5); }
+:root[data-skin] .bhead { padding-left: 16px; }
+:root[data-skin] .bhead .avatar { margin-right: 6px; }
+
+/* life */
+:root[data-skin] .life { font-family: var(--sk-title); font-weight: 700; color: var(--gold-hi); background: var(--sk-life-bg); border-color: color-mix(in srgb, var(--sk-metal) 60%, transparent); border-radius: 4px; text-shadow: 0 2px 0 #000; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .6); }
+:root[data-skin] .life.low { color: var(--bad); }
+:root[data-skin] .life small { font-family: var(--sk-label); color: var(--muted); text-shadow: none; }
+
+/* phase track */
+:root[data-skin] .phase-track { background: rgba(0, 0, 0, .42); border-color: var(--sk-metal-lo); }
+:root[data-skin] .phase-track .ph { font-family: var(--sk-label); letter-spacing: .05em; }
+:root[data-skin] .phase-track .ph.on { background: var(--sk-on); color: var(--sk-on-ink); box-shadow: 0 0 12px -2px var(--sk-glow); }
+
+/* buttons: the main button of each window and bar gets the skin's plate */
+:root[data-skin] .btn { background: linear-gradient(color-mix(in srgb, var(--panel-2) 92%, #fff 8%), var(--panel)); border-color: color-mix(in srgb, var(--sk-metal) 38%, var(--line)); }
+:root[data-skin] .btn.ghost { background: transparent; }
+:root[data-skin] .btn:hover:not(:disabled) { border-color: var(--sk-metal); background: var(--hover); }
+:root[data-skin] .btn.primary:not(.danger) {
+  background: none; color: var(--sk-go-ink); border-style: solid; border-color: transparent; border-radius: 0;
+  border-image: var(--sk-go) var(--sk-go-slice) / var(--sk-go-w) stretch; border-width: var(--sk-go-w);
+  padding-block: 8px; font-family: var(--sk-label); letter-spacing: .05em; text-shadow: 0 1px 0 rgba(0, 0, 0, .35);
+}
+:root[data-skin] .btn.primary:not(.danger):hover:not(:disabled) { background: none; filter: brightness(1.15); }
+
+/* side panel, previews and bars */
+:root[data-skin] .sidebar { background: var(--sk-panel); border-left: 1px solid var(--sk-metal-lo); }
+:root[data-skin] .preview, :root[data-skin] .stack-panel, :root[data-skin] .cd-panel { border-color: color-mix(in srgb, var(--sk-metal) 55%, transparent); }
+:root[data-skin] .le.turn { font-family: var(--sk-label); color: var(--gold-hi); }
+:root[data-skin] .modal-card h2, :root[data-skin] .sm-panel h2 { font-family: var(--sk-label); color: var(--gold-hi); letter-spacing: .08em; }
+:root[data-skin] .seat { background: color-mix(in srgb, var(--panel-2) 85%, transparent); border-color: color-mix(in srgb, var(--sk-metal) 28%, var(--line)); }
+
+/* start menu */
+:root[data-skin] .sm-title h1 { font-family: var(--sk-title); }
+:root[data-skin] .sm-title::before { background: var(--sk-mark) center / contain no-repeat; -webkit-mask: none; mask: none; border-radius: 0; opacity: .7; }
+:root[data-skin] .sm-btn { background: linear-gradient(rgba(255, 255, 255, .04), rgba(0, 0, 0, .25)); border-color: color-mix(in srgb, var(--sk-metal) 26%, transparent); }
+:root[data-skin] .sm-btn:hover, :root[data-skin] .sm-btn:focus-visible { border-color: var(--sk-metal); box-shadow: 0 8px 24px -12px var(--sk-glow); background: linear-gradient(color-mix(in srgb, var(--sk-metal) 12%, transparent), rgba(0, 0, 0, .25)); }
+:root[data-skin] .sm-btn .ico { color: var(--sk-metal); }
+:root[data-skin] .sm-main { background: linear-gradient(120deg, color-mix(in srgb, var(--sk-metal) 22%, var(--panel)), var(--panel) 75%); border-color: var(--sk-metal); }
+:root[data-skin] .sm-main b { font-family: var(--sk-title); }
+
+/* ================================================================ per-skin touches */
+/* Nightspire: crimson for the main action, cold blue glow on the active board */
+:root[data-skin="nightspire"] .board.active { box-shadow: 0 0 0 1px var(--pc), 0 0 30px -4px var(--pc), 0 0 40px -12px rgba(111, 176, 255, .6); }
+:root[data-skin="nightspire"] .life { font-size: 24px; }
+
+/* Highkeep: plaque headings on the start menu, studded life plate */
+:root[data-skin="highkeep"] .sm-panel h2 { width: fit-content; margin-inline: auto; padding: 6px 4px; border-style: solid; border-color: transparent; border-image: url("../skins/frames/hk-plaque.svg") 0 60 fill / 0 30px stretch; border-width: 0 30px; color: #ffe9a8; text-shadow: 0 1px 0 #000; }
+:root[data-skin="highkeep"] .life { border: 0; box-shadow: 0 0 0 1px #000, 0 0 0 3px var(--sk-metal), 0 0 0 4px #000, inset 0 2px 8px rgba(0, 0, 0, .6); }
+:root[data-skin="highkeep"] .brand { background: linear-gradient(#fff4c4, #e2b24c 55%, #8a5d14); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 1px 0 #000); }
+
+/* Brass Meridian: life on a brass plate, gears that turn behind the active player's portrait */
+:root[data-skin="brass"] .life { border-style: solid; border-color: transparent; border-image: url("../skins/frames/bm-plate.svg") 0 30 fill / 0 12px stretch; border-width: 0 12px; border-radius: 0; color: #241706; text-shadow: 0 1px 0 rgba(255, 255, 255, .35); box-shadow: none; padding-inline: 4px; }
+:root[data-skin="brass"] .life small { color: #5a3d14; }
+:root[data-skin="brass"] .life.low { color: #8a1a10; }
+:root[data-skin="brass"] .board .avatar::before { -webkit-mask: radial-gradient(circle, transparent 0 65%, #000 66%); mask: radial-gradient(circle, transparent 0 65%, #000 66%); }
+:root[data-skin="brass"] .board.active .avatar::before { animation: skGear 14s linear infinite; filter: drop-shadow(0 0 6px var(--sk-glow)); }
+:root[data-skin="brass"] .sm-title::before { animation: skGear 40s linear infinite; }
+@keyframes skGear { to { transform: rotate(360deg); } }
+:root[data-skin="brass"] body.calm .board.active .avatar::before, :root[data-skin="brass"] body.less-motion .board.active .avatar::before,
+:root[data-skin="brass"] body.calm .sm-title::before, :root[data-skin="brass"] body.less-motion .sm-title::before { animation: none; }
+@media (prefers-reduced-motion: reduce) { :root[data-skin="brass"] .board.active .avatar::before, :root[data-skin="brass"] .sm-title::before { animation: none; } }
+
+/* High contrast keeps its own plain look */
+:root[data-skin] body.contrast .board, :root[data-skin] body.contrast .modal-card, :root[data-skin] body.contrast .sm-panel { border-image: none; border-width: 2px; border-color: var(--text); background: var(--panel); }
