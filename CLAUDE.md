@@ -27,6 +27,11 @@ Open work list for the look, interface and accessibility: `DESIGN-ROADMAP.md` (i
 - Build our own versions: never copy code, art or names from MTG Arena, Moxgate or Forge (Forge is GPL; ideas only).
 - Replays must stay exact: anything that changes game outcomes is saved in the game setup/replay.
 
+## Claude Code setup
+
+- `.claude/settings.json` runs `.claude/hooks/guard.mjs` before every tool call: it blocks reading or editing `data/` and any command that launches Microsoft Edge.
+- Subagents in `.claude/agents/`: `rules-judge` (read-only review of engine changes against `cache/MagicCompRules.txt` and replay gating), `card-fixer` (the card-fix workflow, a test per card), `release-guard` (the "After each finished change" checklist; doesn't commit).
+
 ## Testing
 
 Use the `test-spellbook-table` project skill (`.claude/skills/test-spellbook-table/SKILL.md`). In short: run
