@@ -46,10 +46,16 @@ if (tool === 'Bash' || tool === 'PowerShell') {
     block('Blocked by .claude/hooks/guard.mjs: CLAUDE.md says never use or launch Microsoft Edge. ' +
       'Use the built-in browser pane, or Chrome/Firefox for tests/browsers.mjs.');
   }
+  // Text, not paths: heredoc bodies, PowerShell here-strings and -m/--message arguments
+  // (commit messages, notes) may mention data/ freely.
+  const code = cmd
+    .replace(/<<-?\s*(['"]?)(\w+)\1[^\n]*\n[\s\S]*?\n\s*\2\s*(?=\n|$)/g, ' ')
+    .replace(/@'[\s\S]*?\n'@|@"[\s\S]*?\n"@/g, ' ')
+    .replace(/(^|\s)(-m|--message|-Message)(\s+|=)("(?:[^"\\]|\\.)*"|'[^']*')/g, ' ');
   // A path token that starts at the project's data folder: data/x, ./data/x, "data\x"
-  if (/(^|[\s"'=(;|&])(\.[\\/])?data[\\/]/i.test(cmd)) block(DATA_MSG);
+  if (/(^|[\s"'=(;|&])(\.[\\/])?data[\\/]/i.test(code)) block(DATA_MSG);
   const absData = (root + path.sep + 'data' + path.sep).toLowerCase();
-  const norm = cmd.replace(/\//g, path.sep).toLowerCase();
+  const norm = code.replace(/\//g, path.sep).toLowerCase();
   if (norm.includes(absData)) block(DATA_MSG);
 }
 
