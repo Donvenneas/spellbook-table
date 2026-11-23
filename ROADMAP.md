@@ -1725,6 +1725,14 @@ item; its "Rules for every session" and "Suggested order" come first). Tick the 
 finished, start a "## Round 8" section above this one and add each finished item to it with its "Done:" note: the
 What's new window lists the newest "## Round" section, so an empty one would leave that window blank.
 
+## Next: the improvement hunt (asked for 2026-11-23: "audit the game and make a roadmap for a new chat to find all improvements with the new add-ons")
+
+The plan is in `IMPROVE-ROADMAP.md`: a baseline of version 1.69.0 (all suites, self-test and interface test green),
+leads to start from, and hunts H0 to H10 that use the project agents (`fuzz-triager`, `rules-judge`, `card-fixer`,
+`ai-evaluator`, `design-worker`, `release-guard`) and plugins to list every improvement as findings numbered from 500.
+It is a survey: fixes come after, item by item. As with Round 8, start a "## Round 9" section only when the first
+finding is fixed, so the What's new window never shows an empty round.
+
 ## Notes from sessions
 
 - 2026-11-07 (side session, version 1.17.0, item 82): card scan 80.8% → 88.0% fully read (3,080 of 3,500). How the
