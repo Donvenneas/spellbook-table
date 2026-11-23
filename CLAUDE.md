@@ -30,7 +30,7 @@ Open work list for the look, interface and accessibility: `DESIGN-ROADMAP.md` (i
 ## Claude Code setup
 
 - `.claude/settings.json` runs `.claude/hooks/guard.mjs` before every tool call: it blocks reading or editing `data/` and any command that launches Microsoft Edge.
-- Subagents in `.claude/agents/`: `rules-judge` (read-only review of engine changes against `cache/MagicCompRules.txt` and replay gating), `card-fixer` (the card-fix workflow, a test per card), `release-guard` (the "After each finished change" checklist; doesn't commit).
+- Subagents in `.claude/agents/`: `rules-judge` (read-only review of engine changes against `cache/MagicCompRules.txt` and replay gating), `card-fixer` (the card-fix workflow, a test per card), `release-guard` (the "After each finished change" checklist; doesn't commit), `fuzz-triager` (extra fuzz games, shrinks failures into `known` tests and AUDIT-ROADMAP items), `design-worker` (one DESIGN-ROADMAP item, checked with uitest, guards and screen sizes), `ai-evaluator` (read-only: seeded AI games, bad plays proposed as `tests/ai.mjs` cases).
 
 ## Testing
 
