@@ -348,6 +348,54 @@ test('R27', 'Unread card text is reported, not approximated', '— (coverage)', 
   ok(!ignoredText(card('Lightning Bolt')), 'Lightning Bolt fully read');
 });
 
+// ================================================================== targets (hunt H1, fuzz seeds 61000 and 90000–92099)
+test('R28', 'A spell whose only target no longer fits its words doesn\'t resolve', '608.2b', 'engine.js (spell fizzle check), triggers.js resolveAbility', 'Medium',
+  'Artifact Mutation aimed at Mirage Mirror, which becomes a copy of Llanowar Elves in response (no longer an artifact): the spell doesn\'t resolve, so no Saproling tokens',
+  async () => {
+    const g = await table([{ battlefield: ['Forest', 'Forest', 'Mountain'], hand: ['Artifact Mutation'] }, { battlefield: ['Mirage Mirror', 'Llanowar Elves', 'Island', 'Island'] }]);
+    const mm = find(g, 1, 'Mirage Mirror'), elves = find(g, 1, 'Llanowar Elves');
+    let done = false;
+    P(g, 1).agent.respondAt = (gg, q, item) => { if (!done && item.o.card.name === 'Artifact Mutation') { done = true; return { kind: 'activate', o: mm, ab: mm.fx.abilities[0] }; } return null; };
+    P(g, 1).agent.chooseTarget = () => ({ obj: elves });
+    ok(await cast(g, 0, 'Artifact Mutation', { targets: [{ obj: mm }] }), 'cast');
+    ok(done && !mm.fx.type.artifact, 'Mirage Mirror became a copy of Llanowar Elves in response');
+    eq(P(g, 0).battlefield.filter(o => o.token).length, 0, `Saproling tokens (log: ${logText(g).split('\n').slice(-2).join(' / ')})`);
+    noErrors(g);
+  }, 'the "every target is illegal" check (engine.js spells, triggers.js resolveAbility) uses validTarget only, not the target\'s words (targetLegal): the destroy part is skipped but the rest of the spell resolves, making X Saprolings from the illegal target\'s mana value. Fuzz: seed 61010 Volatile Stormdrake\'s second trigger gives 4 energy after its target became illegal.');
+test('R29', 'Targets stay legal after a "hit that instead" deal', '601.2c, 115.1', 'engine.js redirectTalk/cast, ai.js redirectOffer/considerRedirect', 'High',
+  'four players: an AI casts Doom Blade at Llanowar Elves; the Elves\' controller may point it elsewhere, but never at Purphoros (not a creature with too little devotion), which is not a legal target',
+  async () => {
+    const g = await table([{ battlefield: ['Swamp', 'Swamp'], hand: ['Doom Blade'] }, { battlefield: ['Llanowar Elves'] }, { battlefield: ['Purphoros, God of the Forge'] }, {}]);
+    const purph = find(g, 2, 'Purphoros, God of the Forge');
+    ok(!g.validTarget({ obj: purph }, P(g, 0), find(g, 0, 'Doom Blade', 'hand')) || !(await import('../public/js/resolve.js')).targetLegal(g, P(g, 0), card('Doom Blade').fx.spell[0], { obj: purph }), 'Purphoros is not a legal target for Doom Blade');
+    await cast(g, 0, 'Doom Blade');
+    const log = logText(g);
+    ok(!/casts Doom Blade targeting Purphoros/.test(log), `Doom Blade was cast at an illegal target (log: ${log.split('\n').slice(-4).join(' / ')})`);
+    noErrors(g);
+  }, 'the redirect offer and its acceptance (ai.js redirectOffer, considerRedirect) test only targetFits (the words), not the kind of permanent (legalTargets); and Game.cast checks AI-chosen targets with targetsBad(..., given = false), which skips legality. 37 of 40 illegal targets in 300 fuzz games (seeds 90000–92099) came from these deals.');
+test('R30', 'Changing a target only to another legal target', '115.7a', 'resolve.js case redirect, ai.js redirectTarget', 'Medium',
+  'Red Elemental Blast (destroy target blue permanent) at Thassa\'s Oracle; Misdirection in response has no other blue permanent to move it to, so the target is unchanged and the Oracle is destroyed',
+  async () => {
+    const g = await table([{ battlefield: ['Mountain'], hand: ['Red Elemental Blast'] }, { battlefield: ["Thassa's Oracle", 'Island', 'Island', 'Island', 'Island', 'Island'], hand: ['Misdirection'] }, { battlefield: ['Llanowar Elves'] }]);
+    const reb = find(g, 0, 'Red Elemental Blast', 'hand'), oracle = find(g, 1, "Thassa's Oracle");
+    let done = false;
+    P(g, 1).agent.respondAt = (gg, q, item) => { if (!done && item.o === reb) { done = true; return { kind: 'cast', card: find(g, 1, 'Misdirection', 'hand'), targets: [{ spell: item }] }; } return null; };
+    ok(await cast(g, 0, 'Red Elemental Blast', { effects: reb.fx.modes.modes[1], targets: [{ obj: oracle }] }), 'cast');
+    ok(done && /Misdirection/.test(logText(g)), 'Misdirection was cast in response');
+    eq([oracle.zone, find(g, 2, 'Llanowar Elves')?.zone], ['graveyard', 'battlefield'], `Oracle destroyed, Elves untouched (log: ${logText(g).split('\n').slice(-2).join(' / ')})`);
+    noErrors(g);
+  }, 'case \'redirect\' in resolve.js takes whatever the agent\'s redirectTarget returns (same card type as the old target) without checking it against the spell\'s words or its controller (validTarget/targetLegal). Fuzz: seed 90000 (Red Elemental Blast moved to a white creature), seed 92072 (Redirect Lightning moved Alela\'s goad trigger onto Alela).');
+test('R31', 'A counterspell\'s words limit its target', '601.2c, 115.1', 'stack.js targetsBad, resolve.js counterFits, human.js castWithChoices', 'Low',
+  'Red Elemental Blast\'s "counter target blue spell" can\'t be cast at a colorless spell (Fellwar Stone): the cast is refused, the card stays in hand',
+  async () => {
+    const g = await table([{ battlefield: ['Mountain'], hand: ['Red Elemental Blast'] }, { battlefield: ['Island'], hand: ['Fellwar Stone'] }], { active: 1 });
+    const fs = find(g, 1, 'Fellwar Stone', 'hand'), reb = find(g, 0, 'Red Elemental Blast', 'hand');
+    const item = { o: fs, p: P(g, 1), effects: [], targets: [] };
+    g.stack.push(item);
+    const r = await g.cast(P(g, 0), reb, { effects: reb.fx.modes.modes[0], targets: [{ spell: item }], response: item });
+    eq([r, reb.zone], [false, 'hand'], 'refused, still in hand');
+  }, 'targetsBad checks given targets with validTarget and targetLegal, and neither applies counterFits (the words of a counter effect); the spell is cast and does nothing on resolution. A person\'s response always aims a counter at the spell it answers (human.js castWithChoices spellTarget). Fuzz: seed 61011 (the random seat).');
+
 // ---------- run
 const results = [];
 for (const t of tests) {
